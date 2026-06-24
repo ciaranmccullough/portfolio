@@ -1,0 +1,25 @@
+{
+  "name": "@portfolio/tokens",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Design primitives (colors, spacing, typography) for the design system.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@portfolio/config": "workspace:*",
+    "typescript": "^5.4.5"
+  }
+}

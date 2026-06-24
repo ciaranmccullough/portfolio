@@ -1,0 +1,22 @@
+{
+  "name": "@portfolio/config",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Shared TypeScript, ESLint, and Prettier configuration for the monorepo.",
+  "files": [
+    "tsconfig.base.json",
+    "eslint-preset.js",
+    "prettier-preset.js"
+  ],
+  "peerDependencies": {
+    "eslint": ">=8",
+    "prettier": ">=3",
+    "typescript": ">=5"
+  },
+  "peerDependenciesMeta": {
+    "eslint": { "optional": true },
+    "prettier": { "optional": true },
+    "typescript": { "optional": true }
+  }
+}
