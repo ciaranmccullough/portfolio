@@ -1,4 +1,8 @@
 import { cn } from "../../cn";
+import {
+  socialLinksAnchorClass,
+  socialLinksListClass,
+} from "./SocialLinks.styles";
 import type { SocialLinksProps } from "./SocialLinks.types";
 
 /**
@@ -7,13 +11,10 @@ import type { SocialLinksProps } from "./SocialLinks.types";
  */
 export function SocialLinks({ items, className, ...props }: SocialLinksProps) {
   return (
-    <ul className={cn("flex list-none gap-5.5", className)} {...props}>
+    <ul className={cn(socialLinksListClass, className)} {...props}>
       {items.map((item) => (
         <li key={item.href}>
-          <a
-            href={item.href}
-            className="border-b border-line-dark pb-0.5 font-semibold text-fg-on-dark no-underline"
-          >
+          <a href={item.href} className={socialLinksAnchorClass}>
             {item.label}
           </a>
         </li>

@@ -1,5 +1,12 @@
 import { Eyebrow, Text } from "../../atoms";
 import { cn } from "../../cn";
+import {
+  heroActionsClass,
+  heroBadgeClass,
+  heroClass,
+  heroIntroClass,
+  heroTitleClass,
+} from "./Hero.styles";
 import type { HeroProps } from "./Hero.types";
 
 /**
@@ -15,20 +22,17 @@ export function Hero({
   ...props
 }: HeroProps) {
   return (
-    <section
-      className={cn("mx-auto max-w-5xl px-6 py-16", className)}
-      {...props}
-    >
-      {badge ? <Eyebrow className="mb-4">{badge}</Eyebrow> : null}
-      <Text variant="display" className="max-w-2xl">
+    <section className={cn(heroClass, className)} {...props}>
+      {badge ? <Eyebrow className={heroBadgeClass}>{badge}</Eyebrow> : null}
+      <Text variant="display" className={heroTitleClass}>
         {title}
       </Text>
       {intro ? (
-        <Text variant="body" className="mt-5 max-w-prose">
+        <Text variant="body" className={heroIntroClass}>
           {intro}
         </Text>
       ) : null}
-      {children ? <div className="mt-7">{children}</div> : null}
+      {children ? <div className={heroActionsClass}>{children}</div> : null}
     </section>
   );
 }

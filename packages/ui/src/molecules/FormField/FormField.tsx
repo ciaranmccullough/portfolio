@@ -1,6 +1,7 @@
 import { useId } from "react";
 
 import { Input } from "../../atoms";
+import { formFieldCaptionClass, formFieldLabelClass } from "./FormField.styles";
 import type { FormFieldProps } from "./FormField.types";
 
 /**
@@ -12,10 +13,8 @@ export function FormField({ label, id, ...inputProps }: FormFieldProps) {
   const inputId = id ?? generatedId;
 
   return (
-    <label htmlFor={inputId} className="block">
-      <span className="mb-2 block font-mono text-2xs font-bold uppercase tracking-wide text-fg-faint">
-        {label}
-      </span>
+    <label htmlFor={inputId} className={formFieldLabelClass}>
+      <span className={formFieldCaptionClass}>{label}</span>
       <Input id={inputId} {...inputProps} />
     </label>
   );

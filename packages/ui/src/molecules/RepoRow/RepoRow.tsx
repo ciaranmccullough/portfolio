@@ -1,4 +1,11 @@
 import { cn } from "../../cn";
+import {
+  repoRowDotClass,
+  repoRowItemClass,
+  repoRowLinkClass,
+  repoRowNameClass,
+  repoRowStarsClass,
+} from "./RepoRow.styles";
 import type { RepoRowProps } from "./RepoRow.types";
 
 /**
@@ -13,18 +20,12 @@ export function RepoRow({
   ...props
 }: RepoRowProps) {
   return (
-    <li className={cn("list-none", className)} {...props}>
-      <a
-        href={href}
-        className="flex items-center gap-3 rounded-md border border-line bg-card px-3.5 py-3 text-fg no-underline"
-      >
-        <span
-          aria-hidden="true"
-          className="size-2 shrink-0 rounded-full bg-brand-violet"
-        />
-        <span className="font-mono text-sm font-bold">{name}</span>
+    <li className={cn(repoRowItemClass, className)} {...props}>
+      <a href={href} className={repoRowLinkClass}>
+        <span aria-hidden="true" className={repoRowDotClass} />
+        <span className={repoRowNameClass}>{name}</span>
         {stars != null ? (
-          <span className="ml-auto text-sm font-semibold text-fg-muted">
+          <span className={repoRowStarsClass}>
             <span aria-hidden="true">★ </span>
             {stars}
           </span>
