@@ -9,6 +9,9 @@ build/
 out/
 storybook-static/
 
+# Next.js (auto-generated)
+next-env.d.ts
+
 # Env
 .env
 .env*.local
