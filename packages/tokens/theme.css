@@ -1,0 +1,76 @@
+/*
+ * @portfolio/tokens — the design system's Tailwind v4 theme.
+ *
+ * This @theme block IS the token layer: it generates the utility classes
+ * (bg-*, text-*, rounded-*, font-*, ...) the component library is built from.
+ * Consume it from an app/Storybook stylesheet that has already imported
+ * Tailwind, e.g.:
+ *
+ *   @import "tailwindcss";
+ *   @import "@portfolio/tokens/theme.css";
+ *
+ * Values mirror the "Component Library" design doc.
+ */
+
+@theme {
+  /* ---- Colour ---- */
+  --color-paper: #f4f1e9;
+  --color-card: #fffdf7;
+  --color-inset: #f6f2e8;
+  --color-chip: #f1eee4;
+  --color-ink: #17161d;
+  --color-ink-soft: #15141b;
+
+  --color-brand-violet: #6a47ff;
+  --color-brand-orange: #ff5836;
+  --color-brand-green: #0fa978;
+  --color-accent-android: #3ddc84;
+  --color-accent-react: #61dafb;
+
+  --color-fg: #17161d;
+  --color-fg-muted: #46434f;
+  --color-fg-soft: #6a6776;
+  --color-fg-faint: #9a9486;
+  --color-fg-inverse: #f4f1e9;
+
+  --color-line: #e6e1d4;
+  --color-line-soft: #e2dcce;
+  --color-line-strong: #ded8c9;
+  --color-line-dark: #312f3c;
+
+  --color-tint-violet: #f1edff;
+  --color-tint-orange: #fff0eb;
+
+  /* ---- Typography ---- */
+  --font-heading: "Bricolage Grotesque", sans-serif;
+  --font-body: "Hanken Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --text-2xs: 11px;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-md: 14px;
+  --text-base: 15px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 24px;
+  --text-3xl: 26px;
+  --text-heading: clamp(28px, 4vw, 44px);
+  --text-display: clamp(34px, 6vw, 64px);
+
+  --tracking-tighter: -0.03em;
+  --tracking-tight: -0.025em;
+  --tracking-snug: -0.02em;
+  --tracking-wide: 0.05em;
+  --tracking-wider: 0.06em;
+
+  /* ---- Radii ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
+  --radius-2xl: 16px;
+
+  /* ---- Shadows ---- */
+  --shadow-brutal: 3px 3px 0 #17161d;
+}
