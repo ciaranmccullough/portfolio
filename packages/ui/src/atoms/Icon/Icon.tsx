@@ -1,4 +1,5 @@
 import { cn } from "../../cn";
+import { iconClass } from "./Icon.styles";
 import type { IconProps } from "./Icon.types";
 
 /**
@@ -14,10 +15,7 @@ export function Icon({ children, label, className, ...props }: IconProps) {
       role={label ? "img" : undefined}
       aria-label={label}
       aria-hidden={label ? undefined : true}
-      className={cn(
-        "inline-flex size-5.5 shrink-0 [&>svg]:size-full",
-        className,
-      )}
+      className={cn(iconClass, className)}
       {...props}
     >
       {children}

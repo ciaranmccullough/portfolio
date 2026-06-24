@@ -1,4 +1,5 @@
 import { Link } from "../../atoms";
+import { navGroupListClass } from "./NavGroup.styles";
 import type { NavGroupProps } from "./NavGroup.types";
 
 /**
@@ -8,7 +9,7 @@ import type { NavGroupProps } from "./NavGroup.types";
 export function NavGroup({ items, className, ...props }: NavGroupProps) {
   return (
     <nav className={className} {...props}>
-      <ul className="flex list-none gap-5.5 text-md">
+      <ul className={navGroupListClass}>
         {items.map((item) => (
           <li key={item.href}>
             <Link href={item.href}>{item.label}</Link>

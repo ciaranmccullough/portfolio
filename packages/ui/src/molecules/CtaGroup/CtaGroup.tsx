@@ -1,4 +1,5 @@
 import { cn } from "../../cn";
+import { ctaGroupClass } from "./CtaGroup.styles";
 import type { CtaGroupProps } from "./CtaGroup.types";
 
 /**
@@ -7,11 +8,7 @@ import type { CtaGroupProps } from "./CtaGroup.types";
  */
 export function CtaGroup({ className, children, ...props }: CtaGroupProps) {
   return (
-    <div
-      role="group"
-      className={cn("flex flex-wrap items-center gap-2.5", className)}
-      {...props}
-    >
+    <div role="group" className={cn(ctaGroupClass, className)} {...props}>
       {children}
     </div>
   );

@@ -1,4 +1,5 @@
 import { cn } from "../../cn";
+import { inputClass } from "./Input.styles";
 import type { InputProps } from "./Input.types";
 
 /**
@@ -8,13 +9,5 @@ import type { InputProps } from "./Input.types";
  * focus outline is preserved for keyboard accessibility.
  */
 export function Input({ className, ...props }: InputProps) {
-  return (
-    <input
-      className={cn(
-        "w-full rounded-lg border border-brand-violet bg-ink-soft px-3.5 py-3 font-body text-base text-fg-inverse",
-        className,
-      )}
-      {...props}
-    />
-  );
+  return <input className={cn(inputClass, className)} {...props} />;
 }

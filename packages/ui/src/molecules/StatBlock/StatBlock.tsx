@@ -1,4 +1,9 @@
 import { cn } from "../../cn";
+import {
+  statBlockClass,
+  statBlockLabelClass,
+  statBlockValueClass,
+} from "./StatBlock.styles";
 import type { StatBlockProps } from "./StatBlock.types";
 
 /**
@@ -11,19 +16,9 @@ export function StatBlock({
   ...props
 }: StatBlockProps) {
   return (
-    <li
-      className={cn(
-        "list-none rounded-2xl border border-line bg-card p-4",
-        className,
-      )}
-      {...props}
-    >
-      <strong className="block font-heading text-3xl font-extrabold tracking-snug text-fg">
-        {value}
-      </strong>
-      <span className="mt-0.5 block font-body text-sm text-fg-soft">
-        {label}
-      </span>
+    <li className={cn(statBlockClass, className)} {...props}>
+      <strong className={statBlockValueClass}>{value}</strong>
+      <span className={statBlockLabelClass}>{label}</span>
     </li>
   );
 }
