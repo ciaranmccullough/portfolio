@@ -19,7 +19,9 @@ export default async function HomePage() {
       }}
     >
       <h1>Portfolio</h1>
-      <Text>This paragraph is rendered by the Text atom from @portfolio/ui.</Text>
+      <Text>
+        This paragraph is rendered by the Text atom from @portfolio/ui.
+      </Text>
       <Text>
         {entryCount === null
           ? "Contentful: no API credentials configured (set CONTENTFUL_SPACE_ID and CONTENTFUL_ACCESS_TOKEN)."

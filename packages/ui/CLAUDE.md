@@ -9,12 +9,12 @@ and consumed by bundlers (Next.js / Turbopack, Storybook / Vite).
 
 The tier decides the folder. Pick the **lowest** tier that fits.
 
-| Tier         | Folder            | What it is                                                                 | Examples                          |
-| ------------ | ----------------- | -------------------------------------------------------------------------- | --------------------------------- |
-| **Atom**     | `src/atoms/`      | One indivisible primitive; renders a single semantic element; composes no other component | `Text`, `Button`, `Input`, `Link` |
-| **Molecule** | `src/molecules/`  | A small group of atoms forming one unit                                    | `FormField` (Label + Input), `SearchBar` |
-| **Organism** | `src/organisms/`  | A distinct, self-contained section composed of molecules/atoms             | `Header`, `Footer`, `Card`        |
-| **Template** | `src/templates/`  | Page-level layout scaffolding                                              | `PageLayout`                      |
+| Tier         | Folder           | What it is                                                                                | Examples                                 |
+| ------------ | ---------------- | ----------------------------------------------------------------------------------------- | ---------------------------------------- |
+| **Atom**     | `src/atoms/`     | One indivisible primitive; renders a single semantic element; composes no other component | `Text`, `Button`, `Input`, `Link`        |
+| **Molecule** | `src/molecules/` | A small group of atoms forming one unit                                                   | `FormField` (Label + Input), `SearchBar` |
+| **Organism** | `src/organisms/` | A distinct, self-contained section composed of molecules/atoms                            | `Header`, `Footer`, `Card`               |
+| **Template** | `src/templates/` | Page-level layout scaffolding                                                             | `PageLayout`                             |
 
 Rule of thumb: if it **composes other components**, it is at least a molecule.
 If it is a single primitive element, it is an atom.
@@ -88,15 +88,15 @@ export const Default: StoryObj<typeof meta> = {
 Render the **most meaningful native element**. Reach for `<div>`/`<span>` only
 when nothing semantic fits (generic grouping or an inline styling hook).
 
-| Need                       | Use                                                                  | Not                    |
-| -------------------------- | -------------------------------------------------------------------- | ---------------------- |
-| paragraph / body text      | `<p>`                                                                | `<div>`                |
-| heading                    | `<h1>`–`<h6>`                                                        | `<div class="title">`  |
-| list                       | `<ul>` / `<ol>` + `<li>`                                             | stacked `<div>`s       |
-| link / navigation target   | `<a href>`                                                           | `<span onClick>`       |
-| action / toggle            | `<button>`                                                           | `<div onClick>`        |
-| page regions               | `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>`, `<footer>` | `<div>`     |
-| emphasis                   | `<em>` / `<strong>`                                                  | `<span>`               |
+| Need                     | Use                                                                            | Not                   |
+| ------------------------ | ------------------------------------------------------------------------------ | --------------------- |
+| paragraph / body text    | `<p>`                                                                          | `<div>`               |
+| heading                  | `<h1>`–`<h6>`                                                                  | `<div class="title">` |
+| list                     | `<ul>` / `<ol>` + `<li>`                                                       | stacked `<div>`s      |
+| link / navigation target | `<a href>`                                                                     | `<span onClick>`      |
+| action / toggle          | `<button>`                                                                     | `<div onClick>`       |
+| page regions             | `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>`, `<footer>` | `<div>`               |
+| emphasis                 | `<em>` / `<strong>`                                                            | `<span>`              |
 
 Semantic elements bring built-in roles, keyboard behavior, and screen-reader
 meaning for free — that is the whole point of an atom.

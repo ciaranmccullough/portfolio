@@ -15,8 +15,14 @@
     "typescript": ">=5"
   },
   "peerDependenciesMeta": {
-    "eslint": { "optional": true },
-    "prettier": { "optional": true },
-    "typescript": { "optional": true }
+    "eslint": {
+      "optional": true
+    },
+    "prettier": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    }
   }
 }

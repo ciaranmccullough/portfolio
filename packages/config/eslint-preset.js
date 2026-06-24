@@ -19,10 +19,11 @@ module.exports = {
     es2022: true,
     node: true,
   },
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "jsx-a11y"],
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:jsx-a11y/recommended",
     "prettier",
   ],
   rules: {
@@ -36,5 +37,6 @@ module.exports = {
     "dist/",
     ".next/",
     "storybook-static/",
+    "next-env.d.ts",
   ],
 };
