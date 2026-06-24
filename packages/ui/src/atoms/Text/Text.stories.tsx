@@ -7,19 +7,22 @@ const meta = {
   component: Text,
   tags: ["autodocs"],
 } satisfies Meta<typeof Text>;
-
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {
-    children: "The quick brown fox jumps over the lazy dog.",
-  },
+export const Display: Story = {
+  args: { variant: "display", children: "Aa Bricolage" },
 };
 
-export const Empty: Story = {
+export const Heading: Story = {
+  args: { variant: "h2", children: "Section heading" },
+};
+
+export const Body: Story = {
   args: {
-    children: "",
+    variant: "body",
+    children:
+      "Hanken Grotesk body copy sits at a 1.6 line-height for comfortable reading.",
   },
 };

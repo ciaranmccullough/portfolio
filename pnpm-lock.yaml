@@ -89,6 +89,10 @@ importers:
         version: 5.9.3
 
   packages/ui:
+    dependencies:
+      '@portfolio/tokens':
+        specifier: workspace:*
+        version: link:../tokens
     devDependencies:
       '@portfolio/config':
         specifier: workspace:*
