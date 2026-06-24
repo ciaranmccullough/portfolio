@@ -1,0 +1,5 @@
+@import "tailwindcss";
+@import "@portfolio/tokens/theme.css";
+
+/* Scan the workspace UI library so its utility classes are generated. */
+@source "../../../packages/ui/src";
