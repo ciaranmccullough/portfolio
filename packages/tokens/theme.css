@@ -64,6 +64,12 @@
   --tracking-wide: 0.05em;
   --tracking-wider: 0.06em;
 
+  /* ---- Line height ---- */
+  --leading-tight: 1.05;
+  --leading-snug: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.6;
+
   /* ---- Radii ---- */
   --radius-sm: 6px;
   --radius-md: 10px;

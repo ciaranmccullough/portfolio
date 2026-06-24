@@ -1,27 +1,16 @@
-import type { CSSProperties } from "react";
-
-import { colors, fonts, fontWeights, radii } from "@portfolio/tokens";
-
+import { cn } from "../../cn";
 import type { ButtonProps, ButtonSize, ButtonVariant } from "./Button.types";
 
-const variantStyle: Record<ButtonVariant, CSSProperties> = {
-  primary: {
-    background: colors.brand.violet,
-    color: "#ffffff",
-    border: "none",
-  },
-  dark: { background: colors.ink, color: colors.text.inverse, border: "none" },
-  ghost: {
-    background: "transparent",
-    color: colors.ink,
-    border: `1px solid ${colors.border.strong}`,
-  },
+const variantClass: Record<ButtonVariant, string> = {
+  primary: "bg-brand-violet text-white",
+  dark: "bg-ink text-fg-inverse",
+  ghost: "bg-transparent text-ink border border-line-strong",
 };
 
-const sizeStyle: Record<ButtonSize, CSSProperties> = {
-  sm: { fontSize: "12.5px", padding: "7px 13px", borderRadius: "9px" },
-  md: { fontSize: "14px", padding: "11px 18px", borderRadius: radii.lg },
-  lg: { fontSize: "15.5px", padding: "14px 24px", borderRadius: "14px" },
+const sizeClass: Record<ButtonSize, string> = {
+  sm: "text-xs px-3 py-2 rounded-md",
+  md: "text-md px-4.5 py-3 rounded-lg",
+  lg: "text-lg px-6 py-3.5 rounded-xl",
 };
 
 /**
@@ -32,20 +21,18 @@ export function Button({
   variant = "primary",
   size = "md",
   type = "button",
-  style,
+  className,
   ...props
 }: ButtonProps) {
   return (
     <button
       type={type}
-      style={{
-        fontFamily: fonts.body,
-        fontWeight: fontWeights.semibold,
-        cursor: "pointer",
-        ...variantStyle[variant],
-        ...sizeStyle[size],
-        ...style,
-      }}
+      className={cn(
+        "cursor-pointer font-body font-semibold",
+        variantClass[variant],
+        sizeClass[size],
+        className,
+      )}
       {...props}
     />
   );

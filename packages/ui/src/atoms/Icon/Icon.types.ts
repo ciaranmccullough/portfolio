@@ -1,16 +1,18 @@
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
-export type IconName = "grid" | "orbit" | "menu" | "arrowUpRight";
-
-/** Props for the {@link Icon} atom. Extends native `<svg>` attributes. */
+/**
+ * Props for the {@link Icon} atom — a pass-through wrapper around an SVG.
+ * Extends native `<span>` attributes; the SVG is provided as `children`.
+ */
 export interface IconProps extends Omit<
-  ComponentPropsWithoutRef<"svg">,
+  ComponentPropsWithoutRef<"span">,
   "children"
 > {
-  /** Which built-in glyph to render. */
-  name: IconName;
-  /** Pixel size (width & height). */
-  size?: number;
-  /** Accessible label. When omitted the icon is decorative (`aria-hidden`). */
-  title?: string;
+  /** The SVG to render — an inline `<svg>` or an SVG component. */
+  children: ReactNode;
+  /**
+   * Accessible label. When provided the icon is exposed as an image; when
+   * omitted the icon is decorative and hidden from assistive tech.
+   */
+  label?: string;
 }

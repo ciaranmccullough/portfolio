@@ -1,7 +1,6 @@
-import type { CSSProperties, ElementType } from "react";
+import type { ElementType } from "react";
 
-import { colors, fonts, fontWeights, lineHeights } from "@portfolio/tokens";
-
+import { cn } from "../../cn";
 import type { TextElement, TextProps, TextVariant } from "./Text.types";
 
 const variantTag: Record<TextVariant, TextElement> = {
@@ -13,48 +12,14 @@ const variantTag: Record<TextVariant, TextElement> = {
   small: "p",
 };
 
-const variantStyle: Record<TextVariant, CSSProperties> = {
-  display: {
-    fontFamily: fonts.heading,
-    fontWeight: fontWeights.extrabold,
-    fontSize: "clamp(34px, 6vw, 64px)",
-    letterSpacing: "-0.03em",
-    lineHeight: lineHeights.tight,
-  },
-  h1: {
-    fontFamily: fonts.heading,
-    fontWeight: fontWeights.extrabold,
-    fontSize: "clamp(28px, 4vw, 44px)",
-    letterSpacing: "-0.025em",
-    lineHeight: lineHeights.tight,
-  },
-  h2: {
-    fontFamily: fonts.heading,
-    fontWeight: fontWeights.bold,
-    fontSize: "24px",
-    letterSpacing: "-0.02em",
-    lineHeight: lineHeights.snug,
-  },
-  h3: {
-    fontFamily: fonts.heading,
-    fontWeight: fontWeights.bold,
-    fontSize: "18px",
-    lineHeight: lineHeights.snug,
-  },
-  body: {
-    fontFamily: fonts.body,
-    fontWeight: fontWeights.regular,
-    fontSize: "16px",
-    lineHeight: lineHeights.relaxed,
-    color: colors.text.secondary,
-  },
-  small: {
-    fontFamily: fonts.body,
-    fontWeight: fontWeights.regular,
-    fontSize: "13.5px",
-    lineHeight: lineHeights.normal,
-    color: colors.text.muted,
-  },
+const variantClass: Record<TextVariant, string> = {
+  display:
+    "font-heading font-extrabold text-display tracking-tighter leading-tight text-fg",
+  h1: "font-heading font-extrabold text-heading tracking-tight leading-tight text-fg",
+  h2: "font-heading font-bold text-2xl tracking-snug leading-snug text-fg",
+  h3: "font-heading font-bold text-xl leading-snug text-fg",
+  body: "font-body text-lg leading-relaxed text-fg-muted",
+  small: "font-body text-md leading-normal text-fg-soft",
 };
 
 /**
@@ -63,12 +28,7 @@ const variantStyle: Record<TextVariant, CSSProperties> = {
  * Renders the semantic element for its `variant` (Bricolage for headings,
  * Hanken for body), or an explicit element via `as`.
  */
-export function Text({ as, variant = "body", style, ...props }: TextProps) {
+export function Text({ as, variant = "body", className, ...props }: TextProps) {
   const Tag = (as ?? variantTag[variant]) as ElementType;
-  return (
-    <Tag
-      style={{ color: colors.text.primary, ...variantStyle[variant], ...style }}
-      {...props}
-    />
-  );
+  return <Tag className={cn(variantClass[variant], className)} {...props} />;
 }

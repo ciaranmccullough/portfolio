@@ -1,36 +1,31 @@
-import type { CSSProperties } from "react";
+import type { ElementType } from "react";
 
-import { colors, fontWeights } from "@portfolio/tokens";
-
+import { cn } from "../../cn";
 import type { LinkProps, LinkVariant } from "./Link.types";
 
-const variantStyle: Record<LinkVariant, CSSProperties> = {
-  nav: { color: colors.text.secondary, textDecoration: "none" },
-  inline: {
-    color: colors.ink,
-    textDecoration: "none",
-    borderBottom: `2px solid ${colors.brand.violet}`,
-    paddingBottom: "2px",
-  },
+const variantClass: Record<LinkVariant, string> = {
+  nav: "text-fg-muted no-underline",
+  inline: "text-fg no-underline border-b-2 border-brand-violet pb-0.5",
 };
 
-/** Link — the anchor atom. Nav links and underlined inline links. */
+/**
+ * Link — the anchor atom. A styled `<a>` by default; pass `as` (e.g. the app's
+ * `next/link`) to keep these styles on a routing component.
+ */
 export function Link({
+  as,
   variant = "nav",
-  style,
+  className,
   children,
   ...props
 }: LinkProps) {
+  const Tag = (as ?? "a") as ElementType;
   return (
-    <a
-      style={{
-        fontWeight: fontWeights.semibold,
-        ...variantStyle[variant],
-        ...style,
-      }}
+    <Tag
+      className={cn("font-semibold", variantClass[variant], className)}
       {...props}
     >
       {children}
-    </a>
+    </Tag>
   );
 }
