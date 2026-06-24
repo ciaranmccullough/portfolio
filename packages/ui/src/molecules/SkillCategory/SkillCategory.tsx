@@ -1,5 +1,4 @@
-import { colors, fonts, fontWeights, radii } from "@portfolio/tokens";
-
+import { cn } from "../../cn";
 import type { SkillCategoryProps } from "./SkillCategory.types";
 
 /**
@@ -9,55 +8,25 @@ import type { SkillCategoryProps } from "./SkillCategory.types";
 export function SkillCategory({
   title,
   children,
-  style,
+  className,
   ...props
 }: SkillCategoryProps) {
   return (
     <section
-      style={{
-        background: colors.tint.violet,
-        border: `1px solid ${colors.border.default}`,
-        borderRadius: radii.xl,
-        padding: "16px",
-        ...style,
-      }}
+      className={cn(
+        "rounded-2xl border border-line bg-tint-violet p-4",
+        className,
+      )}
       {...props}
     >
-      <h3
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "9px",
-          margin: "0 0 12px",
-          fontFamily: fonts.heading,
-          fontWeight: fontWeights.bold,
-          fontSize: "16px",
-          color: colors.brand.violet,
-        }}
-      >
+      <h3 className="mb-3 flex items-center gap-2 font-heading text-lg font-bold text-brand-violet">
         <span
           aria-hidden="true"
-          style={{
-            width: "11px",
-            height: "11px",
-            borderRadius: "50%",
-            background: colors.brand.violet,
-          }}
+          className="size-2.5 rounded-full bg-brand-violet"
         />
         {title}
       </h3>
-      <ul
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "7px",
-          listStyle: "none",
-          margin: 0,
-          padding: 0,
-        }}
-      >
-        {children}
-      </ul>
+      <ul className="flex list-none flex-wrap gap-1.5">{children}</ul>
     </section>
   );
 }

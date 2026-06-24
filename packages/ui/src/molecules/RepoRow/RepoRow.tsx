@@ -1,56 +1,30 @@
-import { colors, fonts, fontWeights, radii } from "@portfolio/tokens";
-
+import { cn } from "../../cn";
 import type { RepoRowProps } from "./RepoRow.types";
 
 /**
  * RepoRow — a repository link: status dot, name and star count in one anchor.
  * Renders an `<li>`; place inside a `<ul>`.
  */
-export function RepoRow({ name, href, stars, style, ...props }: RepoRowProps) {
+export function RepoRow({
+  name,
+  href,
+  stars,
+  className,
+  ...props
+}: RepoRowProps) {
   return (
-    <li style={{ listStyle: "none", ...style }} {...props}>
+    <li className={cn("list-none", className)} {...props}>
       <a
         href={href}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "12px",
-          background: colors.card,
-          border: `1px solid ${colors.border.default}`,
-          borderRadius: radii.md,
-          padding: "12px 14px",
-          textDecoration: "none",
-          color: colors.text.primary,
-        }}
+        className="flex items-center gap-3 rounded-md border border-line bg-card px-3.5 py-3 text-fg no-underline"
       >
         <span
           aria-hidden="true"
-          style={{
-            width: "9px",
-            height: "9px",
-            borderRadius: "50%",
-            background: colors.brand.violet,
-            flex: "none",
-          }}
+          className="size-2 shrink-0 rounded-full bg-brand-violet"
         />
-        <span
-          style={{
-            fontFamily: fonts.mono,
-            fontWeight: fontWeights.bold,
-            fontSize: "13.5px",
-          }}
-        >
-          {name}
-        </span>
+        <span className="font-mono text-sm font-bold">{name}</span>
         {stars != null ? (
-          <span
-            style={{
-              marginLeft: "auto",
-              fontSize: "13px",
-              fontWeight: fontWeights.semibold,
-              color: colors.text.secondary,
-            }}
-          >
+          <span className="ml-auto text-sm font-semibold text-fg-muted">
             <span aria-hidden="true">★ </span>
             {stars}
           </span>

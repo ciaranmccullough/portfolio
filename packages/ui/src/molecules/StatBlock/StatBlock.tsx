@@ -1,44 +1,27 @@
-import { colors, fonts, fontWeights, radii } from "@portfolio/tokens";
-
+import { cn } from "../../cn";
 import type { StatBlockProps } from "./StatBlock.types";
 
 /**
  * StatBlock — a number paired with a label. Renders an `<li>`; place in a list.
  */
-export function StatBlock({ value, label, style, ...props }: StatBlockProps) {
+export function StatBlock({
+  value,
+  label,
+  className,
+  ...props
+}: StatBlockProps) {
   return (
     <li
-      style={{
-        listStyle: "none",
-        background: colors.card,
-        border: `1px solid ${colors.border.default}`,
-        borderRadius: radii.xl,
-        padding: "15px 16px",
-        ...style,
-      }}
+      className={cn(
+        "list-none rounded-2xl border border-line bg-card p-4",
+        className,
+      )}
       {...props}
     >
-      <strong
-        style={{
-          display: "block",
-          fontFamily: fonts.heading,
-          fontWeight: fontWeights.extrabold,
-          fontSize: "26px",
-          letterSpacing: "-0.02em",
-          color: colors.text.primary,
-        }}
-      >
+      <strong className="block font-heading text-3xl font-extrabold tracking-snug text-fg">
         {value}
       </strong>
-      <span
-        style={{
-          display: "block",
-          marginTop: "2px",
-          fontFamily: fonts.body,
-          fontSize: "13px",
-          color: colors.text.muted,
-        }}
-      >
+      <span className="mt-0.5 block font-body text-sm text-fg-soft">
         {label}
       </span>
     </li>

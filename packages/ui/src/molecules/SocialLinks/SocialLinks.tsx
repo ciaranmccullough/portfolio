@@ -1,36 +1,21 @@
-import { colors } from "@portfolio/tokens";
-
-import { Link } from "../../atoms";
+import { cn } from "../../cn";
 import type { SocialLinksProps } from "./SocialLinks.types";
 
 /**
- * SocialLinks — a row of underlined off-site links for the contact panel.
+ * SocialLinks — a row of underlined off-site links for the (dark) contact panel.
+ * Renders anchors directly: the styling differs from the Link atom's variants.
  */
-export function SocialLinks({ items, style, ...props }: SocialLinksProps) {
+export function SocialLinks({ items, className, ...props }: SocialLinksProps) {
   return (
-    <ul
-      style={{
-        display: "flex",
-        gap: "22px",
-        listStyle: "none",
-        margin: 0,
-        padding: 0,
-        ...style,
-      }}
-      {...props}
-    >
+    <ul className={cn("flex list-none gap-5.5", className)} {...props}>
       {items.map((item) => (
         <li key={item.href}>
-          <Link
+          <a
             href={item.href}
-            style={{
-              color: colors.text.muted,
-              borderBottom: `1px solid ${colors.border.dark}`,
-              paddingBottom: "2px",
-            }}
+            className="border-b border-line-dark pb-0.5 font-semibold text-fg-on-dark no-underline"
           >
             {item.label}
-          </Link>
+          </a>
         </li>
       ))}
     </ul>
