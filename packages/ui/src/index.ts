@@ -5,3 +5,4 @@
  *   atoms / molecules / organisms / templates
  */
 export * from "./atoms";
+export * from "./molecules";
