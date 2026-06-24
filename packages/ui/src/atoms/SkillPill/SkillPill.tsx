@@ -1,13 +1,12 @@
-import { colors, fonts, fontWeights, radii, shadows } from "@portfolio/tokens";
-
+import { cn } from "../../cn";
 import type { SkillPillProps, SkillPillTone } from "./SkillPill.types";
 
-const toneBg: Record<SkillPillTone, string> = {
-  android: colors.accent.android,
-  react: colors.accent.react,
-  violet: colors.brand.violet,
-  orange: colors.brand.orange,
-  green: colors.brand.green,
+const toneClass: Record<SkillPillTone, string> = {
+  android: "bg-accent-android",
+  react: "bg-accent-react",
+  violet: "bg-brand-violet",
+  orange: "bg-brand-orange",
+  green: "bg-brand-green",
 };
 
 /**
@@ -17,28 +16,17 @@ const toneBg: Record<SkillPillTone, string> = {
 export function SkillPill({
   tone = "android",
   icon,
-  style,
+  className,
   children,
   ...props
 }: SkillPillProps) {
   return (
     <li
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "6px",
-        listStyle: "none",
-        background: toneBg[tone],
-        color: colors.ink,
-        border: `1.5px solid ${colors.ink}`,
-        borderRadius: radii.lg,
-        padding: "8px 13px",
-        fontFamily: fonts.mono,
-        fontWeight: fontWeights.bold,
-        fontSize: "13px",
-        boxShadow: shadows.brutal,
-        ...style,
-      }}
+      className={cn(
+        "inline-flex list-none items-center gap-1.5 rounded-lg border-[1.5px] border-ink px-3 py-2 font-mono text-sm font-bold text-ink shadow-brutal",
+        toneClass[tone],
+        className,
+      )}
       {...props}
     >
       {icon}

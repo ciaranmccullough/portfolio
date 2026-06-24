@@ -1,28 +1,27 @@
-import { colors, fonts, fontWeights } from "@portfolio/tokens";
-
+import { cn } from "../../cn";
 import type { EyebrowProps, EyebrowTone } from "./Eyebrow.types";
 
-const toneColor: Record<EyebrowTone, string> = {
-  violet: colors.brand.violet,
-  orange: colors.brand.orange,
-  green: colors.brand.green,
+const toneClass: Record<EyebrowTone, string> = {
+  violet: "text-brand-violet",
+  orange: "text-brand-orange",
+  green: "text-brand-green",
 };
 
 /**
  * Eyebrow — a mono, uppercase kicker that sits above a heading. Renders a `<p>`.
  */
-export function Eyebrow({ tone = "violet", style, ...props }: EyebrowProps) {
+export function Eyebrow({
+  tone = "violet",
+  className,
+  ...props
+}: EyebrowProps) {
   return (
     <p
-      style={{
-        fontFamily: fonts.mono,
-        fontWeight: fontWeights.bold,
-        fontSize: "13px",
-        letterSpacing: "0.06em",
-        textTransform: "uppercase",
-        color: toneColor[tone],
-        ...style,
-      }}
+      className={cn(
+        "font-mono text-sm font-bold uppercase tracking-wider",
+        toneClass[tone],
+        className,
+      )}
       {...props}
     />
   );
