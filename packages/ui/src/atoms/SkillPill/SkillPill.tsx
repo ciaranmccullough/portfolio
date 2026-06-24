@@ -23,7 +23,7 @@ export function SkillPill({
   return (
     <li
       className={cn(
-        "inline-flex list-none items-center gap-1.5 rounded-lg border-[1.5px] border-ink px-3 py-2 font-mono text-sm font-bold text-ink shadow-brutal",
+        "inline-flex list-none items-center gap-1.5 rounded-lg border-2 border-ink px-3 py-2 font-mono text-sm font-bold text-ink shadow-brutal",
         toneClass[tone],
         className,
       )}

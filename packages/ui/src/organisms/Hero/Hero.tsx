@@ -20,11 +20,11 @@ export function Hero({
       {...props}
     >
       {badge ? <Eyebrow className="mb-4">{badge}</Eyebrow> : null}
-      <Text variant="display" className="max-w-[18ch]">
+      <Text variant="display" className="max-w-2xl">
         {title}
       </Text>
       {intro ? (
-        <Text variant="body" className="mt-5 max-w-[62ch]">
+        <Text variant="body" className="mt-5 max-w-prose">
           {intro}
         </Text>
       ) : null}

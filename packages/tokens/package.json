@@ -2,29 +2,11 @@
   "name": "@portfolio/tokens",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
-  "description": "Design primitives (colors, spacing, typography) for the design system.",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "description": "Design tokens — the shared Tailwind v4 @theme for the design system.",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
-    },
     "./theme.css": "./theme.css"
   },
   "files": [
-    "dist",
     "theme.css"
-  ],
-  "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "clean": "rm -rf dist"
-  },
-  "devDependencies": {
-    "@portfolio/config": "workspace:*",
-    "typescript": "^5.4.5"
-  }
+  ]
 }
