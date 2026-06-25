@@ -22,12 +22,9 @@
     "resumeLabel": "Résumé"
   },
   "work": {
-    "projects": [
-      { "title": "Helix", "tags": ["TypeScript", "React", "Compose"] },
-      { "title": "Fieldbase", "tags": ["React Native", "Kotlin", "SQLite"] },
-      { "title": "Ledgerly", "tags": ["Next.js", "Node", "Postgres"] },
-      { "title": "Pulse", "tags": ["Kotlin", "Compose", "Coroutines"] }
-    ]
+    "eyebrow": "01 — Selected work",
+    "title": "Things I've shipped",
+    "meta": "// 2 of many"
   },
   "toolbox": {
     "categories": [

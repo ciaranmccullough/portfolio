@@ -13,10 +13,30 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
+    eyebrow: "01 — Selected work",
+    title: "Things I've shipped",
+    meta: "// 3 of many",
     projects: [
-      { title: "Enterprise design system", tags: ["TypeScript", "React"] },
-      { title: "Mobile banking app", tags: ["Kotlin", "Android"] },
-      { title: "Realtime dashboard", tags: ["Next.js", "WebSockets"] },
+      {
+        title: "Enterprise design system",
+        description:
+          "A cross-platform component library powering 20+ internal apps, with shared tokens and full accessibility.",
+        tags: ["TypeScript", "React"],
+        href: "#",
+      },
+      {
+        title: "Mobile banking app",
+        description:
+          "Offline-first banking with native Android modules and conflict-free background sync.",
+        tags: ["Kotlin", "Android"],
+        href: "#",
+      },
+      {
+        title: "Realtime dashboard",
+        description: "Live metrics streamed over WebSockets at a steady 60fps.",
+        tags: ["Next.js", "WebSockets"],
+        href: "#",
+      },
     ],
   },
 };

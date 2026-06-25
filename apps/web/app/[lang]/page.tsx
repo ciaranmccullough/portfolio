@@ -16,6 +16,7 @@ import { ErrorScreen } from "../components/ErrorScreen/ErrorScreen";
 import { SiteNav } from "../components/SiteNav/SiteNav";
 import { getTranslations } from "./dictionaries";
 import { heroTabs } from "../data/heroTabs";
+import { projects } from "../data/projects";
 import { getEntryCount, getHero } from "@/lib/contentful";
 
 export default async function HomePage({
@@ -83,7 +84,13 @@ export default async function HomePage({
         </Hero>
 
         {/* #work */}
-        <WorkGrid id="work" projects={dict.work.projects} />
+        <WorkGrid
+          id="work"
+          eyebrow={dict.work.eyebrow}
+          title={dict.work.title}
+          meta={dict.work.meta}
+          projects={projects}
+        />
 
         {/* #stack */}
         <Toolbox id="stack">
