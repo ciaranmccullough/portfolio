@@ -15,8 +15,9 @@ import {
 
 import type { Locale } from "../../i18n-config";
 import { getDictionary } from "./dictionaries";
+import { heroTabs } from "./heroTabs";
 import { SiteNav } from "./SiteNav";
-import { getEntriesSafe } from "@/lib/contentful";
+import { getEntriesSafe, getHeroSafe } from "@/lib/contentful";
 
 export default async function HomePage({
   params,
@@ -26,8 +27,10 @@ export default async function HomePage({
   const { lang } = await params;
   const dict = await getDictionary(lang as Locale);
 
-  // Pull content from Contentful. With no credentials the helper returns null
-  // (no network at build time), so the production build stays green.
+  // Pull content from Contentful. The Hero text comes from the "project" content
+  // type; both helpers fall back safely (no creds / no network / invalid token)
+  // so the production build stays green.
+  const hero = await getHeroSafe();
   const entries = await getEntriesSafe();
   const entryCount = entries ? entries.items.length : null;
 
@@ -49,12 +52,15 @@ export default async function HomePage({
         <Hero
           id="top"
           badge={dict.hero.badge}
-          title={dict.hero.title}
-          intro={dict.hero.intro}
+          title={hero.title}
+          intro={hero.description}
+          tabs={heroTabs}
         >
           <CtaGroup>
             <Button variant="primary">{dict.hero.viewWork}</Button>
-            <Button variant="ghost">{dict.hero.resume}</Button>
+            <Link href={hero.resume} variant="cta">
+              {dict.hero.resumeLabel}
+            </Link>
           </CtaGroup>
         </Hero>
 

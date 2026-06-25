@@ -80,4 +80,21 @@
 
   /* ---- Shadows ---- */
   --shadow-brutal: 3px 3px 0 #17161d;
+
+  /* ---- Animation ---- */
+  /* Gentle bob for the hero's floating tech tabs (gate with motion-safe:). */
+  --animate-floaty: floaty 6.4s ease-in-out infinite;
+  --animate-floaty-2: floaty 7.6s ease-in-out -1.2s infinite;
+  --animate-floaty-3: floaty 8s ease-in-out -2.4s infinite;
+  --animate-floaty-4: floaty 6.9s ease-in-out -3.6s infinite;
+
+  @keyframes floaty {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-14px);
+    }
+  }
 }

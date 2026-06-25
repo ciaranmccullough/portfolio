@@ -14,10 +14,8 @@
   },
   "hero": {
     "badge": "Available for work",
-    "title": "Software engineer building polished product UI.",
-    "intro": "I design and ship accessible interfaces with a focus on craft, performance, and a tidy design system.",
     "viewWork": "View work ↘",
-    "resume": "Résumé"
+    "resumeLabel": "Résumé"
   },
   "work": {
     "projects": [
