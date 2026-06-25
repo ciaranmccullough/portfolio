@@ -1,7 +1,10 @@
 import { unstable_cache } from "next/cache";
 
 import { mapHero } from "@/mappers/heroMapper";
-import { fetchEntryCount, fetchHeroEntry } from "@/services/contentful";
+import {
+  fetchEntryCount,
+  fetchHeroEntry,
+} from "@/services/contentful/contentful";
 import type { Hero } from "@/types/hero";
 
 /**

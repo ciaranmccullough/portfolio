@@ -4,18 +4,17 @@ import {
   type EntrySkeletonType,
 } from "contentful";
 
-import type { RawHeroFields } from "@/types/hero";
+// --- Client ---------------------------------------------------------------
 
 const spaceId = process.env.CONTENTFUL_SPACE_ID;
 const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN;
 const environment = process.env.CONTENTFUL_ENVIRONMENT ?? "master";
 
 /**
- * The project's single Contentful Content Delivery API client — the global
- * API-client instance (the Axios/fetch-instance equivalent). Server-only: the
- * access token is never exposed to the browser. Placeholder values keep
- * `createClient` happy when credentials are absent; only a real request needs
- * valid ones.
+ * The project's single Contentful Content Delivery API client (the global
+ * API-client instance). Server-only — the access token is never exposed to the
+ * browser. Placeholder values keep `createClient` happy when credentials are
+ * absent; only a real request needs valid ones.
  */
 export const contentfulClient = createClient({
   space: spaceId ?? "missing-space-id",
@@ -26,6 +25,15 @@ export const contentfulClient = createClient({
 /** True only when real Contentful credentials are configured via the env. */
 export const hasContentfulCredentials = Boolean(spaceId && accessToken);
 
+// --- Response (DTOs) ------------------------------------------------------
+
+/** Raw "project" (Hero) entry fields, exactly as the Delivery API returns them. */
+export interface RawHeroFields {
+  title: string;
+  description: string;
+  resume: string;
+}
+
 type ProjectSkeleton = EntrySkeletonType<
   {
     title: EntryFieldTypes.Symbol;
@@ -34,6 +42,8 @@ type ProjectSkeleton = EntrySkeletonType<
   },
   "project"
 >;
+
+// --- Service --------------------------------------------------------------
 
 /**
  * Fetch the raw "project" (Hero) entry fields. Returns `null` when credentials
