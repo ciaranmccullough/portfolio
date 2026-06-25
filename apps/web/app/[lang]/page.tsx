@@ -1,8 +1,6 @@
 import {
   About,
-  Button,
   Contact,
-  CtaGroup,
   Footer,
   FormField,
   Hero,
@@ -56,12 +54,9 @@ export default async function HomePage({
           intro={hero.description}
           tabs={heroTabs}
         >
-          <CtaGroup>
-            <Button variant="primary">{dict.hero.viewWork}</Button>
-            <Link href={hero.resume} variant="cta">
-              {dict.hero.resumeLabel}
-            </Link>
-          </CtaGroup>
+          <Link href={hero.resume} variant="cta">
+            {dict.hero.resumeLabel}
+          </Link>
         </Hero>
 
         {/* #work */}
