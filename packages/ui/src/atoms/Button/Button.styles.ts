@@ -1,11 +1,12 @@
 import type { ButtonSize, ButtonVariant } from "./Button.types";
 
-export const buttonBase = "cursor-pointer font-body font-semibold";
+export const buttonBase =
+  "cursor-pointer font-body font-semibold transition hover:-translate-y-px";
 
 export const buttonVariant: Record<ButtonVariant, string> = {
-  primary: "bg-brand-violet text-white",
-  dark: "bg-ink text-fg-inverse",
-  ghost: "border border-line-strong bg-transparent text-ink",
+  primary: "bg-brand-violet text-white hover:opacity-90",
+  dark: "bg-ink text-fg-inverse hover:opacity-90",
+  ghost: "border border-line-strong bg-transparent text-ink hover:bg-chip",
 };
 
 export const buttonSize: Record<ButtonSize, string> = {

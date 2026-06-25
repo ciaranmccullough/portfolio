@@ -7,7 +7,6 @@ import {
   FormField,
   Hero,
   Link,
-  Navbar,
   SkillCategory,
   Tag,
   Toolbox,
@@ -16,6 +15,7 @@ import {
 
 import type { Locale } from "../../i18n-config";
 import { getDictionary } from "./dictionaries";
+import { SiteNav } from "./SiteNav";
 import { getEntriesSafe } from "@/lib/contentful";
 
 export default async function HomePage({
@@ -33,8 +33,9 @@ export default async function HomePage({
 
   return (
     <>
-      <Navbar
+      <SiteNav
         brand={dict.nav.brand}
+        brandHref="#top"
         items={dict.nav.links}
         cta={
           <Link href={dict.nav.cta.href} variant="cta">

@@ -13,6 +13,7 @@
     "@portfolio/tokens": "workspace:*",
     "@portfolio/ui": "workspace:*",
     "contentful": "^10.15.1",
+    "motion": "^12.41.0",
     "negotiator": "^1.0.0",
     "next": "^16.2.9",
     "react": "^19.2.7",

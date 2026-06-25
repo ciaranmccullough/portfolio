@@ -1,10 +1,11 @@
 export const navbarClass =
-  "sticky top-0 z-50 border-b border-line-soft bg-paper/70 backdrop-blur-md";
+  "border-b border-line-soft bg-paper/70 backdrop-blur-md";
 
 export const navbarInnerClass =
   "mx-auto flex max-w-5xl items-center justify-between px-6 py-4";
 
-export const navbarBrandClass = "font-heading text-lg font-extrabold text-fg";
+export const navbarBrandClass =
+  "font-heading text-lg font-extrabold text-fg transition-colors hover:text-brand-violet";
 
 export const navbarDesktopClass = "hidden items-center gap-6 md:flex";
 

@@ -35,6 +35,7 @@ const menuIcon = (
  */
 export function Navbar({
   brand,
+  brandHref,
   items,
   cta,
   className,
@@ -45,7 +46,13 @@ export function Navbar({
   return (
     <header className={cn(navbarClass, className)} {...props}>
       <div className={navbarInnerClass}>
-        <span className={navbarBrandClass}>{brand}</span>
+        {brandHref ? (
+          <a href={brandHref} className={navbarBrandClass}>
+            {brand}
+          </a>
+        ) : (
+          <span className={navbarBrandClass}>{brand}</span>
+        )}
         <div className={navbarDesktopClass}>
           <NavGroup aria-label="Primary" items={items} />
           {cta}
