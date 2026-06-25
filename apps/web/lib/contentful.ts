@@ -14,18 +14,6 @@ import type { Hero } from "@/types/hero";
  */
 const REVALIDATE_SECONDS = 3600;
 
-/**
- * Served when Contentful is unreachable (no credentials, network failure or an
- * invalid token) so the build and runtime always have content. Swap the env
- * token for a Content Delivery API key to serve live data.
- */
-const HERO_FALLBACK: Hero = {
-  title: "Hello, I am Ciaran and I'm a Software Engineer from London",
-  description:
-    "Frontend engineer with 5+ years experience building enterprise applications with speed, precision and craft.",
-  resumeUrl: "#",
-};
-
 const getHeroCached = unstable_cache(
   async () => {
     const raw = await fetchHeroEntry();
@@ -37,14 +25,14 @@ const getHeroCached = unstable_cache(
 
 /**
  * Server-side data access for the Hero: fetch (service) → map (mapper), cached
- * as ISR, with a fallback so the page always renders. This is the
- * server-rendered equivalent of a client data-fetching hook.
+ * as ISR. Returns `null` when the entry is missing or the request fails — the
+ * page renders an error screen rather than fake fallback content.
  */
-export async function getHero(): Promise<Hero> {
+export async function getHero(): Promise<Hero | null> {
   try {
-    return (await getHeroCached()) ?? HERO_FALLBACK;
+    return await getHeroCached();
   } catch {
-    return HERO_FALLBACK;
+    return null;
   }
 }
 

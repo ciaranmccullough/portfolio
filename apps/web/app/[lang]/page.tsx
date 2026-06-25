@@ -12,6 +12,7 @@ import {
 
 import type { Locale } from "../../i18n-config";
 import { ContactForm } from "../components/ContactForm/ContactForm";
+import { ErrorScreen } from "../components/ErrorScreen/ErrorScreen";
 import { SiteNav } from "../components/SiteNav/SiteNav";
 import { getDictionary } from "./dictionaries";
 import { heroTabs } from "../data/heroTabs";
@@ -25,10 +26,21 @@ export default async function HomePage({
   const { lang } = await params;
   const dict = await getDictionary(lang as Locale);
 
-  // Server-side Contentful data access (services -> mappers -> here). Both
-  // helpers fall back safely (no creds / network / invalid token) so the build
-  // stays green.
+  // Server-side Contentful data access (services -> mappers -> here). getHero
+  // returns null when Contentful is unreachable; show an error screen rather
+  // than fake fallback content.
   const hero = await getHero();
+  if (!hero) {
+    return (
+      <ErrorScreen
+        eyebrow={dict.error.eyebrow}
+        title={dict.error.title}
+        message={dict.error.message}
+        retryLabel={dict.error.retry}
+      />
+    );
+  }
+
   const entryCount = await getEntryCount();
 
   return (

@@ -3,6 +3,12 @@
     "title": "Portfolio",
     "description": "Software Engineer Portfolio — Next.js App Router + Contentful."
   },
+  "error": {
+    "eyebrow": "Error",
+    "title": "Something went wrong",
+    "message": "We couldn't load this page right now. Please try again in a moment.",
+    "retry": "Reload"
+  },
   "nav": {
     "brand": "Ciaran",
     "links": [
