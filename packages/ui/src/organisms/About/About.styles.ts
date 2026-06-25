@@ -1,4 +1,4 @@
-export const aboutClass = "mx-auto max-w-5xl px-6 py-16";
+export const aboutClass = "mx-auto max-w-7xl px-6 py-16 sm:px-10 lg:px-14";
 
 export const aboutGridClass = "grid grid-cols-1 gap-8 sm:grid-cols-[200px_1fr]";
 

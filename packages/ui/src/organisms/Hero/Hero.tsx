@@ -10,6 +10,7 @@ import {
   heroTabClass,
   heroTabFloat,
   heroTabIconClass,
+  heroTabSlant,
   heroTabsClass,
   heroTitleClass,
 } from "./Hero.styles";
@@ -51,6 +52,7 @@ export function Hero({
                 heroTabClass,
                 heroTabFloat[index % heroTabFloat.length],
                 heroTabAlign[index % heroTabAlign.length],
+                heroTabSlant[index % heroTabSlant.length],
                 tab.className,
               )}
             >

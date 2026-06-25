@@ -34,7 +34,10 @@ export default async function RootLayout({
   const { lang } = await params;
   return (
     <html lang={lang}>
-      <body>{children}</body>
+      <body className="bg-paper">
+        <div className="page-texture" aria-hidden="true" />
+        {children}
+      </body>
     </html>
   );
 }

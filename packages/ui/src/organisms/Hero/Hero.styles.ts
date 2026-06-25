@@ -1,5 +1,5 @@
 export const heroClass =
-  "mx-auto max-w-5xl px-6 py-16 md:flex md:items-start md:justify-between md:gap-12";
+  "mx-auto max-w-7xl px-6 py-16 sm:px-10 lg:px-14 md:flex md:items-start md:justify-between md:gap-12";
 export const heroContentClass = "min-w-0";
 export const heroBadgeClass = "mb-4";
 export const heroTitleClass = "max-w-2xl";
@@ -20,6 +20,20 @@ export const heroTabAlign = [
   "md:self-center",
   "md:self-end",
   "md:self-start",
+];
+
+/**
+ * Per-tab slant on md+, mirroring the design's scattered rotations. Tailwind v4's
+ * `rotate-*` sets the `rotate` longhand, so it composes with the float animation's
+ * `transform` rather than fighting it. md-gated so the mobile wrapped row stays
+ * upright (as in the design).
+ */
+export const heroTabSlant = [
+  "md:rotate-[-6deg]",
+  "md:rotate-[7deg]",
+  "md:rotate-[5deg]",
+  "md:rotate-[-8deg]",
+  "md:rotate-[8deg]",
 ];
 
 /** Per-tab background colour is supplied by the consumer via `tab.className`. */

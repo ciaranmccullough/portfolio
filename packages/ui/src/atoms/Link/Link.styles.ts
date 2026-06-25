@@ -9,4 +9,8 @@ export const linkVariant: Record<LinkVariant, string> = {
   cta: "rounded-full bg-ink px-4 py-2 text-fg-inverse no-underline hover:-translate-y-px hover:bg-line-dark",
   primary:
     "inline-flex items-center gap-1.5 rounded-xl bg-brand-violet px-5.5 py-3 text-base text-white no-underline shadow-brand hover:-translate-y-0.5 hover:bg-brand-violet-dark",
+  // Dark-surface inline link (e.g. the Contact panel's socials): a quiet 1px
+  // underline that brightens and turns violet on hover.
+  social:
+    "border-b border-line-dark pb-0.5 text-fg-on-dark no-underline hover:border-brand-violet hover:text-fg-inverse",
 };

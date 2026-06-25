@@ -6,7 +6,6 @@ import { useRef, useState, type FormEvent } from "react";
 import {
   contactFormActionsClass,
   contactFormClass,
-  contactFormClearButtonClass,
   contactFormSuccessButtonClass,
   contactFormSuccessClass,
   contactFormSuccessMessageClass,
@@ -144,7 +143,7 @@ export function ContactForm({
           {successMessage}
         </Text>
         <Button
-          variant="dark"
+          variant="ghost-dark"
           className={contactFormSuccessButtonClass}
           onClick={handleSendAnother}
         >
@@ -197,12 +196,7 @@ export function ContactForm({
         <Button type="submit" variant="primary" disabled={!canSubmit}>
           {submitLabel}
         </Button>
-        <Button
-          type="button"
-          variant="dark"
-          className={contactFormClearButtonClass}
-          onClick={handleClear}
-        >
+        <Button type="button" variant="ghost-dark" onClick={handleClear}>
           {clearLabel}
         </Button>
       </div>

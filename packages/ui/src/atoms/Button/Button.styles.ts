@@ -7,6 +7,10 @@ export const buttonVariant: Record<ButtonVariant, string> = {
   primary: "bg-brand-violet text-white hover:opacity-90",
   dark: "bg-ink text-fg-inverse hover:opacity-90",
   ghost: "border border-line-strong bg-transparent text-ink hover:bg-chip",
+  // Quiet secondary on a dark panel: transparent with a subtle border that
+  // turns violet on hover (e.g. the Contact form's Clear / Send-another).
+  "ghost-dark":
+    "border border-line-dark bg-transparent text-fg-on-dark hover:border-brand-violet hover:text-fg-inverse",
 };
 
 export const buttonSize: Record<ButtonSize, string> = {

@@ -17,3 +17,13 @@ export const Nav: Story = { args: { children: "Work" } };
 export const Inline: Story = {
   args: { variant: "inline", children: "github.com/ciaran ↗" },
 };
+
+/** Dark-surface inline link (e.g. the Contact panel's socials). */
+export const Social: Story = {
+  args: { variant: "social", children: "GitHub ↗" },
+  render: (args) => (
+    <div style={{ background: "#17161d", padding: 24 }}>
+      <Link {...args} />
+    </div>
+  ),
+};

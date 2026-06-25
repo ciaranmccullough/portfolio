@@ -19,7 +19,9 @@ const getHeroCached = unstable_cache(
     const raw = await fetchHeroEntry();
     return raw ? mapHero(raw) : null;
   },
-  ["contentful-hero"],
+  // -v2: the Hero shape changed (title: string -> TitleSegment[]); a fresh key
+  // avoids serving a stale, old-shaped cache entry after deploy.
+  ["contentful-hero-v2"],
   { revalidate: REVALIDATE_SECONDS, tags: ["contentful"] },
 );
 

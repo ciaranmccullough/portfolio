@@ -19,7 +19,6 @@
     "cta": { "label": "Let's talk", "href": "#contact" }
   },
   "hero": {
-    "badge": "Available for work",
     "resumeLabel": "Résumé"
   },
   "work": {

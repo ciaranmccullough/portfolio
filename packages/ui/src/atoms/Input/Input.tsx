@@ -3,7 +3,8 @@ import { inputClass } from "./Input.styles";
 import type { InputProps } from "./Input.types";
 
 /**
- * Input — uncontrolled text-field atom (dark surface, violet border).
+ * Input — uncontrolled text-field atom (dark surface, subtle border that turns
+ * violet on focus).
  *
  * Pass a `ref` and `defaultValue` and read the value from the DOM. The native
  * focus outline is preserved for keyboard accessibility.

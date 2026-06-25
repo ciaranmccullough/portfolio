@@ -46,11 +46,7 @@ export function Contact({
               <ul className={contactSocialsClass}>
                 {socials.map((social) => (
                   <li key={social.href}>
-                    <Link
-                      href={social.href}
-                      variant="inline"
-                      className="text-fg-on-dark"
-                    >
+                    <Link href={social.href} variant="social">
                       {social.label}
                     </Link>
                   </li>

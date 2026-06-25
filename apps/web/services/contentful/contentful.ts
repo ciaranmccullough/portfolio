@@ -25,16 +25,36 @@ export const hasContentfulCredentials = Boolean(spaceId && accessToken);
 
 // --- Response (DTOs) ------------------------------------------------------
 
-/** Raw "project" (Hero) entry fields, exactly as the Delivery API returns them. */
+/** A node in a Contentful Rich Text document — only the parts we read for the
+ *  hero title (text runs and their marks; `content` for nested blocks). */
+export interface RichTextNode {
+  nodeType: string;
+  value?: string;
+  marks?: { type: string }[];
+  content?: RichTextNode[];
+}
+
+/** A Contentful Rich Text document (e.g. a formatted hero title). */
+export interface RichTextDocument {
+  nodeType: "document";
+  content: RichTextNode[];
+}
+
+/**
+ * Raw "project" (Hero) entry fields, exactly as the Delivery API returns them.
+ * `titleRichText` is the hero title as Rich Text, so specific words can be marked
+ * (bold) for highlighting. It's typed optional only defensively — an empty field
+ * renders an empty title rather than throwing.
+ */
 export interface RawHeroFields {
-  title: string;
+  titleRichText?: RichTextDocument;
   description: string;
   resume: string;
 }
 
 type ProjectSkeleton = EntrySkeletonType<
   {
-    title: EntryFieldTypes.Symbol;
+    titleRichText: EntryFieldTypes.RichText;
     description: EntryFieldTypes.Symbol;
     resume: EntryFieldTypes.Symbol;
   },
@@ -57,7 +77,8 @@ export async function fetchHeroEntry(): Promise<RawHeroFields | null> {
   const fields = res.items[0]?.fields;
   if (!fields) return null;
   return {
-    title: fields.title,
+    // Optional Rich Text field; undefined until it's filled in on the entry.
+    titleRichText: fields.titleRichText as RichTextDocument | undefined,
     description: fields.description,
     resume: fields.resume,
   };

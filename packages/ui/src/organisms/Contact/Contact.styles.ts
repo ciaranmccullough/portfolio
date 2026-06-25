@@ -1,7 +1,7 @@
-/* Section wrapper — aligns the dark panel with the page's px-6 content gutter.
-   (Previously the panel was itself max-w-5xl, so it stuck out 24px past every
-   other section's content.) */
-export const contactClass = "mx-auto max-w-5xl px-6";
+/* Section wrapper — aligns the dark panel with the shared page content width and
+   the px-6 gutter used by every other section. (The panel fills this wrapper
+   rather than carrying its own max-width, so it never sticks out past the rest.) */
+export const contactClass = "mx-auto max-w-7xl px-6 sm:px-10 lg:px-14";
 
 /* The dark panel. */
 export const contactPanelClass =

@@ -1,4 +1,4 @@
-export const workGridClass = "mx-auto max-w-5xl px-6 py-16";
+export const workGridClass = "mx-auto max-w-7xl px-6 py-16 sm:px-10 lg:px-14";
 
 export const workGridListClass =
   "grid list-none grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3";

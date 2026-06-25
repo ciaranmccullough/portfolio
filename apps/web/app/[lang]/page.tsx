@@ -9,6 +9,7 @@ import {
   Toolbox,
   WorkGrid,
 } from "@portfolio/ui";
+import { Fragment } from "react";
 
 import { ContactForm } from "../components/ContactForm/ContactForm";
 import { ErrorScreen } from "../components/ErrorScreen/ErrorScreen";
@@ -54,16 +55,28 @@ export default async function HomePage({
         }
       />
 
-      <main className="min-h-screen bg-paper">
+      <main className="relative z-10 min-h-screen">
         {/* #top — hero (the brand wordmark / return target) */}
         <Hero
           id="top"
-          badge={dict.hero.badge}
-          title={hero.title}
+          title={hero.title.map((segment, index) =>
+            segment.highlight ? (
+              <span key={index} className="text-brand-violet">
+                {segment.text}
+              </span>
+            ) : (
+              <Fragment key={index}>{segment.text}</Fragment>
+            ),
+          )}
           intro={hero.description}
           tabs={heroTabs}
         >
-          <Link href={hero.resumeUrl} variant="primary">
+          <Link
+            href={hero.resumeUrl}
+            variant="primary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {dict.hero.resumeLabel}
             <span aria-hidden="true">↗</span>
           </Link>

@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef, ElementType } from "react";
 
-export type LinkVariant = "nav" | "inline" | "cta" | "primary";
+export type LinkVariant = "nav" | "inline" | "cta" | "primary" | "social";
 
 /** Props for the {@link Link} atom. Extends native `<a>` attributes. */
 export interface LinkProps extends ComponentPropsWithoutRef<"a"> {
