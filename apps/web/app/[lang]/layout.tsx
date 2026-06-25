@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
-import { i18n, type Locale } from "../../i18n-config";
-import { getDictionary } from "./dictionaries";
+import { i18n } from "../../i18n-config";
+import { getTranslations } from "./dictionaries";
 
 import "../globals.css";
 
@@ -17,8 +17,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
-  const { lang } = await params;
-  const dict = await getDictionary(lang as Locale);
+  const dict = await getTranslations(params);
   return {
     title: dict.metadata.title,
     description: dict.metadata.description,

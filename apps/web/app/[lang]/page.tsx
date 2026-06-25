@@ -10,11 +10,10 @@ import {
   WorkGrid,
 } from "@portfolio/ui";
 
-import type { Locale } from "../../i18n-config";
 import { ContactForm } from "../components/ContactForm/ContactForm";
 import { ErrorScreen } from "../components/ErrorScreen/ErrorScreen";
 import { SiteNav } from "../components/SiteNav/SiteNav";
-import { getDictionary } from "./dictionaries";
+import { getTranslations } from "./dictionaries";
 import { heroTabs } from "../data/heroTabs";
 import { getEntryCount, getHero } from "@/lib/contentful";
 
@@ -23,8 +22,7 @@ export default async function HomePage({
 }: {
   params: Promise<{ lang: string }>;
 }) {
-  const { lang } = await params;
-  const dict = await getDictionary(lang as Locale);
+  const dict = await getTranslations(params);
 
   // Server-side Contentful data access (services -> mappers -> here). getHero
   // returns null when Contentful is unreachable; show an error screen rather
