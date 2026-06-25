@@ -7,11 +7,20 @@ export const heroIntroClass = "mt-5 max-w-prose";
 export const heroActionsClass = "mt-7";
 
 /**
- * Mobile: a wrapped row below the content. md+: a right-aligned vertical column
- * floating beside the content (ragged left edge mirrors the design's scatter).
+ * Mobile: a wrapped row below the content. md+: a fixed-width column beside the
+ * content within which the tabs scatter horizontally (see heroTabAlign).
  */
 export const heroTabsClass =
-  "mt-10 flex flex-wrap gap-3 md:mt-2 md:shrink-0 md:flex-col md:flex-nowrap md:items-end";
+  "mt-10 flex flex-wrap gap-3 md:mt-2 md:w-72 md:shrink-0 md:flex-col md:flex-nowrap md:gap-6";
+
+/** Per-tab cross-axis position on md+, mirroring the design's scattered lanes. */
+export const heroTabAlign = [
+  "md:self-end",
+  "md:self-start",
+  "md:self-center",
+  "md:self-end",
+  "md:self-start",
+];
 
 /** Per-tab background colour is supplied by the consumer via `tab.className`. */
 export const heroTabClass =

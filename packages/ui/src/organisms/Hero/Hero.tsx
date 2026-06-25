@@ -6,6 +6,7 @@ import {
   heroClass,
   heroContentClass,
   heroIntroClass,
+  heroTabAlign,
   heroTabClass,
   heroTabFloat,
   heroTabIconClass,
@@ -49,6 +50,7 @@ export function Hero({
               className={cn(
                 heroTabClass,
                 heroTabFloat[index % heroTabFloat.length],
+                heroTabAlign[index % heroTabAlign.length],
                 tab.className,
               )}
             >
