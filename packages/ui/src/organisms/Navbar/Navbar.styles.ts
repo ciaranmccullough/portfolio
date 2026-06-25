@@ -1,4 +1,5 @@
-export const navbarClass = "border-b border-line-soft bg-paper";
+export const navbarClass =
+  "sticky top-0 z-50 border-b border-line-soft bg-paper/70 backdrop-blur-md";
 
 export const navbarInnerClass =
   "mx-auto flex max-w-5xl items-center justify-between px-6 py-4";

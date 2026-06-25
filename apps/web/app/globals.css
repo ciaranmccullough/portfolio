@@ -3,3 +3,20 @@
 
 /* Scan the workspace UI library so its utility classes are generated. */
 @source "../../../packages/ui/src";
+
+/* Single-page wayfinding: smooth-scroll to in-page #section anchors. */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Offset id'd sections so the sticky navbar never overlaps their headings. */
+:where(section, header)[id] {
+  scroll-margin-top: 5.25rem;
+}
+
+/* Respect users who prefer reduced motion — jump instead of animate. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

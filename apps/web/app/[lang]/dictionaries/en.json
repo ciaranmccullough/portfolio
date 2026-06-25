@@ -3,6 +3,15 @@
     "title": "Portfolio",
     "description": "Software Engineer Portfolio — Next.js App Router + Contentful."
   },
+  "nav": {
+    "brand": "Ciaran",
+    "links": [
+      { "label": "Work", "href": "#work" },
+      { "label": "Stack", "href": "#stack" },
+      { "label": "About", "href": "#about" }
+    ],
+    "cta": { "label": "Let's talk", "href": "#contact" }
+  },
   "hero": {
     "badge": "Available for work",
     "title": "Software engineer building polished product UI.",
@@ -10,12 +19,43 @@
     "viewWork": "View work ↘",
     "resume": "Résumé"
   },
+  "work": {
+    "projects": [
+      { "title": "Helix", "tags": ["TypeScript", "React", "Compose"] },
+      { "title": "Fieldbase", "tags": ["React Native", "Kotlin", "SQLite"] },
+      { "title": "Ledgerly", "tags": ["Next.js", "Node", "Postgres"] },
+      { "title": "Pulse", "tags": ["Kotlin", "Compose", "Coroutines"] }
+    ]
+  },
   "toolbox": {
     "categories": [
       { "title": "Languages", "skills": ["TypeScript", "Kotlin"] },
       { "title": "Frameworks", "skills": ["React", "Next.js"] },
       { "title": "Tooling", "skills": ["Vite", "Storybook"] }
     ]
+  },
+  "about": {
+    "bio": "I'm a frontend engineer who treats the browser — and the device — like an instrument. Over the last 5+ years I've shipped enterprise applications across web, hybrid mobile and native Android, and learned that performance, accessibility and craft are the same problem wearing different hats.",
+    "stats": [
+      { "value": "5+ yrs", "label": "shipping production" },
+      { "value": "3", "label": "platforms shipped" },
+      { "value": "40+", "label": "features delivered" },
+      { "value": "16ms", "label": "frame budget" }
+    ]
+  },
+  "contact": {
+    "title": "Let's build something together.",
+    "intro": "Open to frontend web, hybrid mobile, Android and full-stack roles, freelance, and the odd side quest. Replies within a day.",
+    "submitLabel": "Send enquiry",
+    "successMessage": "Thanks — your enquiry just landed in my inbox. I'll get back to you within a day.",
+    "fields": {
+      "name": { "label": "Name", "placeholder": "Ada Lovelace" },
+      "email": { "label": "Email", "placeholder": "ada@example.com" },
+      "message": {
+        "label": "Enquiry",
+        "placeholder": "Tell me a little about the project or role…"
+      }
+    }
   },
   "footer": {
     "contentfulNotConfigured": "Contentful: not configured",
