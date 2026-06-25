@@ -2,16 +2,17 @@ import {
   About,
   Contact,
   Footer,
-  Hero,
   Link,
   SkillCategory,
   Tag,
   Toolbox,
   WorkGrid,
 } from "@portfolio/ui";
+import { Suspense } from "react";
 
 import type { Locale } from "../../i18n-config";
 import { ContactForm } from "../components/ContactForm/ContactForm";
+import { HeroSection } from "../components/HeroSection/HeroSection";
 import { SiteNav } from "../components/SiteNav/SiteNav";
 import { getDictionary } from "./dictionaries";
 import { heroTabs } from "../data/heroTabs";
@@ -25,10 +26,11 @@ export default async function HomePage({
   const { lang } = await params;
   const dict = await getDictionary(lang as Locale);
 
-  // Server-side Contentful data access (services -> mappers -> here). Both
-  // helpers fall back safely (no creds / network / invalid token) so the build
-  // stays green.
-  const hero = await getHero();
+  // Server-side Contentful data access (services -> mappers -> here). getHero()
+  // returns a promise handed to the client <HeroSection> via the useHero hook
+  // (data still fetched on the server); getEntryCount falls back safely. Both
+  // keep the build green offline.
+  const heroPromise = getHero();
   const entryCount = await getEntryCount();
 
   return (
@@ -45,19 +47,16 @@ export default async function HomePage({
       />
 
       <main className="min-h-screen bg-paper">
-        {/* #top — hero (the brand wordmark / return target) */}
-        <Hero
-          id="top"
-          badge={dict.hero.badge}
-          title={hero.title}
-          intro={hero.description}
-          tabs={heroTabs}
-        >
-          <Link href={hero.resumeUrl} variant="primary">
-            {dict.hero.resumeLabel}
-            <span aria-hidden="true">↗</span>
-          </Link>
-        </Hero>
+        {/* #top — hero. Data is fetched on the server; HeroSection consumes the
+            promise via the useHero hook. */}
+        <Suspense fallback={null}>
+          <HeroSection
+            heroPromise={heroPromise}
+            badge={dict.hero.badge}
+            resumeLabel={dict.hero.resumeLabel}
+            tabs={heroTabs}
+          />
+        </Suspense>
 
         {/* #work */}
         <WorkGrid id="work" projects={dict.work.projects} />

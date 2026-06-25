@@ -4,8 +4,6 @@ import {
   type EntrySkeletonType,
 } from "contentful";
 
-// --- Client ---------------------------------------------------------------
-
 const spaceId = process.env.CONTENTFUL_SPACE_ID;
 const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN;
 const environment = process.env.CONTENTFUL_ENVIRONMENT ?? "master";
