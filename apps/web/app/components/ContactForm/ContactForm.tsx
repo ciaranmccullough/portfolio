@@ -3,22 +3,16 @@
 import { Button, FormField, Text } from "@portfolio/ui";
 import { useRef, useState, type FormEvent } from "react";
 
-type FieldName = "name" | "email" | "message";
-
-interface FieldCopy {
-  label: string;
-  placeholder: string;
-}
-
-export interface ContactFormProps {
-  fields: Record<FieldName, FieldCopy>;
-  errors: Record<FieldName, string>;
-  submitLabel: string;
-  clearLabel: string;
-  successTitle: string;
-  successMessage: string;
-  sendAnotherLabel: string;
-}
+import {
+  contactFormActionsClass,
+  contactFormClass,
+  contactFormClearButtonClass,
+  contactFormSuccessButtonClass,
+  contactFormSuccessClass,
+  contactFormSuccessMessageClass,
+  contactFormSuccessTitleClass,
+} from "./ContactForm.styles";
+import type { ContactFormProps, FieldName } from "./ContactForm.types";
 
 /** Letters (incl. accented Latin), spaces and a few name punctuation marks. */
 const NAME_PATTERN = /^[A-Za-zÀ-ÖØ-öø-ÿ' .-]{2,}$/;
@@ -27,12 +21,6 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MESSAGE_MIN_LENGTH = 10;
 
 const FIELD_NAMES: readonly FieldName[] = ["name", "email", "message"];
-
-const formCardClass =
-  "flex flex-col gap-2 rounded-2xl border border-line-dark bg-ink-soft p-5 sm:p-6";
-const actionsClass = "mt-2 flex gap-3";
-const successCardClass =
-  "rounded-2xl border border-line-dark bg-ink-soft p-6 text-center sm:p-8";
 
 /**
  * ContactForm — the interactive, uncontrolled contact form.
@@ -148,16 +136,16 @@ export function ContactForm({
 
   if (submitted) {
     return (
-      <div className={successCardClass} role="status">
-        <Text as="h3" variant="h3" className="text-fg-inverse">
+      <div className={contactFormSuccessClass} role="status">
+        <Text as="h3" variant="h3" className={contactFormSuccessTitleClass}>
           {successTitle}
         </Text>
-        <Text variant="body" className="mt-2 text-fg-on-dark">
+        <Text variant="body" className={contactFormSuccessMessageClass}>
           {successMessage}
         </Text>
         <Button
           variant="dark"
-          className="mt-5 border border-line-dark"
+          className={contactFormSuccessButtonClass}
           onClick={handleSendAnother}
         >
           {sendAnotherLabel}
@@ -171,7 +159,7 @@ export function ContactForm({
       ref={formRef}
       onSubmit={handleSubmit}
       noValidate
-      className={formCardClass}
+      className={contactFormClass}
     >
       <FormField
         ref={nameRef}
@@ -205,14 +193,14 @@ export function ContactForm({
         onChange={handleFieldChange("message")}
         onBlur={handleFieldChange("message")}
       />
-      <div className={actionsClass}>
+      <div className={contactFormActionsClass}>
         <Button type="submit" variant="primary" disabled={!canSubmit}>
           {submitLabel}
         </Button>
         <Button
           type="button"
           variant="dark"
-          className="border border-line-dark"
+          className={contactFormClearButtonClass}
           onClick={handleClear}
         >
           {clearLabel}

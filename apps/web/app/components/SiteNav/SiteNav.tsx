@@ -1,9 +1,11 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Navbar, type NavbarProps } from "@portfolio/ui";
+import { Navbar } from "@portfolio/ui";
 
 import { useHideOnScroll } from "@/lib/useHideOnScroll";
+import { siteNavClass } from "./SiteNav.styles";
+import type { SiteNavProps } from "./SiteNav.types";
 
 /**
  * SiteNav — app-level wrapper that pins the Navbar and animates it out of view
@@ -12,12 +14,12 @@ import { useHideOnScroll } from "@/lib/useHideOnScroll";
  * Motion lives here in apps/web, never in @portfolio/ui: the Navbar stays a
  * presentational component and this wrapper owns positioning + animation.
  */
-export function SiteNav(props: NavbarProps) {
+export function SiteNav(props: SiteNavProps) {
   const hidden = useHideOnScroll();
 
   return (
     <motion.div
-      className="sticky top-0 z-50"
+      className={siteNavClass}
       initial={false}
       animate={{ y: hidden ? "-100%" : "0%" }}
       transition={{ duration: 0.35, ease: "easeInOut" }}
