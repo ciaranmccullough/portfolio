@@ -54,8 +54,9 @@ export default async function HomePage({
           intro={hero.description}
           tabs={heroTabs}
         >
-          <Link href={hero.resume} variant="cta">
+          <Link href={hero.resume} variant="primary">
             {dict.hero.resumeLabel}
+            <span aria-hidden="true">↗</span>
           </Link>
         </Hero>
 

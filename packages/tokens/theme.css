@@ -22,6 +22,7 @@
   --color-ink-soft: #15141b;
 
   --color-brand-violet: #6a47ff;
+  --color-brand-violet-dark: #5a3df0;
   --color-brand-orange: #ff5836;
   --color-brand-green: #0fa978;
   --color-accent-android: #3ddc84;
@@ -80,6 +81,7 @@
 
   /* ---- Shadows ---- */
   --shadow-brutal: 3px 3px 0 #17161d;
+  --shadow-brand: 0 12px 30px -10px rgba(106, 71, 255, 0.5);
 
   /* ---- Animation ---- */
   /* Gentle bob for the hero's floating tech tabs (gate with motion-safe:). */
