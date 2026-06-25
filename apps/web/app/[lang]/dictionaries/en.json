@@ -41,10 +41,14 @@
     ]
   },
   "contact": {
+    "eyebrow": "05 — Say hello",
     "title": "Let's build something together.",
     "intro": "Open to frontend web, hybrid mobile, Android and full-stack roles, freelance, and the odd side quest. Replies within a day.",
     "submitLabel": "Send enquiry",
+    "clearLabel": "Clear",
+    "successTitle": "Message sent ✦",
     "successMessage": "Thanks — your enquiry just landed in my inbox. I'll get back to you within a day.",
+    "sendAnotherLabel": "Send another",
     "fields": {
       "name": { "label": "Name", "placeholder": "Ada Lovelace" },
       "email": { "label": "Email", "placeholder": "ada@example.com" },
@@ -52,7 +56,16 @@
         "label": "Enquiry",
         "placeholder": "Tell me a little about the project or role…"
       }
-    }
+    },
+    "errors": {
+      "name": "Please enter your name (at least 2 letters).",
+      "email": "Please enter a valid email address.",
+      "message": "Please tell me a little more (at least 10 characters)."
+    },
+    "socials": [
+      { "label": "GitHub ↗", "href": "https://github.com" },
+      { "label": "LinkedIn ↗", "href": "https://www.linkedin.com" }
+    ]
   },
   "footer": {
     "contentfulNotConfigured": "Contentful: not configured",

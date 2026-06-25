@@ -18,3 +18,18 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+
+export const WithError: Story = {
+  args: {
+    defaultValue: "not-an-email",
+    error: "Please enter a valid email address.",
+  },
+};
+
+export const Multiline: Story = {
+  args: {
+    label: "Enquiry",
+    multiline: true,
+    defaultValue: "Tell me a little about the project or role…",
+  },
+};

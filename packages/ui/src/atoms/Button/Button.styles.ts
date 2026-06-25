@@ -1,7 +1,7 @@
 import type { ButtonSize, ButtonVariant } from "./Button.types";
 
 export const buttonBase =
-  "cursor-pointer font-body font-semibold transition hover:-translate-y-px";
+  "cursor-pointer font-body font-semibold transition hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0";
 
 export const buttonVariant: Record<ButtonVariant, string> = {
   primary: "bg-brand-violet text-white hover:opacity-90",

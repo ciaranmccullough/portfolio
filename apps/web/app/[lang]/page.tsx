@@ -2,7 +2,6 @@ import {
   About,
   Contact,
   Footer,
-  FormField,
   Hero,
   Link,
   SkillCategory,
@@ -12,6 +11,7 @@ import {
 } from "@portfolio/ui";
 
 import type { Locale } from "../../i18n-config";
+import { ContactForm } from "./ContactForm";
 import { getDictionary } from "./dictionaries";
 import { heroTabs } from "./heroTabs";
 import { SiteNav } from "./SiteNav";
@@ -80,29 +80,19 @@ export default async function HomePage({
         {/* #contact */}
         <Contact
           id="contact"
+          eyebrow={dict.contact.eyebrow}
           title={dict.contact.title}
           intro={dict.contact.intro}
-          submitLabel={dict.contact.submitLabel}
-          successMessage={dict.contact.successMessage}
+          socials={dict.contact.socials}
         >
-          <FormField
-            label={dict.contact.fields.name.label}
-            name="name"
-            placeholder={dict.contact.fields.name.placeholder}
-            required
-          />
-          <FormField
-            label={dict.contact.fields.email.label}
-            name="email"
-            type="email"
-            placeholder={dict.contact.fields.email.placeholder}
-            required
-          />
-          <FormField
-            label={dict.contact.fields.message.label}
-            name="message"
-            placeholder={dict.contact.fields.message.placeholder}
-            required
+          <ContactForm
+            fields={dict.contact.fields}
+            errors={dict.contact.errors}
+            submitLabel={dict.contact.submitLabel}
+            clearLabel={dict.contact.clearLabel}
+            successTitle={dict.contact.successTitle}
+            successMessage={dict.contact.successMessage}
+            sendAnotherLabel={dict.contact.sendAnotherLabel}
           />
         </Contact>
 

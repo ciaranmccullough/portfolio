@@ -6,3 +6,4 @@ export * from "./Link";
 export * from "./SkillPill";
 export * from "./Tag";
 export * from "./Text";
+export * from "./Textarea";

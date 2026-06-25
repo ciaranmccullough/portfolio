@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { FormField } from "../../molecules";
 import { Contact } from "./Contact";
 
 const meta = {
@@ -14,13 +13,19 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    title: "Let's build something.",
-    intro: "Have a project in mind? Send a note and I'll get back to you.",
+    eyebrow: "05 — Say hello",
+    title: "Let's build something together.",
+    intro:
+      "Open to frontend web, hybrid mobile, Android and full-stack roles, freelance, and the odd side quest. Replies within a day.",
+    socials: [
+      { label: "GitHub ↗", href: "#" },
+      { label: "LinkedIn ↗", href: "#" },
+    ],
     children: (
-      <>
-        <FormField label="Name" name="name" />
-        <FormField label="Email" name="email" type="email" />
-      </>
+      <p style={{ color: "#c4c0cf", fontFamily: "monospace" }}>
+        {/* The interactive form is composed at the app level and passed here. */}
+        Contact form slot
+      </p>
     ),
   },
 };
