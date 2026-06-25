@@ -9,15 +9,18 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@formatjs/intl-localematcher": "^0.8.10",
     "@portfolio/tokens": "workspace:*",
     "@portfolio/ui": "workspace:*",
     "contentful": "^10.15.1",
+    "negotiator": "^1.0.0",
     "next": "^16.2.9",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.1",
+    "@types/negotiator": "^0.6.4",
     "@types/node": "^20.17.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",

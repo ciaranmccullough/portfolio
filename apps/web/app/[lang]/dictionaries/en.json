@@ -1,0 +1,25 @@
+{
+  "metadata": {
+    "title": "Portfolio",
+    "description": "Software Engineer Portfolio — Next.js App Router + Contentful."
+  },
+  "hero": {
+    "badge": "Available for work",
+    "title": "Software engineer building polished product UI.",
+    "intro": "I design and ship accessible interfaces with a focus on craft, performance, and a tidy design system.",
+    "viewWork": "View work ↘",
+    "resume": "Résumé"
+  },
+  "toolbox": {
+    "categories": [
+      { "title": "Languages", "skills": ["TypeScript", "Kotlin"] },
+      { "title": "Frameworks", "skills": ["React", "Next.js"] },
+      { "title": "Tooling", "skills": ["Vite", "Storybook"] }
+    ]
+  },
+  "footer": {
+    "contentfulNotConfigured": "Contentful: not configured",
+    "contentfulEntries": "Contentful: {count} entries",
+    "colophon": " · Portfolio · Ciaran"
+  }
+}
