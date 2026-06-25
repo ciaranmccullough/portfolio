@@ -1,7 +1,8 @@
 import { unstable_cache } from "next/cache";
 
-import { mapHero, type Hero } from "@/mappers/heroMapper";
+import { mapHero } from "@/mappers/heroMapper";
 import { fetchEntryCount, fetchHeroEntry } from "@/services/contentful";
+import type { Hero } from "@/types/hero";
 
 /**
  * Seconds Next serves cached content before regenerating it in the background

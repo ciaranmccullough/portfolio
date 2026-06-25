@@ -4,6 +4,8 @@ import {
   type EntrySkeletonType,
 } from "contentful";
 
+import type { RawHeroFields } from "@/types/hero";
+
 const spaceId = process.env.CONTENTFUL_SPACE_ID;
 const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN;
 const environment = process.env.CONTENTFUL_ENVIRONMENT ?? "master";
@@ -23,13 +25,6 @@ export const contentfulClient = createClient({
 
 /** True only when real Contentful credentials are configured via the env. */
 export const hasContentfulCredentials = Boolean(spaceId && accessToken);
-
-/** Raw "project" (Hero) entry fields, as the Delivery API returns them (DTO). */
-export interface RawHeroFields {
-  title: string;
-  description: string;
-  resume: string;
-}
 
 type ProjectSkeleton = EntrySkeletonType<
   {
