@@ -14,7 +14,7 @@ import type { Locale } from "../../i18n-config";
 import { ContactForm } from "../components/ContactForm/ContactForm";
 import { SiteNav } from "../components/SiteNav/SiteNav";
 import { getDictionary } from "./dictionaries";
-import { heroTabs } from "./heroTabs";
+import { heroTabs } from "../data/heroTabs";
 import { getEntriesSafe, getHeroSafe } from "@/lib/contentful";
 
 export default async function HomePage({

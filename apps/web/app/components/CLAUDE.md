@@ -40,6 +40,7 @@ app/components/<Component>/
 
 ## Not components
 
-Data modules — the hero tabs (`heroTabs`), the i18n `dictionaries` — are **not**
-components and stay beside the route under `app/[lang]/`. Routes (`page.tsx`,
-`layout.tsx`) stay there too.
+Data modules are **not** components: the i18n `dictionaries` (locale-specific)
+stay under `app/[lang]/`; non-locale data — e.g. the hero tabs in
+`app/data/heroTabs.tsx` — lives under `app/data/`. Routes (`page.tsx`,
+`layout.tsx`) stay under `app/[lang]/` too.
