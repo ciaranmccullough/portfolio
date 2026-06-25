@@ -1,11 +1,12 @@
 import { Eyebrow, Link, Text } from "../../atoms";
 import { cn } from "../../cn";
 import {
+  contactClass,
   contactGlowOneClass,
   contactGlowTwoClass,
   contactGridClass,
   contactIntroClass,
-  contactClass,
+  contactPanelClass,
   contactSocialsClass,
   contactTitleClass,
 } from "./Contact.styles";
@@ -27,36 +28,38 @@ export function Contact({
 }: ContactProps) {
   return (
     <section className={cn(contactClass, className)} {...props}>
-      <span aria-hidden="true" className={contactGlowOneClass} />
-      <span aria-hidden="true" className={contactGlowTwoClass} />
-      <div className={contactGridClass}>
-        <div>
-          {eyebrow ? <Eyebrow tone="green">{eyebrow}</Eyebrow> : null}
-          <Text as="h2" variant="h1" className={contactTitleClass}>
-            {title}
-          </Text>
-          {intro ? (
-            <Text variant="body" className={contactIntroClass}>
-              {intro}
+      <div className={contactPanelClass}>
+        <span aria-hidden="true" className={contactGlowOneClass} />
+        <span aria-hidden="true" className={contactGlowTwoClass} />
+        <div className={contactGridClass}>
+          <div>
+            {eyebrow ? <Eyebrow tone="green">{eyebrow}</Eyebrow> : null}
+            <Text as="h2" variant="h1" className={contactTitleClass}>
+              {title}
             </Text>
-          ) : null}
-          {socials?.length ? (
-            <ul className={contactSocialsClass}>
-              {socials.map((social) => (
-                <li key={social.href}>
-                  <Link
-                    href={social.href}
-                    variant="inline"
-                    className="text-fg-on-dark"
-                  >
-                    {social.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : null}
+            {intro ? (
+              <Text variant="body" className={contactIntroClass}>
+                {intro}
+              </Text>
+            ) : null}
+            {socials?.length ? (
+              <ul className={contactSocialsClass}>
+                {socials.map((social) => (
+                  <li key={social.href}>
+                    <Link
+                      href={social.href}
+                      variant="inline"
+                      className="text-fg-on-dark"
+                    >
+                      {social.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
+          <div>{children}</div>
         </div>
-        <div>{children}</div>
       </div>
     </section>
   );

@@ -1,5 +1,11 @@
-export const contactClass =
-  "relative mx-auto max-w-5xl overflow-hidden rounded-2xl bg-ink px-6 py-14 sm:px-12 sm:py-16";
+/* Section wrapper — aligns the dark panel with the page's px-6 content gutter.
+   (Previously the panel was itself max-w-5xl, so it stuck out 24px past every
+   other section's content.) */
+export const contactClass = "mx-auto max-w-5xl px-6";
+
+/* The dark panel. */
+export const contactPanelClass =
+  "relative overflow-hidden rounded-2xl bg-ink px-6 py-14 sm:px-10 sm:py-16";
 
 /* Decorative brand-gradient glows — arbitrary one-offs with no token. */
 export const contactGlowOneClass =
@@ -8,8 +14,10 @@ export const contactGlowOneClass =
 export const contactGlowTwoClass =
   "pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(255,88,54,0.45),transparent_70%)]";
 
+/* Pitch + form. Single column until md (≈ the design's 780px breakpoint), then
+   a two-column split whose gutter grows with the viewport. */
 export const contactGridClass =
-  "relative grid grid-cols-1 items-start gap-10 sm:grid-cols-2 sm:gap-14";
+  "relative grid grid-cols-1 items-start gap-10 md:grid-cols-2 md:gap-12 lg:gap-14";
 
 /* text-fg-inverse / text-fg-on-dark are declared last in the theme, so they win
    the cascade over the Text atom's baked light-surface colours on this panel. */
