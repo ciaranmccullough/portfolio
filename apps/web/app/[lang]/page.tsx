@@ -15,7 +15,7 @@ import { ContactForm } from "../components/ContactForm/ContactForm";
 import { SiteNav } from "../components/SiteNav/SiteNav";
 import { getDictionary } from "./dictionaries";
 import { heroTabs } from "../data/heroTabs";
-import { getEntriesSafe, getHeroSafe } from "@/lib/contentful";
+import { getEntryCount, getHero } from "@/lib/contentful";
 
 export default async function HomePage({
   params,
@@ -25,12 +25,11 @@ export default async function HomePage({
   const { lang } = await params;
   const dict = await getDictionary(lang as Locale);
 
-  // Pull content from Contentful. The Hero text comes from the "project" content
-  // type; both helpers fall back safely (no creds / no network / invalid token)
-  // so the production build stays green.
-  const hero = await getHeroSafe();
-  const entries = await getEntriesSafe();
-  const entryCount = entries ? entries.items.length : null;
+  // Server-side Contentful data access (services -> mappers -> here). Both
+  // helpers fall back safely (no creds / network / invalid token) so the build
+  // stays green.
+  const hero = await getHero();
+  const entryCount = await getEntryCount();
 
   return (
     <>
@@ -54,7 +53,7 @@ export default async function HomePage({
           intro={hero.description}
           tabs={heroTabs}
         >
-          <Link href={hero.resume} variant="primary">
+          <Link href={hero.resumeUrl} variant="primary">
             {dict.hero.resumeLabel}
             <span aria-hidden="true">↗</span>
           </Link>
