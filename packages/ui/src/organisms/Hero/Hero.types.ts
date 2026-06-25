@@ -6,6 +6,8 @@ export interface HeroTab {
   icon: ReactNode;
   /** The tech name. */
   title: ReactNode;
+  /** Optional per-tab classes, e.g. a brand background colour. */
+  className?: string;
 }
 
 /** Props for the {@link Hero} organism. Renders a `<section>`. */

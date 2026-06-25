@@ -56,9 +56,9 @@ const nodejs = (
 
 /** The hero's tech tabs, in display order. */
 export const heroTabs: HeroTab[] = [
-  { title: "Claude Code", icon: claudeCode },
-  { title: "React", icon: react },
-  { title: "Android", icon: android },
-  { title: "TypeScript", icon: typescript },
-  { title: "NodeJS", icon: nodejs },
+  { title: "Claude Code", icon: claudeCode, className: "bg-[#f7e8e0]" },
+  { title: "React", icon: react, className: "bg-[#dbf4fd]" },
+  { title: "Android", icon: android, className: "bg-[#e0f5e8]" },
+  { title: "TypeScript", icon: typescript, className: "bg-[#dde9fb]" },
+  { title: "NodeJS", icon: nodejs, className: "bg-[#ecf6d9]" },
 ];

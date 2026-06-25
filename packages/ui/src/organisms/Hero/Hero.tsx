@@ -4,6 +4,7 @@ import {
   heroActionsClass,
   heroBadgeClass,
   heroClass,
+  heroContentClass,
   heroIntroClass,
   heroTabClass,
   heroTabFloat,
@@ -14,8 +15,8 @@ import {
 import type { HeroProps } from "./Hero.types";
 
 /**
- * Hero — the landing section: status badge, display heading, intro, a slot for
- * actions (e.g. a CtaGroup) and a row of floating tech tabs.
+ * Hero — the landing section: status badge, display heading, intro and a slot
+ * for actions (left column), beside a column of floating tech tabs (right).
  */
 export function Hero({
   badge,
@@ -28,16 +29,18 @@ export function Hero({
 }: HeroProps) {
   return (
     <section className={cn(heroClass, className)} {...props}>
-      {badge ? <Eyebrow className={heroBadgeClass}>{badge}</Eyebrow> : null}
-      <Text variant="display" className={heroTitleClass}>
-        {title}
-      </Text>
-      {intro ? (
-        <Text variant="body" className={heroIntroClass}>
-          {intro}
+      <div className={heroContentClass}>
+        {badge ? <Eyebrow className={heroBadgeClass}>{badge}</Eyebrow> : null}
+        <Text variant="display" className={heroTitleClass}>
+          {title}
         </Text>
-      ) : null}
-      {children ? <div className={heroActionsClass}>{children}</div> : null}
+        {intro ? (
+          <Text variant="body" className={heroIntroClass}>
+            {intro}
+          </Text>
+        ) : null}
+        {children ? <div className={heroActionsClass}>{children}</div> : null}
+      </div>
       {tabs?.length ? (
         <ul className={heroTabsClass}>
           {tabs.map((tab, index) => (
@@ -46,6 +49,7 @@ export function Hero({
               className={cn(
                 heroTabClass,
                 heroTabFloat[index % heroTabFloat.length],
+                tab.className,
               )}
             >
               <Icon className={heroTabIconClass}>{tab.icon}</Icon>
