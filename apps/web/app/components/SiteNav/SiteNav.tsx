@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { Navbar } from "@portfolio/ui";
 
-import { useHideOnScroll } from "@/lib/useHideOnScroll";
+import { useHideOnScroll } from "@/hooks/useHideOnScroll";
 import { siteNavClass } from "./SiteNav.styles";
 import type { SiteNavProps } from "./SiteNav.types";
 

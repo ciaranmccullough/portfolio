@@ -28,8 +28,9 @@ app/components/<Component>/
   components are, e.g. they use Motion or React state).
 - Compose `@portfolio/ui` primitives; pass user-facing copy in as props from the
   localized dictionary — components hold **no hardcoded UI strings**.
-- Imports: `@/lib/*` for helpers, `../components/<Component>/<Component>` for use
-  from a route, `./<Component>.styles` / `./<Component>.types` within the folder.
+- Imports: `@/lib/*` for service helpers, `@/hooks/*` for hooks,
+  `../components/<Component>/<Component>` for use from a route,
+  `./<Component>.styles` / `./<Component>.types` within the folder.
 
 ## Reference: `SiteNav`
 
