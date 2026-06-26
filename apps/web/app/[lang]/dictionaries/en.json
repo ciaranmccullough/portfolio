@@ -27,10 +27,38 @@
     "meta": "// 2 of many"
   },
   "toolbox": {
+    "eyebrow": "02 — The toolbox",
+    "title": "What I reach for",
     "categories": [
-      { "title": "Languages", "skills": ["TypeScript", "Kotlin"] },
-      { "title": "Frameworks", "skills": ["React", "Next.js"] },
-      { "title": "Tooling", "skills": ["Vite", "Storybook"] }
+      {
+        "title": "Languages",
+        "skills": ["TypeScript", "Kotlin", "JavaScript", "HTML/CSS"]
+      },
+      {
+        "title": "Frameworks",
+        "skills": [
+          "React",
+          "React Native",
+          "Jetpack Compose",
+          "Next.js",
+          "Astro",
+          "Node.js"
+        ]
+      },
+      {
+        "title": "Craft",
+        "skills": [
+          "AI",
+          "Performance",
+          "Design System",
+          "Accessibility",
+          "Testing"
+        ]
+      },
+      {
+        "title": "Tooling",
+        "skills": ["Git", "Gradle", "Claude Code", "Figma", "Vite"]
+      }
     ]
   },
   "about": {

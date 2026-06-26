@@ -15,19 +15,37 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
+    eyebrow: "02 — The toolbox",
+    title: "What I reach for",
     children: (
       <>
-        <SkillCategory title="Languages">
+        <SkillCategory title="Languages" tone="violet">
           <Tag>TypeScript</Tag>
           <Tag>Kotlin</Tag>
+          <Tag>JavaScript</Tag>
+          <Tag>HTML/CSS</Tag>
         </SkillCategory>
-        <SkillCategory title="Frameworks">
+        <SkillCategory title="Frameworks" tone="orange">
           <Tag>React</Tag>
+          <Tag>React Native</Tag>
+          <Tag>Jetpack Compose</Tag>
           <Tag>Next.js</Tag>
+          <Tag>Astro</Tag>
+          <Tag>Node.js</Tag>
         </SkillCategory>
-        <SkillCategory title="Tooling">
+        <SkillCategory title="Craft" tone="green">
+          <Tag>AI</Tag>
+          <Tag>Performance</Tag>
+          <Tag>Design System</Tag>
+          <Tag>Accessibility</Tag>
+          <Tag>Testing</Tag>
+        </SkillCategory>
+        <SkillCategory title="Tooling" tone="amber">
+          <Tag>Git</Tag>
+          <Tag>Gradle</Tag>
+          <Tag>Claude Code</Tag>
+          <Tag>Figma</Tag>
           <Tag>Vite</Tag>
-          <Tag>Storybook</Tag>
         </SkillCategory>
       </>
     ),

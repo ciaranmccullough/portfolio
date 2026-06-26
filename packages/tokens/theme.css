@@ -25,6 +25,7 @@
   --color-brand-violet-dark: #5a3df0;
   --color-brand-orange: #ff5836;
   --color-brand-green: #0fa978;
+  --color-brand-amber: #e0930c;
   --color-accent-android: #3ddc84;
   --color-accent-react: #61dafb;
 
@@ -42,6 +43,8 @@
 
   --color-tint-violet: #f1edff;
   --color-tint-orange: #fff0eb;
+  --color-tint-green: #e8f6f0;
+  --color-tint-amber: #fdf3df;
 
   /* ---- Typography ---- */
   --font-heading: "Bricolage Grotesque", sans-serif;

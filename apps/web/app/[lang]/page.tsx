@@ -19,6 +19,10 @@ import { heroTabs } from "../data/heroTabs";
 import { projects } from "../data/projects";
 import { getEntryCount, getHero } from "@/lib/contentful";
 
+// Toolbox cards cycle the brand accents in order (the colour is positional
+// presentation, not category data — see SkillCategory `tone`).
+const TOOLBOX_TONES = ["violet", "orange", "green", "amber"] as const;
+
 export default async function HomePage({
   params,
 }: {
@@ -93,9 +97,17 @@ export default async function HomePage({
         />
 
         {/* #stack */}
-        <Toolbox id="stack">
-          {dict.toolbox.categories.map((category) => (
-            <SkillCategory key={category.title} title={category.title}>
+        <Toolbox
+          id="stack"
+          eyebrow={dict.toolbox.eyebrow}
+          title={dict.toolbox.title}
+        >
+          {dict.toolbox.categories.map((category, index) => (
+            <SkillCategory
+              key={category.title}
+              title={category.title}
+              tone={TOOLBOX_TONES[index % TOOLBOX_TONES.length]}
+            >
               {category.skills.map((skill) => (
                 <Tag key={skill}>{skill}</Tag>
               ))}
