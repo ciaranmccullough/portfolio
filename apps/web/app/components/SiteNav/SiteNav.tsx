@@ -18,13 +18,13 @@ export function SiteNav(props: SiteNavProps) {
   const hidden = useHideOnScroll();
 
   return (
-    <motion.div
+    <motion.header
       className={siteNavClass}
       initial={false}
       animate={{ y: hidden ? "-100%" : "0%" }}
       transition={{ duration: 0.35, ease: "easeInOut" }}
     >
       <Navbar {...props} />
-    </motion.div>
+    </motion.header>
   );
 }

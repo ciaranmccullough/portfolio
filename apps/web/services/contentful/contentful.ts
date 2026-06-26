@@ -61,6 +61,34 @@ type ProjectSkeleton = EntrySkeletonType<
   "project"
 >;
 
+/** A value tab stored in the "about" entry's freeform `tabs` Object field. */
+export interface RawAboutTab {
+  title: string;
+  description: string;
+}
+
+/**
+ * Raw "about" entry fields, as the Delivery API returns them. `imageUrl` is the
+ * linked asset's URL resolved from the include (protocol-relative, e.g.
+ * `//images.ctfassets.net/…`); `tabs` is a freeform JSON array.
+ */
+export interface RawAboutFields {
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  tabs: RawAboutTab[];
+}
+
+type AboutSkeleton = EntrySkeletonType<
+  {
+    title: EntryFieldTypes.Symbol;
+    description: EntryFieldTypes.Text;
+    image: EntryFieldTypes.AssetLink;
+    tabs: EntryFieldTypes.Object;
+  },
+  "about"
+>;
+
 // --- Service --------------------------------------------------------------
 
 /**
@@ -81,6 +109,32 @@ export async function fetchHeroEntry(): Promise<RawHeroFields | null> {
     titleRichText: fields.titleRichText as RichTextDocument | undefined,
     description: fields.description,
     resume: fields.resume,
+  };
+}
+
+/**
+ * Fetch the raw "about" entry fields, resolving the linked portrait asset's URL
+ * from the include. Returns `null` when credentials are absent or nothing is
+ * published; throws on a failed request so the caller decides how to recover.
+ */
+export async function fetchAboutEntry(): Promise<RawAboutFields | null> {
+  if (!hasContentfulCredentials) return null;
+  const res = await contentfulClient.getEntries<AboutSkeleton>({
+    content_type: "about",
+    limit: 1,
+    include: 2,
+  });
+  const fields = res.items[0]?.fields;
+  if (!fields) return null;
+  // The SDK resolves the linked asset into the field; read its file URL.
+  const image = fields.image as unknown as
+    | { fields?: { file?: { url?: string } } }
+    | undefined;
+  return {
+    title: fields.title as string,
+    description: fields.description as string | undefined,
+    imageUrl: image?.fields?.file?.url,
+    tabs: (fields.tabs as unknown as RawAboutTab[] | undefined) ?? [],
   };
 }
 

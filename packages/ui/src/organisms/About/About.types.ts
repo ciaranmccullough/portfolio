@@ -1,16 +1,26 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
-export interface AboutStat {
-  value: ReactNode;
-  label: ReactNode;
+/** A value tab in the {@link About} section: a short title + supporting line. */
+export interface AboutTab {
+  title: ReactNode;
+  description: ReactNode;
 }
 
 /** Props for the {@link About} organism. Renders a `<section>`. */
-export interface AboutProps extends ComponentPropsWithoutRef<"section"> {
-  /** Optional portrait media slot. */
+export interface AboutProps extends Omit<
+  ComponentPropsWithoutRef<"section">,
+  "title"
+> {
+  /** Mono kicker above the heading (e.g. "03 — About"). */
+  eyebrow?: ReactNode;
+  /** Section heading. */
+  title?: ReactNode;
+  /** Biography / description copy. */
+  description?: ReactNode;
+  /** Optional portrait media slot (e.g. a `next/image`). */
   portrait?: ReactNode;
-  /** Biography copy. */
-  bio: ReactNode;
-  /** Stat blocks shown beside the bio. */
-  stats?: AboutStat[];
+  /** Optional decorative sticker pinned to the portrait corner. */
+  sticker?: ReactNode;
+  /** Value tabs shown beside the bio. */
+  tabs?: AboutTab[];
 }

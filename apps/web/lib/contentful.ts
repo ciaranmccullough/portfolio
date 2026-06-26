@@ -1,10 +1,13 @@
 import { unstable_cache } from "next/cache";
 
+import { mapAbout } from "@/mappers/aboutMapper";
 import { mapHero } from "@/mappers/heroMapper";
 import {
+  fetchAboutEntry,
   fetchEntryCount,
   fetchHeroEntry,
 } from "@/services/contentful/contentful";
+import type { About } from "@/types/about";
 import type { Hero } from "@/types/hero";
 
 /**
@@ -33,6 +36,27 @@ const getHeroCached = unstable_cache(
 export async function getHero(): Promise<Hero | null> {
   try {
     return await getHeroCached();
+  } catch {
+    return null;
+  }
+}
+
+const getAboutCached = unstable_cache(
+  async () => {
+    const raw = await fetchAboutEntry();
+    return raw ? mapAbout(raw) : null;
+  },
+  ["contentful-about-v1"],
+  { revalidate: REVALIDATE_SECONDS, tags: ["contentful"] },
+);
+
+/**
+ * Server-side data access for the About section: fetch (service) → map (mapper),
+ * cached as ISR. Returns `null` when the entry is missing or the request fails.
+ */
+export async function getAbout(): Promise<About | null> {
+  try {
+    return await getAboutCached();
   } catch {
     return null;
   }

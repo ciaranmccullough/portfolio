@@ -22,12 +22,12 @@
     "resumeLabel": "Résumé"
   },
   "work": {
-    "eyebrow": "01 — Selected work",
+    "eyebrow": "Selected work",
     "title": "Things I've shipped",
     "meta": "// 2 of many"
   },
   "toolbox": {
-    "eyebrow": "02 — The toolbox",
+    "eyebrow": "The toolbox",
     "title": "What I reach for",
     "categories": [
       {
@@ -62,16 +62,12 @@
     ]
   },
   "about": {
-    "bio": "I'm a frontend engineer who treats the browser — and the device — like an instrument. Over the last 5+ years I've shipped enterprise applications across web, hybrid mobile and native Android, and learned that performance, accessibility and craft are the same problem wearing different hats.",
-    "stats": [
-      { "value": "5+ yrs", "label": "shipping production" },
-      { "value": "3", "label": "platforms shipped" },
-      { "value": "40+", "label": "features delivered" },
-      { "value": "16ms", "label": "frame budget" }
-    ]
+    "eyebrow": "About",
+    "imageAlt": "Ciaran McCullough",
+    "sticker": "// hi there 👋"
   },
   "contact": {
-    "eyebrow": "05 — Say hello",
+    "eyebrow": "Say hello",
     "title": "Let's build something together.",
     "intro": "Open to frontend web, hybrid mobile, Android and full-stack roles, freelance, and the odd side quest. Replies within a day.",
     "submitLabel": "Send enquiry",

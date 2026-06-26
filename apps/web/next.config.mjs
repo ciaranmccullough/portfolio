@@ -8,6 +8,7 @@ const nextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "easa-web.easports.ea.com" },
       { protocol: "https", hostname: "ecdn.codemasters.com" },
+      { protocol: "https", hostname: "images.ctfassets.net" },
     ],
   },
   // $HOME contains stray lockfiles, so Next mis-infers the workspace root.

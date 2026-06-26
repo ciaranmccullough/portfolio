@@ -13,11 +13,29 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    bio: "I'm a software engineer who cares about craft — accessible interfaces, tidy design systems, and shipping production software that lasts.",
-    stats: [
-      { value: "5+ yrs", label: "shipping production" },
-      { value: "30+", label: "projects delivered" },
-      { value: "12", label: "open-source repos" },
+    eyebrow: "03 — About",
+    title: "Curious, collaborative, and relentless about the details.",
+    description:
+      "I'm a product-focused engineer who cares as much about how a team works as what it ships. I start with the user and the problem before the solution, and I try to leave things better than I found them.",
+    sticker: "// hi there 👋",
+    portrait: <div className="size-full bg-inset" />,
+    tabs: [
+      {
+        title: "Product mindset",
+        description: "I think in products, not tickets",
+      },
+      {
+        title: "Teamwork",
+        description: "I get design and engineering speaking one language",
+      },
+      {
+        title: "Determination",
+        description: "I push past 'good enough' on the problems others skip",
+      },
+      {
+        title: "Creativity",
+        description: "Always experimenting with new tools and ideas",
+      },
     ],
   },
 };

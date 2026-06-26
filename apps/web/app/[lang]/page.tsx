@@ -10,6 +10,7 @@ import {
   WorkGrid,
 } from "@portfolio/ui";
 import { Fragment } from "react";
+import Image from "next/image";
 
 import { ContactForm } from "../components/ContactForm/ContactForm";
 import { ErrorScreen } from "../components/ErrorScreen/ErrorScreen";
@@ -17,7 +18,7 @@ import { SiteNav } from "../components/SiteNav/SiteNav";
 import { getTranslations } from "./dictionaries";
 import { heroTabs } from "../data/heroTabs";
 import { projects } from "../data/projects";
-import { getEntryCount, getHero } from "@/lib/contentful";
+import { getAbout, getEntryCount, getHero } from "@/lib/contentful";
 
 // Toolbox cards cycle the brand accents in order (the colour is positional
 // presentation, not category data — see SkillCategory `tone`).
@@ -30,10 +31,14 @@ export default async function HomePage({
 }) {
   const dict = await getTranslations(params);
 
-  // Server-side Contentful data access (services -> mappers -> here). getHero
-  // returns null when Contentful is unreachable; show an error screen rather
-  // than fake fallback content.
-  const hero = await getHero();
+  // Server-side Contentful data access (services -> mappers -> here), fetched in
+  // parallel. getHero returns null when Contentful is unreachable; show an error
+  // screen rather than fake fallback content.
+  const [hero, about, entryCount] = await Promise.all([
+    getHero(),
+    getAbout(),
+    getEntryCount(),
+  ]);
   if (!hero) {
     return (
       <ErrorScreen
@@ -44,8 +49,6 @@ export default async function HomePage({
       />
     );
   }
-
-  const entryCount = await getEntryCount();
 
   return (
     <>
@@ -116,7 +119,25 @@ export default async function HomePage({
         </Toolbox>
 
         {/* #about */}
-        <About id="about" bio={dict.about.bio} stats={dict.about.stats} />
+        {about ? (
+          <About
+            id="about"
+            eyebrow={dict.about.eyebrow}
+            title={about.title}
+            description={about.description}
+            sticker={dict.about.sticker}
+            tabs={about.tabs}
+            portrait={
+              <Image
+                src={about.imageUrl}
+                alt={dict.about.imageAlt}
+                fill
+                sizes="(min-width: 1024px) 38vw, 100vw"
+                className="object-cover"
+              />
+            }
+          />
+        ) : null}
 
         {/* #contact */}
         <Contact
@@ -136,17 +157,17 @@ export default async function HomePage({
             sendAnotherLabel={dict.contact.sendAnotherLabel}
           />
         </Contact>
-
-        <Footer>
-          {entryCount === null
-            ? dict.footer.contentfulNotConfigured
-            : dict.footer.contentfulEntries.replace(
-                "{count}",
-                String(entryCount),
-              )}
-          {dict.footer.colophon}
-        </Footer>
       </main>
+
+      <Footer className="relative z-10">
+        {entryCount === null
+          ? dict.footer.contentfulNotConfigured
+          : dict.footer.contentfulEntries.replace(
+              "{count}",
+              String(entryCount),
+            )}
+        {dict.footer.colophon}
+      </Footer>
     </>
   );
 }
