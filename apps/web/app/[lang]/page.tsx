@@ -17,8 +17,13 @@ import { ErrorScreen } from "../components/ErrorScreen/ErrorScreen";
 import { SiteNav } from "../components/SiteNav/SiteNav";
 import { getTranslations } from "./dictionaries";
 import { heroTabs } from "../data/heroTabs";
-import { projects } from "../data/projects";
-import { getAbout, getContact, getEntryCount, getHero } from "@/lib/contentful";
+import {
+  getAbout,
+  getContact,
+  getEntryCount,
+  getHero,
+  getProjects,
+} from "@/lib/contentful";
 
 // Toolbox cards cycle the brand accents in order (the colour is positional
 // presentation, not category data — see SkillCategory `tone`).
@@ -34,10 +39,11 @@ export default async function HomePage({
   // Server-side Contentful data access (services -> mappers -> here), fetched in
   // parallel. getHero returns null when Contentful is unreachable; show an error
   // screen rather than fake fallback content.
-  const [hero, about, contact, entryCount] = await Promise.all([
+  const [hero, about, contact, projects, entryCount] = await Promise.all([
     getHero(),
     getAbout(),
     getContact(),
+    getProjects(),
     getEntryCount(),
   ]);
   if (!hero) {
@@ -96,8 +102,25 @@ export default async function HomePage({
           id="work"
           eyebrow={dict.work.eyebrow}
           title={dict.work.title}
-          meta={dict.work.meta}
-          projects={projects}
+          meta={dict.work.meta.replace(
+            "{count}",
+            String(projects?.length ?? 0),
+          )}
+          projects={(projects ?? []).map((project) => ({
+            title: project.title,
+            description: project.description,
+            href: project.href,
+            tags: project.tags,
+            media: project.imageUrl ? (
+              <Image
+                src={project.imageUrl}
+                alt={project.title}
+                fill
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                className="object-cover"
+              />
+            ) : undefined,
+          }))}
         />
 
         {/* #stack */}

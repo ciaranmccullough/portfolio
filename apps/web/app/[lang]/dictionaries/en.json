@@ -24,7 +24,7 @@
   "work": {
     "eyebrow": "Selected work",
     "title": "Things I've shipped",
-    "meta": "// 2 of many"
+    "meta": "// {count} of many"
   },
   "toolbox": {
     "eyebrow": "The toolbox",

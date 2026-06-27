@@ -108,6 +108,23 @@ type ContactSkeleton = EntrySkeletonType<
   "contact"
 >;
 
+/**
+ * One project inside the "projects" entry's freeform `projects` Object array.
+ * `link` is the outbound URL and `tabs` holds the tech tags (the CMS field name).
+ */
+export interface RawProject {
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  link?: string;
+  tabs?: string[];
+}
+
+type ProjectsSkeleton = EntrySkeletonType<
+  { projects: EntryFieldTypes.Object },
+  "projects"
+>;
+
 // --- Service --------------------------------------------------------------
 
 /**
@@ -174,6 +191,22 @@ export async function fetchContactEntry(): Promise<RawContactFields | null> {
     description: fields.description as string | undefined,
     links: (fields.links as unknown as string[] | undefined) ?? [],
   };
+}
+
+/**
+ * Fetch the raw projects list from the single "projects" entry's JSON field.
+ * Returns `null` when credentials are absent or nothing is published; throws on
+ * a failed request.
+ */
+export async function fetchProjects(): Promise<RawProject[] | null> {
+  if (!hasContentfulCredentials) return null;
+  const res = await contentfulClient.getEntries<ProjectsSkeleton>({
+    content_type: "projects",
+    limit: 1,
+  });
+  const fields = res.items[0]?.fields;
+  if (!fields) return null;
+  return (fields.projects as unknown as RawProject[] | undefined) ?? [];
 }
 
 /** Fetch the total count of published entries. `null` when no credentials. */
