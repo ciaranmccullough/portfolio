@@ -89,6 +89,25 @@ type AboutSkeleton = EntrySkeletonType<
   "about"
 >;
 
+/**
+ * Raw "contact" entry fields. `links` is a free array of short strings (each a
+ * URL, or a `Label | URL` pair); empty/absent when none are published.
+ */
+export interface RawContactFields {
+  title: string;
+  description?: string;
+  links?: string[];
+}
+
+type ContactSkeleton = EntrySkeletonType<
+  {
+    title: EntryFieldTypes.Symbol;
+    description: EntryFieldTypes.Symbol;
+    links: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
+  },
+  "contact"
+>;
+
 // --- Service --------------------------------------------------------------
 
 /**
@@ -135,6 +154,25 @@ export async function fetchAboutEntry(): Promise<RawAboutFields | null> {
     description: fields.description as string | undefined,
     imageUrl: image?.fields?.file?.url,
     tabs: (fields.tabs as unknown as RawAboutTab[] | undefined) ?? [],
+  };
+}
+
+/**
+ * Fetch the raw "contact" entry fields. Returns `null` when credentials are
+ * absent or nothing is published; throws on a failed request.
+ */
+export async function fetchContactEntry(): Promise<RawContactFields | null> {
+  if (!hasContentfulCredentials) return null;
+  const res = await contentfulClient.getEntries<ContactSkeleton>({
+    content_type: "contact",
+    limit: 1,
+  });
+  const fields = res.items[0]?.fields;
+  if (!fields) return null;
+  return {
+    title: fields.title as string,
+    description: fields.description as string | undefined,
+    links: (fields.links as unknown as string[] | undefined) ?? [],
   };
 }
 

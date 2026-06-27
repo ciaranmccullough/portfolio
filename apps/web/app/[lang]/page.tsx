@@ -18,7 +18,7 @@ import { SiteNav } from "../components/SiteNav/SiteNav";
 import { getTranslations } from "./dictionaries";
 import { heroTabs } from "../data/heroTabs";
 import { projects } from "../data/projects";
-import { getAbout, getEntryCount, getHero } from "@/lib/contentful";
+import { getAbout, getContact, getEntryCount, getHero } from "@/lib/contentful";
 
 // Toolbox cards cycle the brand accents in order (the colour is positional
 // presentation, not category data — see SkillCategory `tone`).
@@ -34,9 +34,10 @@ export default async function HomePage({
   // Server-side Contentful data access (services -> mappers -> here), fetched in
   // parallel. getHero returns null when Contentful is unreachable; show an error
   // screen rather than fake fallback content.
-  const [hero, about, entryCount] = await Promise.all([
+  const [hero, about, contact, entryCount] = await Promise.all([
     getHero(),
     getAbout(),
+    getContact(),
     getEntryCount(),
   ]);
   if (!hero) {
@@ -143,9 +144,9 @@ export default async function HomePage({
         <Contact
           id="contact"
           eyebrow={dict.contact.eyebrow}
-          title={dict.contact.title}
-          intro={dict.contact.intro}
-          socials={dict.contact.socials}
+          title={contact?.title ?? dict.contact.title}
+          intro={contact?.intro ?? dict.contact.intro}
+          socials={contact?.socials}
         >
           <ContactForm
             fields={dict.contact.fields}

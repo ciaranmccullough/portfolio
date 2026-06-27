@@ -87,11 +87,7 @@
       "name": "Please enter your name (at least 2 letters).",
       "email": "Please enter a valid email address.",
       "message": "Please tell me a little more (at least 10 characters)."
-    },
-    "socials": [
-      { "label": "GitHub ↗", "href": "https://github.com" },
-      { "label": "LinkedIn ↗", "href": "https://www.linkedin.com" }
-    ]
+    }
   },
   "footer": {
     "contentfulNotConfigured": "Contentful: not configured",

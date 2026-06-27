@@ -1,13 +1,16 @@
 import { unstable_cache } from "next/cache";
 
 import { mapAbout } from "@/mappers/aboutMapper";
+import { mapContact } from "@/mappers/contactMapper";
 import { mapHero } from "@/mappers/heroMapper";
 import {
   fetchAboutEntry,
+  fetchContactEntry,
   fetchEntryCount,
   fetchHeroEntry,
 } from "@/services/contentful/contentful";
 import type { About } from "@/types/about";
+import type { Contact } from "@/types/contact";
 import type { Hero } from "@/types/hero";
 
 /**
@@ -57,6 +60,27 @@ const getAboutCached = unstable_cache(
 export async function getAbout(): Promise<About | null> {
   try {
     return await getAboutCached();
+  } catch {
+    return null;
+  }
+}
+
+const getContactCached = unstable_cache(
+  async () => {
+    const raw = await fetchContactEntry();
+    return raw ? mapContact(raw) : null;
+  },
+  ["contentful-contact-v1"],
+  { revalidate: REVALIDATE_SECONDS, tags: ["contentful"] },
+);
+
+/**
+ * Server-side data access for the Contact section: fetch (service) → map
+ * (mapper), cached as ISR. Returns `null` when the entry is missing or fails.
+ */
+export async function getContact(): Promise<Contact | null> {
+  try {
+    return await getContactCached();
   } catch {
     return null;
   }

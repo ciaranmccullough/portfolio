@@ -50,6 +50,7 @@ export function ContactForm({
     Partial<Record<FieldName, string>>
   >({});
   const [canSubmit, setCanSubmit] = useState(false);
+  const [canClear, setCanClear] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   function validate(field: FieldName, value: string): string {
@@ -79,9 +80,12 @@ export function ContactForm({
       const values = readValues();
       setFieldErrors((prev) => ({
         ...prev,
-        [field]: validate(field, values[field]),
+        // Clear the error when a field is emptied; only validate real content.
+        [field]:
+          values[field].trim() === "" ? "" : validate(field, values[field]),
       }));
       setCanSubmit(isFormValid(values));
+      setCanClear(FIELD_NAMES.some((f) => values[f].length > 0));
     };
   }
 
@@ -121,6 +125,7 @@ export function ContactForm({
     touched.current.clear();
     setFieldErrors({});
     setCanSubmit(false);
+    setCanClear(false);
   }
 
   function handleClear() {
@@ -196,7 +201,12 @@ export function ContactForm({
         <Button type="submit" variant="primary" disabled={!canSubmit}>
           {submitLabel}
         </Button>
-        <Button type="button" variant="ghost-dark" onClick={handleClear}>
+        <Button
+          type="button"
+          variant="ghost-dark"
+          onClick={handleClear}
+          disabled={!canClear}
+        >
           {clearLabel}
         </Button>
       </div>
