@@ -93,11 +93,11 @@
     "fields": {
       "name": {
         "label": "Name",
-        "placeholder": "Ada Lovelace"
+        "placeholder": "Name"
       },
       "email": {
         "label": "Email",
-        "placeholder": "ada@example.com"
+        "placeholder": "example@email.com"
       },
       "message": {
         "label": "Enquiry",
@@ -113,6 +113,6 @@
   "footer": {
     "contentfulNotConfigured": "Contentful: not configured",
     "contentfulEntries": "Contentful: {count} entries",
-    "colophon": " · Portfolio · Ciaran"
+    "colophon": " · @ciaranmccullough 2026"
   }
 }

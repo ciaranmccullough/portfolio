@@ -1,5 +1,7 @@
+// On mobile the form sits directly on the Contact section's dark panel (no
+// nested frame); from `sm` up it gets its own bordered, inset surface.
 export const contactFormClass =
-  "flex flex-col gap-2 rounded-2xl border border-line-dark bg-ink-soft p-5 sm:p-6";
+  "flex flex-col gap-2 sm:rounded-2xl sm:border sm:border-line-dark sm:bg-ink-soft sm:p-6";
 
 export const contactFormActionsClass = "mt-2 flex gap-3";
 

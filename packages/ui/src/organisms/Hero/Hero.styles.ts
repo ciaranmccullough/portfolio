@@ -8,10 +8,12 @@ export const heroActionsClass = "mt-7";
 
 /**
  * Mobile: a wrapped row below the content. md+: a fixed-width column beside the
- * content within which the tabs scatter horizontally (see heroTabAlign).
+ * content within which the tabs scatter horizontally (see heroTabAlign). The
+ * column widens on tablet/desktop so the `self-start`/`self-end` lanes spread
+ * the tabs further apart horizontally.
  */
 export const heroTabsClass =
-  "mt-10 flex flex-wrap gap-3 md:mt-2 md:w-72 md:shrink-0 md:flex-col md:flex-nowrap md:gap-6";
+  "mt-10 flex flex-wrap gap-3 md:mt-2 md:w-80 md:shrink-0 md:flex-col md:flex-nowrap md:gap-6 lg:w-96";
 
 /** Per-tab cross-axis position on md+, mirroring the design's scattered lanes. */
 export const heroTabAlign = [
