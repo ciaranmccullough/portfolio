@@ -53,30 +53,9 @@ const getHeroCached = withCache(
  * page renders an error screen rather than fake fallback content.
  */
 export async function getHero(): Promise<Hero | null> {
-  // TEMP DIAGNOSTIC — remove once the Vercel env is confirmed working.
-  // Logs whether the credentials reached this process and the real error, since
-  // both "missing creds" and "bad token" otherwise fail silently as `null`.
   try {
-    const hero = await getHeroCached();
-    if (!hero) {
-      console.error("[diag] getHero returned null", {
-        hasSpace: Boolean(process.env.CONTENTFUL_SPACE_ID),
-        spaceLen: process.env.CONTENTFUL_SPACE_ID?.length,
-        hasToken: Boolean(process.env.CONTENTFUL_ACCESS_TOKEN),
-        tokenLen: process.env.CONTENTFUL_ACCESS_TOKEN?.length,
-        environment: process.env.CONTENTFUL_ENVIRONMENT,
-      });
-    }
-    return hero;
-  } catch (error) {
-    console.error("[diag] getHero threw", {
-      hasSpace: Boolean(process.env.CONTENTFUL_SPACE_ID),
-      spaceLen: process.env.CONTENTFUL_SPACE_ID?.length,
-      hasToken: Boolean(process.env.CONTENTFUL_ACCESS_TOKEN),
-      tokenLen: process.env.CONTENTFUL_ACCESS_TOKEN?.length,
-      environment: process.env.CONTENTFUL_ENVIRONMENT,
-      message: error instanceof Error ? error.message : String(error),
-    });
+    return await getHeroCached();
+  } catch {
     return null;
   }
 }
