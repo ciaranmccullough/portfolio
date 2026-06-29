@@ -2,7 +2,11 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 /** A floating tech tab in the {@link Hero}: an icon paired with a label. */
 export interface HeroTab {
-  /** The tech icon — an SVG rendered through the Icon atom. */
+  /**
+   * The tech icon — a rendered icon element (an Icon-atom glyph such as the
+   * app's `<ReactIcon />`), placed as-is. Size it via the element's own
+   * `className` (e.g. `size-4`).
+   */
   icon: ReactNode;
   /** The tech name. */
   title: ReactNode;

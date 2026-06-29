@@ -40,8 +40,6 @@ export const heroTabSlant = [
 export const heroTabClass =
   "inline-flex items-center gap-2 rounded-lg border border-ink px-3 py-2 font-mono text-xs font-bold text-fg shadow-brutal";
 
-export const heroTabIconClass = "size-4";
-
 /** Staggered float variants, cycled per tab so they bob out of sync. */
 export const heroTabFloat = [
   "motion-safe:animate-floaty",

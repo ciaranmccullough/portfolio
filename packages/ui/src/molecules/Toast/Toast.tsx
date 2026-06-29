@@ -1,7 +1,8 @@
-import type { ReactNode } from "react";
+import type { ComponentType } from "react";
 
-import { Icon, Text } from "../../atoms";
+import { Text } from "../../atoms";
 import { cn } from "../../cn";
+import { AlertIcon, CheckIcon, CloseIcon, type GlyphProps } from "../../icons";
 import {
   toastBadge,
   toastBase,
@@ -12,48 +13,10 @@ import {
 import type { ToastProps, ToastVariant } from "./Toast.types";
 
 /** Leading status glyph per tone (inherits the badge's text colour). */
-const variantIcon: Record<ToastVariant, ReactNode> = {
-  success: (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m20 6-11 11-5-5" />
-    </svg>
-  ),
-  error: (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 8v5" />
-      <path d="M12 16.5h.01" />
-    </svg>
-  ),
+const variantIcon: Record<ToastVariant, ComponentType<GlyphProps>> = {
+  success: CheckIcon,
+  error: AlertIcon,
 };
-
-const closeIcon = (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M18 6 6 18" />
-    <path d="m6 6 12 12" />
-  </svg>
-);
 
 /**
  * Toast — a transient notification card confirming success or reporting an
@@ -71,6 +34,7 @@ export function Toast({
   className,
   ...props
 }: ToastProps) {
+  const StatusIcon = variantIcon[variant];
   return (
     <div
       role={variant === "error" ? "alert" : "status"}
@@ -79,7 +43,7 @@ export function Toast({
       {...props}
     >
       <span className={toastBadge[variant]}>
-        <Icon>{variantIcon[variant]}</Icon>
+        <StatusIcon />
       </span>
       <div className={toastBodyClass}>
         <Text variant="body" className={toastTitleClass}>
@@ -94,7 +58,7 @@ export function Toast({
           onClick={onDismiss}
           className={toastCloseClass}
         >
-          <Icon>{closeIcon}</Icon>
+          <CloseIcon />
         </button>
       ) : null}
     </div>

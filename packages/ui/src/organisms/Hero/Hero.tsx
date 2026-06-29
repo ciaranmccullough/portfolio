@@ -1,4 +1,4 @@
-import { Eyebrow, Icon, Text } from "../../atoms";
+import { Eyebrow, Text } from "../../atoms";
 import { cn } from "../../cn";
 import {
   heroActionsClass,
@@ -9,7 +9,6 @@ import {
   heroTabAlign,
   heroTabClass,
   heroTabFloat,
-  heroTabIconClass,
   heroTabSlant,
   heroTabsClass,
   heroTitleClass,
@@ -56,7 +55,7 @@ export function Hero({
                 tab.className,
               )}
             >
-              <Icon className={heroTabIconClass}>{tab.icon}</Icon>
+              {tab.icon}
               {tab.title}
             </li>
           ))}

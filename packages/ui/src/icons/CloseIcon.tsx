@@ -1,0 +1,21 @@
+import { Icon } from "../atoms";
+import type { GlyphProps } from "./types";
+
+/** Close / dismiss cross. */
+export function CloseIcon(props: GlyphProps) {
+  return (
+    <Icon {...props}>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </svg>
+    </Icon>
+  );
+}
