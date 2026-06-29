@@ -1,6 +1,5 @@
 import { Icon, type GlyphProps } from "@portfolio/ui";
 
-/** C#. */
 export function CSharpIcon(props: GlyphProps) {
   return (
     <Icon {...props}>

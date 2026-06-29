@@ -1,6 +1,5 @@
 import { Icon, type GlyphProps } from "@portfolio/ui";
 
-/** Node.js. */
 export function NodeJsIcon(props: GlyphProps) {
   return (
     <Icon {...props}>

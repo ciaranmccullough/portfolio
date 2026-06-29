@@ -1,7 +1,6 @@
 import {
   About,
   Contact,
-  Footer,
   Hero,
   Link,
   SkillCategory,
@@ -14,16 +13,11 @@ import Image from "next/image";
 
 import { ContactForm } from "../components/ContactForm/ContactForm";
 import { ErrorScreen } from "../components/ErrorScreen/ErrorScreen";
+import { SiteFooter } from "../components/SiteFooter/SiteFooter";
 import { SiteNav } from "../components/SiteNav/SiteNav";
 import { getTranslations } from "./dictionaries";
 import { heroTabs } from "../data/heroTabs";
-import {
-  getAbout,
-  getContact,
-  getEntryCount,
-  getHero,
-  getProjects,
-} from "@/lib/contentful";
+import { getAbout, getContact, getHero, getProjects } from "@/lib/contentful";
 
 // Toolbox cards cycle the brand accents in order (the colour is positional
 // presentation, not category data — see SkillCategory `tone`).
@@ -39,12 +33,11 @@ export default async function HomePage({
   // Server-side Contentful data access (services -> mappers -> here), fetched in
   // parallel. getHero returns null when Contentful is unreachable; show an error
   // screen rather than fake fallback content.
-  const [hero, about, contact, projects, entryCount] = await Promise.all([
+  const [hero, about, contact, projects] = await Promise.all([
     getHero(),
     getAbout(),
     getContact(),
     getProjects(),
-    getEntryCount(),
   ]);
   if (!hero) {
     return (
@@ -172,10 +165,7 @@ export default async function HomePage({
           socials={contact?.socials}
         >
           <ContactForm
-            endpoint={
-              process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT ??
-              "https://formspree.io/f/mqkywjpw"
-            }
+            endpoint={process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT ?? ""}
             fields={dict.contact.fields}
             errors={dict.contact.errors}
             submitLabel={dict.contact.submitLabel}
@@ -189,16 +179,7 @@ export default async function HomePage({
           />
         </Contact>
       </main>
-
-      <Footer className="relative z-10">
-        {entryCount === null
-          ? dict.footer.contentfulNotConfigured
-          : dict.footer.contentfulEntries.replace(
-              "{count}",
-              String(entryCount),
-            )}
-        {dict.footer.colophon}
-      </Footer>
+      <SiteFooter colophon={dict.footer.colophon} />
     </>
   );
 }

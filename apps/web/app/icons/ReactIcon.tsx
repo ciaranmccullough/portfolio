@@ -1,6 +1,5 @@
 import { Icon, type GlyphProps } from "@portfolio/ui";
 
-/** React. */
 export function ReactIcon(props: GlyphProps) {
   return (
     <Icon {...props}>

@@ -8,7 +8,6 @@ export interface AboutTab {
 export interface About {
   title: string;
   description: string;
-  /** Absolute portrait image URL (https). */
   imageUrl: string;
   tabs: AboutTab[];
 }

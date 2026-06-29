@@ -1,6 +1,5 @@
 import { Icon, type GlyphProps } from "@portfolio/ui";
 
-/** TypeScript. */
 export function TypeScriptIcon(props: GlyphProps) {
   return (
     <Icon {...props}>

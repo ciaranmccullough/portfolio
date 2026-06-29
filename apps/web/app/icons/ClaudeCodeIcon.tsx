@@ -1,6 +1,5 @@
 import { Icon, type GlyphProps } from "@portfolio/ui";
 
-/** Claude Code. */
 export function ClaudeCodeIcon(props: GlyphProps) {
   return (
     <Icon {...props}>

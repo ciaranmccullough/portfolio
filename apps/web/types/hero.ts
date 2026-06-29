@@ -7,7 +7,6 @@ export interface TitleSegment {
 
 /** Hero content as the UI consumes it — the clean frontend entity. */
 export interface Hero {
-  /** The title split into display runs, so highlighted words can be styled. */
   title: TitleSegment[];
   description: string;
   resumeUrl: string;

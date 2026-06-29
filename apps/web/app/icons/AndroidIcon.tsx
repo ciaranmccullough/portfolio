@@ -1,6 +1,5 @@
 import { Icon, type GlyphProps } from "@portfolio/ui";
 
-/** Android. */
 export function AndroidIcon(props: GlyphProps) {
   return (
     <Icon {...props}>

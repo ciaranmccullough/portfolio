@@ -1,6 +1,5 @@
 import { Icon, type GlyphProps } from "@portfolio/ui";
 
-/** .NET. */
 export function DotNetIcon(props: GlyphProps) {
   return (
     <Icon {...props}>

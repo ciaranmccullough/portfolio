@@ -111,8 +111,6 @@
     }
   },
   "footer": {
-    "contentfulNotConfigured": "Contentful: not configured",
-    "contentfulEntries": "Contentful: {count} entries",
-    "colophon": " · @ciaranmccullough 2026"
+    "colophon": "@ciaranmccullough {year}"
   }
 }
