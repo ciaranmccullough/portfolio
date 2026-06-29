@@ -41,9 +41,10 @@ const getHeroCached = withCache(
     const raw = await fetchHeroEntry();
     return raw ? mapHero(raw) : null;
   },
-  // -v2: the Hero shape changed (title: string -> TitleSegment[]); a fresh key
-  // avoids serving a stale, old-shaped cache entry after deploy.
-  ["contentful-hero-v2"],
+  // -v3: bust a stale cache entry restored from build cache — an earlier deploy
+  // (before the Contentful env vars were set on Vercel) cached `null`, and the
+  // restored build cache kept serving it. A fresh key forces a real fetch.
+  ["contentful-hero-v3"],
 );
 
 /**
@@ -83,7 +84,7 @@ export async function getHero(): Promise<Hero | null> {
 const getAboutCached = withCache(async () => {
   const raw = await fetchAboutEntry();
   return raw ? mapAbout(raw) : null;
-}, ["contentful-about-v1"]);
+}, ["contentful-about-v2"]);
 
 /**
  * Server-side data access for the About section: fetch (service) → map (mapper),
@@ -100,7 +101,7 @@ export async function getAbout(): Promise<About | null> {
 const getContactCached = withCache(async () => {
   const raw = await fetchContactEntry();
   return raw ? mapContact(raw) : null;
-}, ["contentful-contact-v1"]);
+}, ["contentful-contact-v2"]);
 
 /**
  * Server-side data access for the Contact section: fetch (service) → map
@@ -117,7 +118,7 @@ export async function getContact(): Promise<Contact | null> {
 const getProjectsCached = withCache(async () => {
   const raw = await fetchProjects();
   return raw ? mapProjects(raw) : null;
-}, ["contentful-projects-v1"]);
+}, ["contentful-projects-v2"]);
 
 /**
  * Server-side data access for the Projects (WorkGrid) section: fetch (service) →
@@ -133,7 +134,7 @@ export async function getProjects(): Promise<Project[] | null> {
 
 const getEntryCountCached = withCache(
   () => fetchEntryCount(),
-  ["contentful-entry-count"],
+  ["contentful-entry-count-v2"],
 );
 
 /** Total published Contentful entry count (footer stat); `null` when absent. */
