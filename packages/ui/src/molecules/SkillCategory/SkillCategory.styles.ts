@@ -14,11 +14,13 @@ export const skillCategorySurface: Record<SkillCategoryTone, string> = {
 export const skillCategoryTitleBase =
   "mb-3 flex items-center gap-2 font-heading text-lg font-bold";
 
+// Title sits on the tone's light tint, so it uses the AA-contrast `-deep`
+// shades; the dot below keeps the bright brand colour as the accent.
 export const skillCategoryTitleTone: Record<SkillCategoryTone, string> = {
   violet: "text-brand-violet",
-  orange: "text-brand-orange",
-  green: "text-brand-green",
-  amber: "text-brand-amber",
+  orange: "text-brand-orange-deep",
+  green: "text-brand-green-deep",
+  amber: "text-brand-amber-deep",
 };
 
 export const skillCategoryDotBase = "size-2.5 rounded-full";

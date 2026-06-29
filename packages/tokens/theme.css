@@ -26,6 +26,12 @@
   --color-brand-orange: #ff5836;
   --color-brand-green: #0fa978;
   --color-brand-amber: #e0930c;
+  /* Darker accent shades for use as *text* on light tints/paper — the bright
+     brand colours above fail WCAG AA (4.5:1) there. These clear 4.6:1 on tint,
+     paper and card. (Violet already passes, so it has no -deep variant.) */
+  --color-brand-orange-deep: #bf4228;
+  --color-brand-green-deep: #0b7c58;
+  --color-brand-amber-deep: #956208;
   --color-accent-android: #3ddc84;
   --color-accent-react: #61dafb;
 
