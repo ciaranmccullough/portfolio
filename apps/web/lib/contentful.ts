@@ -7,7 +7,6 @@ import { mapProjects } from "@/mappers/projectsMapper";
 import {
   fetchAboutEntry,
   fetchContactEntry,
-  fetchEntryCount,
   fetchHeroEntry,
   fetchProjects,
 } from "@/services/contentful/contentful";
@@ -106,20 +105,6 @@ const getProjectsCached = withCache(async () => {
 export async function getProjects(): Promise<Project[] | null> {
   try {
     return await getProjectsCached();
-  } catch {
-    return null;
-  }
-}
-
-const getEntryCountCached = withCache(
-  () => fetchEntryCount(),
-  ["contentful-entry-count-v2"],
-);
-
-/** Total published Contentful entry count (footer stat); `null` when absent. */
-export async function getEntryCount(): Promise<number | null> {
-  try {
-    return await getEntryCountCached();
   } catch {
     return null;
   }

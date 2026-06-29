@@ -51,8 +51,8 @@ page / component          clean entity
 
 - **Client** — `contentfulClient` (CDA) + `hasContentfulCredentials`.
 - **Response** — `RawHeroFields` (raw "project" entry fields).
-- **Service** — `fetchHeroEntry()` → `RawHeroFields | null`, `fetchEntryCount()`
-  → `number | null`. (No Request types — these reads are parameterless.)
+- **Service** — `fetchHeroEntry()` → `RawHeroFields | null`. (No Request types —
+  these reads are parameterless.)
 
 `mappers/heroMapper.ts` maps `RawHeroFields` → the `Hero` entity
 (`types/hero.ts`); `lib/contentful.ts` composes them (ISR cache + fallback).

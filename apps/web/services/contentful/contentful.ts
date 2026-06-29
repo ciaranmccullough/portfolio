@@ -208,10 +208,3 @@ export async function fetchProjects(): Promise<RawProject[] | null> {
   if (!fields) return null;
   return (fields.projects as unknown as RawProject[] | undefined) ?? [];
 }
-
-/** Fetch the total count of published entries. `null` when no credentials. */
-export async function fetchEntryCount(): Promise<number | null> {
-  if (!hasContentfulCredentials) return null;
-  const res = await contentfulClient.getEntries({ limit: 1 });
-  return res.total;
-}
