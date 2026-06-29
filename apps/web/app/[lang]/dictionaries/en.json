@@ -12,11 +12,23 @@
   "nav": {
     "brand": "Ciaran",
     "links": [
-      { "label": "Work", "href": "#work" },
-      { "label": "Stack", "href": "#stack" },
-      { "label": "About", "href": "#about" }
+      {
+        "label": "Work",
+        "href": "#work"
+      },
+      {
+        "label": "Stack",
+        "href": "#stack"
+      },
+      {
+        "label": "About",
+        "href": "#about"
+      }
     ],
-    "cta": { "label": "Let's talk", "href": "#contact" }
+    "cta": {
+      "label": "Let's talk",
+      "href": "#contact"
+    }
   },
   "hero": {
     "resumeLabel": "Résumé"
@@ -71,13 +83,22 @@
     "title": "Let's build something together.",
     "intro": "Open to frontend web, hybrid mobile, Android and full-stack roles, freelance, and the odd side quest.",
     "submitLabel": "Send enquiry",
+    "sendingLabel": "Sending…",
     "clearLabel": "Clear",
     "successTitle": "Message sent ✦",
     "successMessage": "Thanks — your enquiry just landed in my inbox. I'll get back to you within a day.",
-    "sendAnotherLabel": "Send another",
+    "errorTitle": "Couldn't send your message",
+    "submitError": "Something went wrong sending your message. Please try again, or email me directly.",
+    "dismissToastLabel": "Dismiss",
     "fields": {
-      "name": { "label": "Name", "placeholder": "Ada Lovelace" },
-      "email": { "label": "Email", "placeholder": "ada@example.com" },
+      "name": {
+        "label": "Name",
+        "placeholder": "Ada Lovelace"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "ada@example.com"
+      },
       "message": {
         "label": "Enquiry",
         "placeholder": "Tell me a little about the project or role…"

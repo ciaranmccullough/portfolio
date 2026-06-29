@@ -1,15 +1,14 @@
 "use client";
 
-import { Button, FormField, Text } from "@portfolio/ui";
-import { useRef, useState, type FormEvent } from "react";
+import { Button, FormField, Toast, type ToastVariant } from "@portfolio/ui";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import {
   contactFormActionsClass,
   contactFormClass,
-  contactFormSuccessButtonClass,
-  contactFormSuccessClass,
-  contactFormSuccessMessageClass,
-  contactFormSuccessTitleClass,
+  contactFormToastMotionClass,
+  contactFormToastViewportClass,
 } from "./ContactForm.styles";
 import type { ContactFormProps, FieldName } from "./ContactForm.types";
 
@@ -21,37 +20,65 @@ const MESSAGE_MIN_LENGTH = 10;
 
 const FIELD_NAMES: readonly FieldName[] = ["name", "email", "message"];
 
+/** How long a toast stays up before auto-dismissing (ms). */
+const TOAST_DURATION = 6000;
+
+/** A single active toast; `id` re-triggers the animation on repeat submits. */
+interface ActiveToast {
+  id: number;
+  variant: ToastVariant;
+}
+
 /**
  * ContactForm — the interactive, uncontrolled contact form.
  *
  * Field values are owned by the DOM and read through refs (no value state); we
  * keep React state only for validation messages, the submit-enabled flag and
- * the post-submit success view. Validation runs in real time against regex
- * patterns, the submit button stays disabled until every field is valid, and a
- * submit logs the collected data. Copy is injected from the localised
- * dictionary so this component holds no user-facing strings.
+ * the in-flight status. Validation runs in real time against regex patterns and
+ * the submit button stays disabled until every field is valid. A valid submit
+ * POSTs the data to the Formspree `endpoint` as JSON (AJAX, so the page never
+ * navigates); the outcome is surfaced through a transient {@link Toast} —
+ * success also resets the form. Copy is injected from the localised dictionary.
  */
 export function ContactForm({
+  endpoint,
   fields,
   errors,
   submitLabel,
+  sendingLabel,
   clearLabel,
   successTitle,
   successMessage,
-  sendAnotherLabel,
+  errorTitle,
+  submitError,
+  dismissToastLabel,
 }: ContactFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
   const touched = useRef<Set<FieldName>>(new Set());
+  const toastId = useRef(0);
 
   const [fieldErrors, setFieldErrors] = useState<
     Partial<Record<FieldName, string>>
   >({});
   const [canSubmit, setCanSubmit] = useState(false);
   const [canClear, setCanClear] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [toast, setToast] = useState<ActiveToast | null>(null);
+
+  // Auto-dismiss the current toast; the timer resets whenever a new one shows.
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), TOAST_DURATION);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  function showToast(variant: ToastVariant) {
+    toastId.current += 1;
+    setToast({ id: toastId.current, variant });
+  }
 
   function validate(field: FieldName, value: string): string {
     const trimmed = value.trim();
@@ -89,7 +116,14 @@ export function ContactForm({
     };
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function resetState() {
+    touched.current.clear();
+    setFieldErrors({});
+    setCanSubmit(false);
+    setCanClear(false);
+  }
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const values = readValues();
     const nextErrors: Record<FieldName, string> = {
@@ -116,16 +150,30 @@ export function ContactForm({
       email: values.email.trim(),
       message: values.message.trim(),
     };
-    // Task's definition of done: log the collected form-data object on submit.
-    console.log("Contact form submission", data);
-    setSubmitted(true);
-  }
 
-  function resetState() {
-    touched.current.clear();
-    setFieldErrors({});
-    setCanSubmit(false);
-    setCanClear(false);
+    // AJAX submit to Formspree: POST JSON with an Accept: application/json
+    // header so the endpoint answers with JSON instead of redirecting, keeping
+    // the single-page experience intact.
+    setSubmitting(true);
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error(`Submit failed: ${response.status}`);
+      // Success: wipe the form (DOM + validation state) and confirm via toast.
+      formRef.current?.reset();
+      resetState();
+      showToast("success");
+    } catch {
+      showToast("error");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   function handleClear() {
@@ -133,83 +181,89 @@ export function ContactForm({
     resetState();
   }
 
-  function handleSendAnother() {
-    resetState();
-    setSubmitted(false);
-  }
-
-  if (submitted) {
-    return (
-      <div className={contactFormSuccessClass} role="status">
-        <Text as="h3" variant="h3" className={contactFormSuccessTitleClass}>
-          {successTitle}
-        </Text>
-        <Text variant="body" className={contactFormSuccessMessageClass}>
-          {successMessage}
-        </Text>
-        <Button
-          variant="ghost-dark"
-          className={contactFormSuccessButtonClass}
-          onClick={handleSendAnother}
-        >
-          {sendAnotherLabel}
-        </Button>
-      </div>
-    );
-  }
-
   return (
-    <form
-      ref={formRef}
-      onSubmit={handleSubmit}
-      noValidate
-      className={contactFormClass}
-    >
-      <FormField
-        ref={nameRef}
-        name="name"
-        autoComplete="name"
-        label={fields.name.label}
-        placeholder={fields.name.placeholder}
-        error={fieldErrors.name}
-        onChange={handleFieldChange("name")}
-        onBlur={handleFieldChange("name")}
-      />
-      <FormField
-        ref={emailRef}
-        name="email"
-        type="email"
-        inputMode="email"
-        autoComplete="email"
-        label={fields.email.label}
-        placeholder={fields.email.placeholder}
-        error={fieldErrors.email}
-        onChange={handleFieldChange("email")}
-        onBlur={handleFieldChange("email")}
-      />
-      <FormField
-        ref={messageRef}
-        multiline
-        name="message"
-        label={fields.message.label}
-        placeholder={fields.message.placeholder}
-        error={fieldErrors.message}
-        onChange={handleFieldChange("message")}
-        onBlur={handleFieldChange("message")}
-      />
-      <div className={contactFormActionsClass}>
-        <Button type="submit" variant="primary" disabled={!canSubmit}>
-          {submitLabel}
-        </Button>
-        <Button
-          type="button"
-          variant="ghost-dark"
-          onClick={handleClear}
-          disabled={!canClear}
-        >
-          {clearLabel}
-        </Button>
+    <>
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit}
+        noValidate
+        className={contactFormClass}
+      >
+        <FormField
+          ref={nameRef}
+          name="name"
+          autoComplete="name"
+          label={fields.name.label}
+          placeholder={fields.name.placeholder}
+          error={fieldErrors.name}
+          onChange={handleFieldChange("name")}
+          onBlur={handleFieldChange("name")}
+        />
+        <FormField
+          ref={emailRef}
+          name="email"
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          label={fields.email.label}
+          placeholder={fields.email.placeholder}
+          error={fieldErrors.email}
+          onChange={handleFieldChange("email")}
+          onBlur={handleFieldChange("email")}
+        />
+        <FormField
+          ref={messageRef}
+          multiline
+          name="message"
+          label={fields.message.label}
+          placeholder={fields.message.placeholder}
+          error={fieldErrors.message}
+          onChange={handleFieldChange("message")}
+          onBlur={handleFieldChange("message")}
+        />
+        <div className={contactFormActionsClass}>
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={!canSubmit || submitting}
+          >
+            {submitting ? sendingLabel : submitLabel}
+          </Button>
+          <Button
+            type="button"
+            variant="ghost-dark"
+            onClick={handleClear}
+            disabled={!canClear || submitting}
+          >
+            {clearLabel}
+          </Button>
+        </div>
+      </form>
+
+      <div className={contactFormToastViewportClass}>
+        <AnimatePresence>
+          {toast ? (
+            <motion.div
+              key={toast.id}
+              initial={{ opacity: 0, y: 16, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.97 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              className={contactFormToastMotionClass}
+            >
+              <Toast
+                variant={toast.variant}
+                title={toast.variant === "success" ? successTitle : errorTitle}
+                message={
+                  toast.variant === "success" ? successMessage : submitError
+                }
+                onDismiss={() => setToast(null)}
+                dismissLabel={dismissToastLabel}
+              />
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
-    </form>
+    </>
   );
 }

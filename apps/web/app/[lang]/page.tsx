@@ -172,13 +172,20 @@ export default async function HomePage({
           socials={contact?.socials}
         >
           <ContactForm
+            endpoint={
+              process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT ??
+              "https://formspree.io/f/mqkywjpw"
+            }
             fields={dict.contact.fields}
             errors={dict.contact.errors}
             submitLabel={dict.contact.submitLabel}
+            sendingLabel={dict.contact.sendingLabel}
             clearLabel={dict.contact.clearLabel}
             successTitle={dict.contact.successTitle}
             successMessage={dict.contact.successMessage}
-            sendAnotherLabel={dict.contact.sendAnotherLabel}
+            errorTitle={dict.contact.errorTitle}
+            submitError={dict.contact.submitError}
+            dismissToastLabel={dict.contact.dismissToastLabel}
           />
         </Contact>
       </main>

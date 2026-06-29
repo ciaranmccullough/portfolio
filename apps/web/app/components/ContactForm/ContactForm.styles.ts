@@ -3,11 +3,13 @@ export const contactFormClass =
 
 export const contactFormActionsClass = "mt-2 flex gap-3";
 
-export const contactFormSuccessClass =
-  "rounded-2xl border border-line-dark bg-ink-soft p-6 text-center sm:p-8";
+/**
+ * Fixed viewport that floats the toast above all content (bottom-centre on
+ * mobile, bottom-right from `sm`). `pointer-events-none` lets clicks fall
+ * through the empty gutter; the Toast itself re-enables pointer events.
+ */
+export const contactFormToastViewportClass =
+  "pointer-events-none fixed inset-x-4 bottom-4 z-[60] flex justify-center sm:inset-x-auto sm:bottom-6 sm:right-6 sm:justify-end";
 
-export const contactFormSuccessTitleClass = "text-fg-inverse";
-
-export const contactFormSuccessMessageClass = "mt-2 text-fg-on-dark";
-
-export const contactFormSuccessButtonClass = "mt-5";
+/** The motion wrapper sizing: full-width on mobile, hug the Toast from `sm`. */
+export const contactFormToastMotionClass = "w-full sm:w-auto";

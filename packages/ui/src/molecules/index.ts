@@ -5,3 +5,4 @@ export * from "./RepoRow";
 export * from "./SkillCategory";
 export * from "./SocialLinks";
 export * from "./StatBlock";
+export * from "./Toast";
