@@ -33,7 +33,11 @@ export function Contact({
         <span aria-hidden="true" className={contactGlowTwoClass} />
         <div className={contactGridClass}>
           <div>
-            {eyebrow ? <Eyebrow tone="green">{eyebrow}</Eyebrow> : null}
+            {eyebrow ? (
+              <Eyebrow tone="green" onDark>
+                {eyebrow}
+              </Eyebrow>
+            ) : null}
             <Text as="h2" variant="h1" className={contactTitleClass}>
               {title}
             </Text>
