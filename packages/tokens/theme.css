@@ -53,9 +53,12 @@
   --color-tint-amber: #fdf3df;
 
   /* ---- Typography ---- */
-  --font-heading: "Bricolage Grotesque", sans-serif;
-  --font-body: "Hanken Grotesk", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  /* The `--font-*` variables are set by next/font in the app (self-hosted); the
+     named families are a fallback for any consumer (e.g. Storybook) that doesn't
+     load them, then a generic. */
+  --font-heading: var(--font-bricolage), "Bricolage Grotesque", sans-serif;
+  --font-body: var(--font-hanken), "Hanken Grotesk", sans-serif;
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", monospace;
 
   --text-2xs: 11px;
   --text-xs: 12px;
