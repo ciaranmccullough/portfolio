@@ -1,7 +1,9 @@
 import { Eyebrow, Tag, Text } from "../../atoms";
 import { cn } from "../../cn";
+import { ArrowUpRightIcon } from "../../icons";
 import {
   workCardArrowClass,
+  workCardArrowIconClass,
   workCardBodyClass,
   workCardClass,
   workCardDescriptionClass,
@@ -82,7 +84,7 @@ export function WorkGrid({
                     ))}
                     {project.href ? (
                       <li aria-hidden="true" className={workCardArrowClass}>
-                        ↗
+                        <ArrowUpRightIcon className={workCardArrowIconClass} />
                       </li>
                     ) : null}
                   </ul>

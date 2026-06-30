@@ -37,4 +37,6 @@ export const workCardDescriptionClass = "text-base text-fg-soft";
 export const workCardTagsClass =
   "mt-auto flex list-none flex-wrap items-center gap-1.5 pt-4";
 
-export const workCardArrowClass = "ml-auto font-bold text-brand-violet";
+/* The external-link arrow, pushed to the far end; colour flows to the SVG. */
+export const workCardArrowClass = "ml-auto text-brand-violet";
+export const workCardArrowIconClass = "size-4";

@@ -8,6 +8,7 @@
  */
 export * from "./types";
 export * from "./AlertIcon";
+export * from "./ArrowUpRightIcon";
 export * from "./CheckIcon";
 export * from "./CloseIcon";
 export * from "./MenuIcon";

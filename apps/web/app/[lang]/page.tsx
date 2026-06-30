@@ -1,5 +1,6 @@
 import {
   About,
+  ArrowUpRightIcon,
   Contact,
   Hero,
   Link,
@@ -86,7 +87,7 @@ export default async function HomePage({
             rel="noopener noreferrer"
           >
             {dict.hero.resumeLabel}
-            <span aria-hidden="true">↗</span>
+            <ArrowUpRightIcon className="size-4" />
           </Link>
         </Hero>
 
