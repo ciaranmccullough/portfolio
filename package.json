@@ -14,7 +14,8 @@
     "lint:fix": "eslint apps packages --ext .ts,.tsx --fix",
     "format": "prettier --check .",
     "format:write": "prettier --write .",
-    "check": "pnpm run lint && pnpm run format"
+    "check": "pnpm run lint && pnpm run format",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@portfolio/config": "workspace:*",
@@ -23,6 +24,7 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jsx-a11y": "^6.10.0",
+    "husky": "^9.1.7",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"
   },
