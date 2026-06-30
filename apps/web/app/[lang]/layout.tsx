@@ -6,6 +6,8 @@ import {
 } from "next/font/google";
 import type { ReactNode } from "react";
 
+import { SITE_NAME, SITE_URL } from "@/site-config";
+
 import { i18n } from "../../i18n-config";
 import { getTranslations } from "./dictionaries";
 
@@ -44,10 +46,23 @@ export async function generateMetadata({
 }: {
   params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
-  const dict = await getTranslations(params);
+  const { title, description } = (await getTranslations(params)).metadata;
   return {
-    title: dict.metadata.title,
-    description: dict.metadata.description,
+    metadataBase: new URL(SITE_URL),
+    title: { default: title, template: `%s | ${SITE_NAME}` },
+    description,
+    applicationName: SITE_NAME,
+    authors: [{ name: SITE_NAME, url: SITE_URL }],
+    alternates: { canonical: "/" },
+    openGraph: {
+      type: "website",
+      url: SITE_URL,
+      siteName: SITE_NAME,
+      title,
+      description,
+      locale: "en_GB",
+    },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
