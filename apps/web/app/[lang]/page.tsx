@@ -19,6 +19,7 @@ import { SiteNav } from "../components/SiteNav/SiteNav";
 import { getTranslations } from "./dictionaries";
 import { heroTabs } from "../data/heroTabs";
 import { getAbout, getContact, getHero, getProjects } from "@/lib/contentful";
+import { SITE_NAME, SITE_URL } from "@/site-config";
 
 // Toolbox cards cycle the brand accents in order (the colour is positional
 // presentation, not category data — see SkillCategory `tone`).
@@ -51,8 +52,29 @@ export default async function HomePage({
     );
   }
 
+  // Person structured data (JSON-LD) for richer search results; `sameAs` links
+  // out to the social profiles from Contentful so engines can connect them.
+  const personJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: SITE_NAME,
+    url: SITE_URL,
+    jobTitle: "Software Engineer",
+    ...(contact?.socials?.length
+      ? {
+          sameAs: contact.socials
+            .map((social) => social.href)
+            .filter((href) => href.startsWith("http")),
+        }
+      : {}),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
       <SiteNav
         brand={dict.nav.brand}
         brandHref="#top"
