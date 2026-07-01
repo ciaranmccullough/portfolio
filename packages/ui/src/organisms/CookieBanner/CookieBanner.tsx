@@ -107,18 +107,15 @@ export const defaultCookieBannerCopy: CookieBannerCopy = {
   statusSaved: "Preferences saved",
 };
 
-/** Seed the draft toggles from the persisted preferences (necessary always on). */
-function seedDraft(preferences?: CookiePreferences): CookiePreferences {
-  return { ...NECESSARY_ONLY, ...preferences, necessary: true };
-}
-
 /**
  * CookieBanner — the consent organism. Fixed to the foot of the screen, it opens
  * as a compact summary (accept / reject / manage) and expands into a modal
- * preferences dialog with a per-category {@link Switch}. Presentational: it owns
- * only ephemeral UI state (which view is showing and the pending toggles); the
- * persisted decision is supplied via `preferences` and reported back through the
- * `onAcceptAll` / `onRejectAll` / `onSavePreferences` callbacks.
+ * preferences dialog with a per-category {@link Switch}. Presentational: the only
+ * React state is which view is showing and the transient status pill. The
+ * per-category toggles are uncontrolled — each `Switch` seeds from `preferences`
+ * via `defaultChecked` and its value is read from the DOM (through refs) on save.
+ * Decisions are reported back through the `onAcceptAll` / `onRejectAll` /
+ * `onSavePreferences` callbacks.
  */
 export function CookieBanner({
   open,
@@ -133,22 +130,20 @@ export function CookieBanner({
 }: CookieBannerProps) {
   const text = { ...defaultCookieBannerCopy, ...copy };
   const [view, setView] = useState<"summary" | "preferences">("summary");
-  const [draft, setDraft] = useState<CookiePreferences>(() =>
-    seedDraft(preferences),
-  );
   const [status, setStatus] = useState("");
   const dialogRef = useRef<HTMLElement>(null);
+  const inputRefs = useRef<
+    Partial<Record<CookieCategoryKey, HTMLInputElement | null>>
+  >({});
 
   const expanded = view === "preferences";
 
-  // Each time the banner (re)opens, return to the summary view and reseed the
-  // toggles from the latest persisted preferences.
+  // Each time the banner (re)opens, return to the summary view. The per-category
+  // toggles are uncontrolled and re-seed from `preferences` when the preferences
+  // list (re)mounts on expand.
   useEffect(() => {
-    if (open) {
-      setView("summary");
-      setDraft(seedDraft(preferences));
-    }
-  }, [open, preferences]);
+    if (open) setView("summary");
+  }, [open]);
 
   // Move focus into the dialog when it becomes a modal (preferences view), and
   // let Escape collapse it back to the summary.
@@ -169,10 +164,6 @@ export function CookieBanner({
     return () => clearTimeout(timer);
   }, [status]);
 
-  function toggleCategory(key: CookieCategoryKey) {
-    setDraft((current) => ({ ...current, [key]: !current[key] }));
-  }
-
   function handleAcceptAll() {
     setStatus(text.statusAccepted);
     onAcceptAll();
@@ -184,8 +175,15 @@ export function CookieBanner({
   }
 
   function handleSave() {
+    // Read the current toggle states straight from the DOM (uncontrolled).
+    const next: CookiePreferences = { ...NECESSARY_ONLY };
+    for (const category of categories) {
+      next[category.key] = category.locked
+        ? true
+        : Boolean(inputRefs.current[category.key]?.checked);
+    }
     setStatus(text.statusSaved);
-    onSavePreferences(draft);
+    onSavePreferences(next);
   }
 
   return (
@@ -256,10 +254,17 @@ export function CookieBanner({
                         </Text>
                       </div>
                       <Switch
-                        checked={draft[category.key]}
+                        ref={(el) => {
+                          inputRefs.current[category.key] = el;
+                        }}
+                        name={category.key}
+                        defaultChecked={
+                          category.locked
+                            ? true
+                            : (preferences?.[category.key] ?? false)
+                        }
                         locked={category.locked}
                         aria-label={category.title}
-                        onCheckedChange={() => toggleCategory(category.key)}
                       />
                     </div>
                     <p className={itemMetaClass}>{category.meta}</p>

@@ -1,21 +1,22 @@
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentPropsWithRef } from "react";
 
 /**
- * Props for the {@link Switch} atom — a toggle rendered as a
- * `<button role="switch">`. Controlled: drive it with `checked` and respond to
- * `onCheckedChange`. Extends native `<button>` attributes (minus `onChange`).
+ * Props for the {@link Switch} atom — an uncontrolled on/off toggle rendered as
+ * a `<label>` wrapping a visually-hidden `<input type="checkbox" role="switch">`.
+ *
+ * Extends native `<input>` attributes (including `ref` for React 19 uncontrolled
+ * usage): pass `defaultChecked` and read the value from the DOM via `ref`. Native
+ * input props (`name`, `disabled`, `onChange`, `aria-label`, `ref`, …) flow to
+ * the input; `className` styles the outer track. The controlled props (`checked`,
+ * `value`) are intentionally omitted — this atom is uncontrolled by design.
  */
 export interface SwitchProps extends Omit<
-  ComponentPropsWithoutRef<"button">,
-  "onChange"
+  ComponentPropsWithRef<"input">,
+  "type" | "role" | "checked" | "value"
 > {
-  /** Whether the switch is on. */
-  checked: boolean;
-  /** Called with the next value when the user toggles the switch. */
-  onCheckedChange?: (checked: boolean) => void;
   /**
-   * Locks the switch on: it reads as checked, shows a lock glyph in the knob and
-   * is non-interactive (e.g. a mandatory, always-on option).
+   * Locks the switch on: it renders checked, is disabled and shows a lock glyph
+   * — a mandatory, always-on option that can't be turned off.
    */
   locked?: boolean;
 }

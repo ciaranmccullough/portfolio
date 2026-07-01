@@ -116,13 +116,38 @@ describe("CookieBanner", () => {
       screen.getByRole("button", { name: "Manage preferences" }),
     );
 
-    expect(screen.getByRole("switch", { name: "Functional" })).toHaveAttribute(
-      "aria-checked",
-      "true",
-    );
+    expect(screen.getByRole("switch", { name: "Functional" })).toBeChecked();
     expect(
       screen.getByRole("switch", { name: "Performance & analytics" }),
-    ).toHaveAttribute("aria-checked", "false");
+    ).not.toBeChecked();
+  });
+
+  it("saves a seeded-on toggle that was never touched (reads it from the DOM)", async () => {
+    const user = userEvent.setup();
+    const { onSavePreferences } = setup({
+      preferences: {
+        necessary: true,
+        functional: true,
+        analytics: false,
+        marketing: false,
+      },
+    });
+
+    await user.click(
+      screen.getByRole("button", { name: "Manage preferences" }),
+    );
+    // Save without touching any switch — the seeded `functional: true` must
+    // survive because handleSave reads the live DOM state, not a default.
+    await user.click(
+      screen.getByRole("button", { name: "Save my preferences" }),
+    );
+
+    expect(onSavePreferences).toHaveBeenCalledWith({
+      necessary: true,
+      functional: true,
+      analytics: false,
+      marketing: false,
+    });
   });
 
   it("links the privacy policy from the body", () => {
