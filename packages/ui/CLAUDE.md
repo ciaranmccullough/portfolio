@@ -33,6 +33,12 @@ src/<tier>/<Component>/
 └── index.ts                 # barrel: re-export the component + its types
 ```
 
+Tests are co-located as an optional sixth file — `<Component>.test.tsx` (Jest +
+React Testing Library, run with `pnpm --filter @portfolio/ui test`). They are
+excluded from the package build and from the barrels. Note: components type props
+with `ComponentPropsWithoutRef`, so `ref` is **not** part of the typed API — don't
+write tests that pass a `ref` prop.
+
 Surface it through the barrels:
 
 - tier barrel — `src/atoms/index.ts`: `export * from "./<Component>";`

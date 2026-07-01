@@ -10,6 +10,7 @@
     "build": "pnpm -r --if-present build",
     "dev": "pnpm -r --if-present dev",
     "typecheck": "pnpm -r --if-present typecheck",
+    "test": "pnpm -r --if-present test",
     "lint": "eslint apps packages --ext .ts,.tsx",
     "lint:fix": "eslint apps packages --ext .ts,.tsx --fix",
     "format": "prettier --check .",

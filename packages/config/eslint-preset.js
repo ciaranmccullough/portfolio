@@ -32,6 +32,32 @@ module.exports = {
       { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
     ],
   },
+  overrides: [
+    {
+      // Jest test files: declare the test-runner globals (so `no-undef` is happy
+      // without eslint-plugin-jest) and relax the a11y rules that bare test
+      // markup / lightweight mock stubs can trip.
+      files: ["**/*.test.ts", "**/*.test.tsx", "**/jest.setup.ts"],
+      globals: {
+        describe: "readonly",
+        it: "readonly",
+        test: "readonly",
+        expect: "readonly",
+        beforeEach: "readonly",
+        afterEach: "readonly",
+        beforeAll: "readonly",
+        afterAll: "readonly",
+        jest: "readonly",
+      },
+      rules: {
+        "jsx-a11y/label-has-associated-control": "off",
+        "jsx-a11y/no-autofocus": "off",
+        // require() is idiomatic inside jest.mock factories (which are hoisted
+        // above imports and cannot reference module-scope import bindings).
+        "@typescript-eslint/no-require-imports": "off",
+      },
+    },
+  ],
   ignorePatterns: [
     "node_modules/",
     "dist/",
