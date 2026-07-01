@@ -34,7 +34,6 @@ import {
   manageClass,
   privacyLinkClass,
   scrimClass,
-  statusClass,
 } from "./CookieBanner.styles";
 import type {
   CookieBannerCopy,
@@ -102,20 +101,16 @@ export const defaultCookieBannerCopy: CookieBannerCopy = {
   manage: "Manage preferences",
   save: "Save my preferences",
   dialogLabel: "Cookie consent",
-  statusAccepted: "All cookies accepted",
-  statusRejected: "Non-essential cookies rejected",
-  statusSaved: "Preferences saved",
 };
 
 /**
  * CookieBanner — the consent organism. Fixed to the foot of the screen, it opens
  * as a compact summary (accept / reject / manage) and expands into a modal
  * preferences dialog with a per-category {@link Switch}. Presentational: the only
- * React state is which view is showing and the transient status pill. The
- * per-category toggles are uncontrolled — each `Switch` seeds from `preferences`
- * via `defaultChecked` and its value is read from the DOM (through refs) on save.
- * Decisions are reported back through the `onAcceptAll` / `onRejectAll` /
- * `onSavePreferences` callbacks.
+ * React state is which view is showing. The per-category toggles are uncontrolled
+ * — each `Switch` seeds from `preferences` via `defaultChecked` and its value is
+ * read from the DOM (through refs) on save. Decisions are reported back through
+ * the `onAcceptAll` / `onRejectAll` / `onSavePreferences` callbacks.
  */
 export function CookieBanner({
   open,
@@ -130,7 +125,6 @@ export function CookieBanner({
 }: CookieBannerProps) {
   const text = { ...defaultCookieBannerCopy, ...copy };
   const [view, setView] = useState<"summary" | "preferences">("summary");
-  const [status, setStatus] = useState("");
   const dialogRef = useRef<HTMLElement>(null);
   const inputRefs = useRef<
     Partial<Record<CookieCategoryKey, HTMLInputElement | null>>
@@ -157,23 +151,6 @@ export function CookieBanner({
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open, expanded]);
 
-  // Auto-dismiss the status pill; the timer resets whenever a new one shows.
-  useEffect(() => {
-    if (!status) return;
-    const timer = setTimeout(() => setStatus(""), 2600);
-    return () => clearTimeout(timer);
-  }, [status]);
-
-  function handleAcceptAll() {
-    setStatus(text.statusAccepted);
-    onAcceptAll();
-  }
-
-  function handleRejectAll() {
-    setStatus(text.statusRejected);
-    onRejectAll();
-  }
-
   function handleSave() {
     // Read the current toggle states straight from the DOM (uncontrolled).
     const next: CookiePreferences = { ...NECESSARY_ONLY };
@@ -182,7 +159,6 @@ export function CookieBanner({
         ? true
         : Boolean(inputRefs.current[category.key]?.checked);
     }
-    setStatus(text.statusSaved);
     onSavePreferences(next);
   }
 
@@ -276,14 +252,14 @@ export function CookieBanner({
             <div className={actionsClass}>
               <Button
                 variant="dark"
-                onClick={handleAcceptAll}
+                onClick={onAcceptAll}
                 className={actionAccept}
               >
                 {text.acceptAll}
               </Button>
               <Button
                 variant="ghost"
-                onClick={handleRejectAll}
+                onClick={onRejectAll}
                 className={actionReject}
               >
                 {text.rejectAll}
@@ -307,12 +283,6 @@ export function CookieBanner({
               )}
             </div>
           </section>
-        </div>
-      ) : null}
-
-      {status ? (
-        <div role="status" className={statusClass}>
-          {status}
         </div>
       ) : null}
     </>

@@ -85,9 +85,9 @@ export default async function RootLayout({
         <div className="page-texture" aria-hidden="true" />
         <CookieConsentProvider>
           {children}
-          {/* Always mounted so the confirmation pill outlives the banner closing;
-              the banner's own `open` flag gates its visibility. `categories` is a
-              typed cast of the JSON dictionary (keys match CookieCategoryKey). */}
+          {/* Site-wide consent banner (its own `open` flag gates visibility).
+              `categories` is a typed cast of the JSON dictionary — its keys match
+              CookieCategoryKey. */}
           <CookieConsent
             copy={cookies.copy}
             categories={cookies.categories as CookieCategory[]}

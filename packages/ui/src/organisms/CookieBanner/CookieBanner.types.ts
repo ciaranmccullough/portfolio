@@ -46,12 +46,6 @@ export interface CookieBannerCopy {
   save: string;
   /** Accessible name for the dialog. */
   dialogLabel: string;
-  /** Status pill shown after accepting all. */
-  statusAccepted: string;
-  /** Status pill shown after rejecting non-essential cookies. */
-  statusRejected: string;
-  /** Status pill shown after saving custom preferences. */
-  statusSaved: string;
 }
 
 /** Props for the {@link CookieBanner} organism. */

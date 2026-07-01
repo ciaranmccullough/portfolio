@@ -38,15 +38,12 @@ describe("CookieBanner", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  it("calls onAcceptAll and surfaces a status message", async () => {
+  it("calls onAcceptAll", async () => {
     const user = userEvent.setup();
     const { onAcceptAll } = setup();
 
     await user.click(screen.getByRole("button", { name: "Accept all" }));
     expect(onAcceptAll).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "All cookies accepted",
-    );
   });
 
   it("calls onRejectAll", async () => {

@@ -8,9 +8,9 @@ import type { CookieConsentProps } from "./CookieConsent.types";
 
 /**
  * CookieConsent — app-level bridge between the {@link useCookieConsent} state and
- * the presentational `CookieBanner` organism. Kept always-mounted (the banner's
- * `open` flag gates its own visibility) so the confirmation status pill survives
- * the banner collapsing after a choice.
+ * the presentational `CookieBanner` organism: it feeds the persisted consent in
+ * and wires the accept / reject / save callbacks back to the provider. The
+ * banner's own `open` flag gates its visibility.
  */
 export function CookieConsent({
   copy,

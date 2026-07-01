@@ -66,6 +66,3 @@ export const actionSave = "order-3 basis-full";
 
 export const manageClass =
   "order-3 basis-full cursor-pointer border-none bg-transparent p-1.5 font-mono text-xs font-bold tracking-wide text-fg-soft underline underline-offset-2 hover:text-fg";
-
-export const statusClass =
-  "fixed inset-x-0 bottom-4 z-[95] mx-auto w-fit rounded-full bg-ink px-5 py-2.5 text-center font-mono text-xs font-bold text-fg-inverse shadow-brand motion-safe:animate-cookie-pop sm:bottom-6";

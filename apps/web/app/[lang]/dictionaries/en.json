@@ -149,10 +149,7 @@
       "rejectAll": "Reject all",
       "manage": "Manage preferences",
       "save": "Save my preferences",
-      "dialogLabel": "Cookie consent",
-      "statusAccepted": "All cookies accepted",
-      "statusRejected": "Non-essential cookies rejected",
-      "statusSaved": "Preferences saved"
+      "dialogLabel": "Cookie consent"
     },
     "categories": [
       {
