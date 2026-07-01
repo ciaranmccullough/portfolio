@@ -107,7 +107,7 @@ describe("useCookieConsent", () => {
     expect(result.current.isBannerOpen).toBe(false);
   });
 
-  it("re-opens the banner without changing the stored choice", () => {
+  it("re-opens the banner on the summary view without changing the stored choice", () => {
     const { result } = renderConsent();
 
     act(() => result.current.rejectAll());
@@ -115,12 +115,31 @@ describe("useCookieConsent", () => {
 
     act(() => result.current.openBanner());
     expect(result.current.isBannerOpen).toBe(true);
+    expect(result.current.bannerView).toBe("summary");
     // The persisted choice is untouched by re-opening.
     expect(result.current.consent).toEqual({
       necessary: true,
       functional: false,
       analytics: false,
       marketing: false,
+    });
+  });
+
+  it("openPreferences re-opens the banner straight on the preferences view", () => {
+    const { result } = renderConsent();
+
+    act(() => result.current.acceptAll());
+    expect(result.current.isBannerOpen).toBe(false);
+
+    act(() => result.current.openPreferences());
+    expect(result.current.isBannerOpen).toBe(true);
+    expect(result.current.bannerView).toBe("preferences");
+    // The persisted choice is untouched by re-opening the settings.
+    expect(result.current.consent).toEqual({
+      necessary: true,
+      functional: true,
+      analytics: true,
+      marketing: true,
     });
   });
 

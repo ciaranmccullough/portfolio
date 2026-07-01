@@ -20,11 +20,12 @@ import type { SiteFooterProps } from "./SiteFooter.types";
  * colophon's `{year}` placeholder with a *live* copyright year read from the
  * browser clock (client-only, so no SSR/hydration mismatch around New Year), and
  * adds the utility links: Privacy, Terms and a "Cookie settings" button that
- * re-opens the consent banner via {@link useCookieConsent}.
+ * re-opens the consent banner straight on its manage-preferences view (via
+ * {@link useCookieConsent}'s `openPreferences`).
  */
 export function SiteFooter({ colophon, links }: SiteFooterProps) {
   const [year, setYear] = useState<number | null>(null);
-  const { openBanner } = useCookieConsent();
+  const { openPreferences } = useCookieConsent();
 
   useEffect(() => setYear(new Date().getFullYear()), []);
 
@@ -43,7 +44,7 @@ export function SiteFooter({ colophon, links }: SiteFooterProps) {
           </NextLink>
           <button
             type="button"
-            onClick={openBanner}
+            onClick={openPreferences}
             className={siteFooterButtonClass}
           >
             {links.cookieSettingsLabel}

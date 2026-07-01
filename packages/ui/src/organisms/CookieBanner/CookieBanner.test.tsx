@@ -38,6 +38,16 @@ describe("CookieBanner", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
+  it("opens straight on the preferences view when initialView is 'preferences'", () => {
+    setup({ initialView: "preferences" });
+
+    expect(
+      screen.getByRole("heading", { name: "Manage your cookies" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("dialog")).toHaveAttribute("aria-modal", "true");
+    expect(screen.getAllByRole("switch")).toHaveLength(4);
+  });
+
   it("calls onAcceptAll", async () => {
     const user = userEvent.setup();
     const { onAcceptAll } = setup();

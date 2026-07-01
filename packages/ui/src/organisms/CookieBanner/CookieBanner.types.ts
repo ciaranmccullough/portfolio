@@ -8,6 +8,9 @@ export type CookieCategoryKey =
 /** A per-category on/off consent map. `necessary` is always granted. */
 export type CookiePreferences = Record<CookieCategoryKey, boolean>;
 
+/** Which view the banner shows: the compact summary or the preferences panel. */
+export type CookieBannerView = "summary" | "preferences";
+
 /** A single consent category as shown in the preferences panel. */
 export interface CookieCategory {
   /** Stable identifier — also the key into {@link CookiePreferences}. */
@@ -52,6 +55,13 @@ export interface CookieBannerCopy {
 export interface CookieBannerProps {
   /** Whether the banner card is visible. Controlled by the consumer. */
   open: boolean;
+  /**
+   * Which view to show each time the banner opens. Defaults to `"summary"`; pass
+   * `"preferences"` to open straight into the manage-preferences panel (e.g. a
+   * footer "Cookie settings" link). The banner still switches views internally
+   * afterwards (Manage / collapse).
+   */
+  initialView?: CookieBannerView;
   /** Current persisted preferences, used to seed the toggles when expanded. */
   preferences?: CookiePreferences;
   /** The consent categories rendered in the preferences view. */

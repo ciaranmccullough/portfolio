@@ -17,12 +17,19 @@ export function CookieConsent({
   categories,
   privacyHref,
 }: CookieConsentProps) {
-  const { consent, isBannerOpen, acceptAll, rejectAll, savePreferences } =
-    useCookieConsent();
+  const {
+    consent,
+    isBannerOpen,
+    bannerView,
+    acceptAll,
+    rejectAll,
+    savePreferences,
+  } = useCookieConsent();
 
   return (
     <CookieBanner
       open={isBannerOpen}
+      initialView={bannerView}
       preferences={consent ?? undefined}
       categories={categories}
       copy={copy}

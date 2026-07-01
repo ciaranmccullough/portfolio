@@ -1,6 +1,6 @@
 "use client";
 
-import type { CookiePreferences } from "@portfolio/ui";
+import type { CookieBannerView, CookiePreferences } from "@portfolio/ui";
 import {
   createContext,
   useCallback,
@@ -35,14 +35,16 @@ export const CookieConsentContext =
  * The stored choice is hydrated from `localStorage` after mount (client-only, so
  * there's no SSR/hydration mismatch); if nothing is stored the banner opens for a
  * first-time decision. Accept / reject / save persist through the localStorage
- * helpers and close the banner; `openBanner` brings it back (footer "Cookie
- * settings"); `reset` forgets the choice and re-opens it.
+ * helpers and close the banner; `openBanner` / `openPreferences` bring it back on
+ * the summary / manage-preferences view (the footer "Cookie settings" link opens
+ * preferences); `reset` forgets the choice and re-opens it.
  */
 export function CookieConsentProvider({
   children,
 }: CookieConsentProviderProps) {
   const [consent, setConsent] = useState<CookiePreferences | null>(null);
   const [isBannerOpen, setIsBannerOpen] = useState(false);
+  const [bannerView, setBannerView] = useState<CookieBannerView>("summary");
 
   useEffect(() => {
     const stored = readConsent();
@@ -61,11 +63,19 @@ export function CookieConsentProvider({
     (preferences: CookiePreferences) => persist(preferences),
     [persist],
   );
-  const openBanner = useCallback(() => setIsBannerOpen(true), []);
+  const openBanner = useCallback(() => {
+    setBannerView("summary");
+    setIsBannerOpen(true);
+  }, []);
+  const openPreferences = useCallback(() => {
+    setBannerView("preferences");
+    setIsBannerOpen(true);
+  }, []);
   const closeBanner = useCallback(() => setIsBannerOpen(false), []);
   const reset = useCallback(() => {
     clearConsent();
     setConsent(null);
+    setBannerView("summary");
     setIsBannerOpen(true);
   }, []);
 
@@ -74,20 +84,24 @@ export function CookieConsentProvider({
       consent,
       hasConsented: consent !== null,
       isBannerOpen,
+      bannerView,
       acceptAll,
       rejectAll,
       savePreferences,
       openBanner,
+      openPreferences,
       closeBanner,
       reset,
     }),
     [
       consent,
       isBannerOpen,
+      bannerView,
       acceptAll,
       rejectAll,
       savePreferences,
       openBanner,
+      openPreferences,
       closeBanner,
       reset,
     ],

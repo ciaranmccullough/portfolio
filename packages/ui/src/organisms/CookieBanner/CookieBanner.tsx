@@ -38,6 +38,7 @@ import {
 import type {
   CookieBannerCopy,
   CookieBannerProps,
+  CookieBannerView,
   CookieCategory,
   CookieCategoryKey,
   CookiePreferences,
@@ -114,6 +115,7 @@ export const defaultCookieBannerCopy: CookieBannerCopy = {
  */
 export function CookieBanner({
   open,
+  initialView = "summary",
   preferences,
   categories = defaultCookieCategories,
   onAcceptAll,
@@ -124,7 +126,7 @@ export function CookieBanner({
   className,
 }: CookieBannerProps) {
   const text = { ...defaultCookieBannerCopy, ...copy };
-  const [view, setView] = useState<"summary" | "preferences">("summary");
+  const [view, setView] = useState<CookieBannerView>(initialView);
   const dialogRef = useRef<HTMLElement>(null);
   const inputRefs = useRef<
     Partial<Record<CookieCategoryKey, HTMLInputElement | null>>
@@ -132,12 +134,12 @@ export function CookieBanner({
 
   const expanded = view === "preferences";
 
-  // Each time the banner (re)opens, return to the summary view. The per-category
-  // toggles are uncontrolled and re-seed from `preferences` when the preferences
-  // list (re)mounts on expand.
+  // Each time the banner (re)opens, reset to the requested `initialView`. The
+  // per-category toggles are uncontrolled and re-seed from `preferences` when the
+  // preferences list (re)mounts on expand.
   useEffect(() => {
-    if (open) setView("summary");
-  }, [open]);
+    if (open) setView(initialView);
+  }, [open, initialView]);
 
   // Move focus into the dialog when it becomes a modal (preferences view), and
   // let Escape collapse it back to the summary.

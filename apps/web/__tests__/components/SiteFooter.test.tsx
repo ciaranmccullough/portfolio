@@ -30,10 +30,15 @@ const links = {
   cookieSettingsLabel: "Cookie settings",
 };
 
-/** Surfaces the banner-open flag so tests can observe re-opening. */
+/** Surfaces the banner state so tests can observe re-opening + the target view. */
 function BannerProbe() {
-  const { isBannerOpen } = useCookieConsent();
-  return <div data-testid="banner-open">{String(isBannerOpen)}</div>;
+  const { isBannerOpen, bannerView } = useCookieConsent();
+  return (
+    <>
+      <div data-testid="banner-open">{String(isBannerOpen)}</div>
+      <div data-testid="banner-view">{bannerView}</div>
+    </>
+  );
 }
 
 function renderFooter(children?: ReactNode) {
@@ -68,7 +73,7 @@ describe("SiteFooter", () => {
     expect(screen.getByText(/@ciaranmccullough \d{4}/)).toBeInTheDocument();
   });
 
-  it("re-opens the cookie banner when 'Cookie settings' is clicked", async () => {
+  it("re-opens the cookie banner on the preferences view when 'Cookie settings' is clicked", async () => {
     // A prior decision means the banner starts closed.
     writeConsent(NECESSARY_ONLY);
     const user = userEvent.setup();
@@ -79,5 +84,7 @@ describe("SiteFooter", () => {
     await user.click(screen.getByRole("button", { name: "Cookie settings" }));
 
     expect(screen.getByTestId("banner-open")).toHaveTextContent("true");
+    // "Cookie settings" jumps straight to the manage-preferences view.
+    expect(screen.getByTestId("banner-view")).toHaveTextContent("preferences");
   });
 });
