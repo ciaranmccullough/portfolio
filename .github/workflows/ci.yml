@@ -1,0 +1,50 @@
+name: CI
+
+# Mirrors the local husky pre-push gate. Runs on every PR and again when a PR
+# is merged (push to main), so a green check here matches a green push locally.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel superseded runs on the same ref (e.g. new pushes to an open PR).
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: lint · format · build · typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Reads the packageManager field (pnpm@10.6.5) from package.json.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      # Node version comes from .nvmrc so CI and local stay in lockstep.
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Format check
+        run: pnpm run format
+
+      # Build before typecheck: apps/web resolves @portfolio/ui from its built
+      # dist output, so the library must be compiled first.
+      - name: Build
+        run: pnpm run build
+
+      - name: Typecheck
+        run: pnpm run typecheck
