@@ -5,14 +5,18 @@ import { mapContact } from "@/mappers/contactMapper";
 import { mapHero } from "@/mappers/heroMapper";
 import { mapProjects } from "@/mappers/projectsMapper";
 import {
+  PRIVACY_CONTENT_TYPES,
+  TERMS_CONTENT_TYPES,
   fetchAboutEntry,
   fetchContactEntry,
   fetchHeroEntry,
+  fetchLegalDocument,
   fetchProjects,
 } from "@/services/contentful/contentful";
 import type { About } from "@/types/about";
 import type { Contact } from "@/types/contact";
 import type { Hero } from "@/types/hero";
+import type { LegalDocument } from "@/types/legal";
 import type { Project } from "@/types/project";
 
 /**
@@ -105,6 +109,44 @@ const getProjectsCached = withCache(async () => {
 export async function getProjects(): Promise<Project[] | null> {
   try {
     return await getProjectsCached();
+  } catch {
+    return null;
+  }
+}
+
+// The legal pages need no mapper: the Rich Text document the service returns is
+// exactly the entity the `RichText` component renders.
+const getPrivacyPolicyCached = withCache(
+  () => fetchLegalDocument(PRIVACY_CONTENT_TYPES),
+  ["contentful-privacy-policy-v1"],
+);
+
+/**
+ * Server-side data access for the Privacy Policy body (Contentful Rich Text),
+ * cached as ISR. Returns `null` when the entry is missing or the request fails —
+ * the page then falls back to its placeholder copy.
+ */
+export async function getPrivacyPolicy(): Promise<LegalDocument | null> {
+  try {
+    return await getPrivacyPolicyCached();
+  } catch {
+    return null;
+  }
+}
+
+const getTermsAndConditionsCached = withCache(
+  () => fetchLegalDocument(TERMS_CONTENT_TYPES),
+  ["contentful-terms-v1"],
+);
+
+/**
+ * Server-side data access for the Terms body (Contentful Rich Text), cached as
+ * ISR. Returns `null` when the entry is missing or the request fails — the page
+ * then falls back to its placeholder copy.
+ */
+export async function getTermsAndConditions(): Promise<LegalDocument | null> {
+  try {
+    return await getTermsAndConditionsCached();
   } catch {
     return null;
   }

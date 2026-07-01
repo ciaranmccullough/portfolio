@@ -10,6 +10,8 @@
     "test": "jest"
   },
   "dependencies": {
+    "@contentful/rich-text-react-renderer": "^16.2.1",
+    "@contentful/rich-text-types": "^17.2.7",
     "@formatjs/intl-localematcher": "^0.8.10",
     "@portfolio/tokens": "workspace:*",
     "@portfolio/ui": "workspace:*",

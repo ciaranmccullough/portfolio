@@ -11,4 +11,6 @@ export * from "./AlertIcon";
 export * from "./ArrowUpRightIcon";
 export * from "./CheckIcon";
 export * from "./CloseIcon";
+export * from "./CookieIcon";
+export * from "./LockIcon";
 export * from "./MenuIcon";

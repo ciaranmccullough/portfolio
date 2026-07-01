@@ -1,3 +1,4 @@
+import type { CookieCategory } from "@portfolio/ui";
 import type { Metadata } from "next";
 import {
   Bricolage_Grotesque,
@@ -8,8 +9,11 @@ import type { ReactNode } from "react";
 
 import { SITE_NAME, SITE_URL } from "@/site-config";
 
+import { CookieConsent } from "../components/CookieConsent/CookieConsent";
+import { CookieConsentProvider } from "../components/CookieConsentProvider/CookieConsentProvider";
 import { i18n } from "../../i18n-config";
 import { getTranslations } from "./dictionaries";
+import { localePath } from "@/lib/localePath";
 
 import "../globals.css";
 
@@ -74,11 +78,22 @@ export default async function RootLayout({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
+  const { cookies } = await getTranslations(params);
   return (
     <html lang={lang} className={fontVariables}>
       <body className="bg-paper">
         <div className="page-texture" aria-hidden="true" />
-        {children}
+        <CookieConsentProvider>
+          {children}
+          {/* Site-wide consent banner (its own `open` flag gates visibility).
+              `categories` is a typed cast of the JSON dictionary — its keys match
+              CookieCategoryKey. */}
+          <CookieConsent
+            copy={cookies.copy}
+            categories={cookies.categories as CookieCategory[]}
+            privacyHref={localePath(lang, "/privacy")}
+          />
+        </CookieConsentProvider>
       </body>
     </html>
   );
