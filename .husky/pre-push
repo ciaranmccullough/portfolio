@@ -1,9 +1,9 @@
-echo "▶ pre-push: lint · typecheck · format · build — push is blocked if any step fails"
+echo "▶ pre-push: lint · format · build · typecheck — push is blocked if any step fails"
 set -e
 
 pnpm run lint
-pnpm run typecheck
 pnpm run format
 pnpm run build
+pnpm run typecheck
 
 echo "✓ pre-push checks passed — pushing"

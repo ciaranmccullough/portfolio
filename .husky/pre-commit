@@ -1,0 +1,5 @@
+echo "▶ pre-commit: eslint --fix · prettier --write on staged files (lint-staged)"
+
+pnpm exec lint-staged
+
+echo "✓ pre-commit checks passed"
