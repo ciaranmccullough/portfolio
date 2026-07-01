@@ -1,7 +1,7 @@
-/* Scrim behind the expanded preferences dialog. Background blur is intentionally
-   omitted (per the design brief). */
-export const scrimClass =
-  "fixed inset-0 z-[80] bg-ink/40 motion-safe:animate-cookie-pop";
+/* Full-screen click-catcher behind the expanded preferences dialog: clicking it
+   collapses the dialog. Deliberately transparent — the background is left
+   un-blurred AND un-dimmed, so nothing behind the banner is obscured. */
+export const scrimClass = "fixed inset-0 z-[80]";
 
 /* Fixed anchor pinning the card to the foot of the viewport: full-width with
    gutters on mobile, hugging the bottom-left from `sm` up. */
