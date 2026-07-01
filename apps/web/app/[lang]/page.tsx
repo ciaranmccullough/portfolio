@@ -1,6 +1,5 @@
 import {
   About,
-  ArrowUpRightIcon,
   Contact,
   Hero,
   Link,
@@ -14,6 +13,9 @@ import Image from "next/image";
 
 import { ContactForm } from "../components/ContactForm/ContactForm";
 import { ErrorScreen } from "../components/ErrorScreen/ErrorScreen";
+import { HomeAnalytics } from "../components/HomeAnalytics/HomeAnalytics";
+import type { HomeSection } from "../components/HomeAnalytics/HomeAnalytics.types";
+import { ResumeLink } from "../components/ResumeLink/ResumeLink";
 import { SiteFooter } from "../components/SiteFooter/SiteFooter";
 import { SiteNav } from "../components/SiteNav/SiteNav";
 import { getTranslations } from "./dictionaries";
@@ -25,6 +27,16 @@ import { SITE_NAME, SITE_URL } from "@/site-config";
 // Toolbox cards cycle the brand accents in order (the colour is positional
 // presentation, not category data — see SkillCategory `tone`).
 const TOOLBOX_TONES = ["violet", "orange", "green", "amber"] as const;
+
+// Home-page sections tracked as `feature_viewed` impressions — ids must match
+// the `id` props on the sections below (About is only present when it renders).
+const HOME_SECTIONS: HomeSection[] = [
+  { id: "top", feature: "hero" },
+  { id: "work", feature: "project" },
+  { id: "stack", feature: "toolbox" },
+  { id: "about", feature: "about" },
+  { id: "contact", feature: "contact" },
+];
 
 export default async function HomePage({
   params,
@@ -104,15 +116,7 @@ export default async function HomePage({
           intro={hero.description}
           tabs={heroTabs}
         >
-          <Link
-            href={hero.resumeUrl}
-            variant="primary"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {dict.hero.resumeLabel}
-            <ArrowUpRightIcon className="size-4" />
-          </Link>
+          <ResumeLink href={hero.resumeUrl} label={dict.hero.resumeLabel} />
         </Hero>
 
         {/* #work */}
@@ -208,6 +212,8 @@ export default async function HomePage({
         colophon={dict.footer.colophon}
         links={buildFooterLinks(dict, lang)}
       />
+      {/* Consent-gated home-page tracking (feature_viewed + project_clicked). */}
+      <HomeAnalytics sections={HOME_SECTIONS} />
     </>
   );
 }

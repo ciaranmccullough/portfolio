@@ -4,6 +4,8 @@ import { Button, FormField, Toast, type ToastVariant } from "@portfolio/ui";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 
+import { track } from "@/lib/analytics/mixpanel";
+
 import {
   contactFormActionsClass,
   contactFormClass,
@@ -169,8 +171,15 @@ export function ContactForm({
       formRef.current?.reset();
       resetState();
       showToast("success");
-    } catch {
+      // Value Moment — a visitor reached out. No PII: the message content and
+      // sender details are never sent to analytics.
+      track("form_sent", { form: "contact" });
+    } catch (error) {
       showToast("error");
+      track("form_send_failed", {
+        form: "contact",
+        reason: error instanceof Error ? error.message : "unknown",
+      });
     } finally {
       setSubmitting(false);
     }

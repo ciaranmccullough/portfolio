@@ -9,6 +9,7 @@ import type { ReactNode } from "react";
 
 import { SITE_NAME, SITE_URL } from "@/site-config";
 
+import { Analytics } from "../components/Analytics/Analytics";
 import { CookieConsent } from "../components/CookieConsent/CookieConsent";
 import { CookieConsentProvider } from "../components/CookieConsentProvider/CookieConsentProvider";
 import { i18n } from "../../i18n-config";
@@ -85,6 +86,9 @@ export default async function RootLayout({
         <div className="page-texture" aria-hidden="true" />
         <CookieConsentProvider>
           {children}
+          {/* Consent-gated Mixpanel — inits and page-view tracking once the
+              visitor grants the `analytics` cookie category. Renders nothing. */}
+          <Analytics />
           {/* Site-wide consent banner (its own `open` flag gates visibility).
               `categories` is a typed cast of the JSON dictionary — its keys match
               CookieCategoryKey. */}
