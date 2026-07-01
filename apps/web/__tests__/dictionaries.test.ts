@@ -34,6 +34,8 @@ describe("getDictionary", () => {
         "about",
         "contact",
         "footer",
+        "legal",
+        "cookies",
       ].sort(),
     );
   });

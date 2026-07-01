@@ -1,3 +1,4 @@
+import type { CookieCategory } from "@portfolio/ui";
 import type { Metadata } from "next";
 import {
   Bricolage_Grotesque,
@@ -8,6 +9,8 @@ import type { ReactNode } from "react";
 
 import { SITE_NAME, SITE_URL } from "@/site-config";
 
+import { CookieConsent } from "../components/CookieConsent/CookieConsent";
+import { CookieConsentProvider } from "../components/CookieConsentProvider/CookieConsentProvider";
 import { i18n } from "../../i18n-config";
 import { getTranslations } from "./dictionaries";
 
@@ -74,11 +77,22 @@ export default async function RootLayout({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
+  const { cookies } = await getTranslations(params);
   return (
     <html lang={lang} className={fontVariables}>
       <body className="bg-paper">
         <div className="page-texture" aria-hidden="true" />
-        {children}
+        <CookieConsentProvider>
+          {children}
+          {/* Always mounted so the confirmation pill outlives the banner closing;
+              the banner's own `open` flag gates its visibility. `categories` is a
+              typed cast of the JSON dictionary (keys match CookieCategoryKey). */}
+          <CookieConsent
+            copy={cookies.copy}
+            categories={cookies.categories as CookieCategory[]}
+            privacyHref={`/${lang}/privacy`}
+          />
+        </CookieConsentProvider>
       </body>
     </html>
   );

@@ -111,6 +111,79 @@
     }
   },
   "footer": {
-    "colophon": "@ciaranmccullough {year}"
+    "colophon": "@ciaranmccullough {year}",
+    "links": {
+      "privacy": "Privacy policy",
+      "terms": "Terms",
+      "cookieSettings": "Cookie settings"
+    }
+  },
+  "legal": {
+    "backLabel": "← Back to home",
+    "updatedLabel": "Last updated",
+    "placeholder": [
+      "This page is a placeholder — the full text is coming soon. It's here so the site's structure, navigation and footer links all work end to end.",
+      "Check back shortly for the complete, finalised wording."
+    ],
+    "terms": {
+      "eyebrow": "Legal",
+      "title": "Terms of Service",
+      "updated": "Coming soon",
+      "lead": "The terms that govern your use of this site. This is placeholder content while the final copy is prepared."
+    },
+    "privacy": {
+      "eyebrow": "Legal",
+      "title": "Privacy Policy",
+      "updated": "Coming soon",
+      "lead": "How this site handles your data and cookies. This is placeholder content while the final copy is prepared."
+    }
+  },
+  "cookies": {
+    "copy": {
+      "eyebrow": "// Your privacy",
+      "summaryHeading": "We value your privacy",
+      "preferencesHeading": "Manage your cookies",
+      "description": "We use cookies to keep the site running, remember your preferences and understand how it's used. Strictly necessary cookies are always on. Everything else stays off until you say yes.",
+      "privacyLabel": "Privacy policy",
+      "acceptAll": "Accept all",
+      "rejectAll": "Reject all",
+      "manage": "Manage preferences",
+      "save": "Save my preferences",
+      "dialogLabel": "Cookie consent",
+      "statusAccepted": "All cookies accepted",
+      "statusRejected": "Non-essential cookies rejected",
+      "statusSaved": "Preferences saved"
+    },
+    "categories": [
+      {
+        "key": "necessary",
+        "title": "Strictly necessary",
+        "tag": "Always active",
+        "locked": true,
+        "description": "Required for the site to work safely — security, network management and remembering this very consent choice.",
+        "meta": "Legal basis · GDPR Art. 6(1)(f) — Legitimate interests · No consent needed"
+      },
+      {
+        "key": "functional",
+        "title": "Functional",
+        "tag": "Opt-in",
+        "description": "Remembers choices you make — preferred language or region, dark mode and layout preferences.",
+        "meta": "Consent · Opt-in required before execution"
+      },
+      {
+        "key": "analytics",
+        "title": "Performance & analytics",
+        "tag": "Opt-in",
+        "description": "Aggregate insight into how the site is used — page views, bounce rates and crash reports. Never identifies you directly.",
+        "meta": "Consent · Opt-in required before execution"
+      },
+      {
+        "key": "marketing",
+        "title": "Targeting & marketing",
+        "tag": "Opt-in",
+        "description": "Third-party advertising cookies that build an interest profile across sites to personalise and measure ads.",
+        "meta": "Consent · Strict opt-in — blocked by default"
+      }
+    ]
   }
 }

@@ -19,6 +19,7 @@ import { SiteNav } from "../components/SiteNav/SiteNav";
 import { getTranslations } from "./dictionaries";
 import { heroTabs } from "../data/heroTabs";
 import { getAbout, getContact, getHero, getProjects } from "@/lib/contentful";
+import { buildFooterLinks } from "@/lib/footerLinks";
 import { SITE_NAME, SITE_URL } from "@/site-config";
 
 // Toolbox cards cycle the brand accents in order (the colour is positional
@@ -30,6 +31,7 @@ export default async function HomePage({
 }: {
   params: Promise<{ lang: string }>;
 }) {
+  const { lang } = await params;
   const dict = await getTranslations(params);
 
   // Server-side Contentful data access (services -> mappers -> here), fetched in
@@ -202,7 +204,10 @@ export default async function HomePage({
           />
         </Contact>
       </main>
-      <SiteFooter colophon={dict.footer.colophon} />
+      <SiteFooter
+        colophon={dict.footer.colophon}
+        links={buildFooterLinks(dict, lang)}
+      />
     </>
   );
 }
