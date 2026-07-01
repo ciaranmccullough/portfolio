@@ -1,3 +1,4 @@
+import type { Document } from "@contentful/rich-text-types";
 import {
   createClient,
   type EntryFieldTypes,
@@ -207,4 +208,62 @@ export async function fetchProjects(): Promise<RawProject[] | null> {
   const fields = res.items[0]?.fields;
   if (!fields) return null;
   return (fields.projects as unknown as RawProject[] | undefined) ?? [];
+}
+
+/**
+ * Candidate content-type IDs holding each legal page's Rich Text body, in
+ * priority order — the first that resolves a published entry wins. Multiple
+ * candidates absorb naming drift (e.g. `terms` vs `termsAndConditions`).
+ */
+export const PRIVACY_CONTENT_TYPES = ["privacyPolicy"] as const;
+export const TERMS_CONTENT_TYPES = ["termsAndConditions", "terms"] as const;
+
+/**
+ * Find the first Rich Text document among an entry's fields — the policy body —
+ * without needing to know the field's ID (a Rich Text value is an object whose
+ * `nodeType` is `"document"`).
+ */
+export function findRichTextDocument(
+  fields: Record<string, unknown>,
+): Document | null {
+  for (const value of Object.values(fields)) {
+    if (
+      value !== null &&
+      typeof value === "object" &&
+      (value as { nodeType?: unknown }).nodeType === "document"
+    ) {
+      return value as Document;
+    }
+  }
+  return null;
+}
+
+/**
+ * Fetch a legal page's Rich Text body from the first of `contentTypes` that has a
+ * published entry. Returns `null` when credentials are absent or nothing is
+ * found. Each candidate is tried independently: an unknown content-type ID (or a
+ * transient error for that candidate) falls through to the next rather than
+ * failing the whole read.
+ */
+export async function fetchLegalDocument(
+  contentTypes: readonly string[],
+): Promise<Document | null> {
+  if (!hasContentfulCredentials) return null;
+  for (const contentType of contentTypes) {
+    try {
+      const res = await contentfulClient.getEntries({
+        content_type: contentType,
+        limit: 1,
+      });
+      const fields = res.items[0]?.fields as
+        | Record<string, unknown>
+        | undefined;
+      if (!fields) continue;
+      const doc = findRichTextDocument(fields);
+      if (doc) return doc;
+    } catch {
+      // Unknown content-type ID or transient error — try the next candidate.
+    }
+  }
+  return null;
 }

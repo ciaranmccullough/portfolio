@@ -1,9 +1,15 @@
+import { Text } from "@portfolio/ui";
 import type { Metadata } from "next";
 
 import { LegalPage } from "../../components/LegalPage/LegalPage";
-import { legalPageWrapperClass } from "../../components/LegalPage/LegalPage.styles";
+import {
+  legalBodyClass,
+  legalPageWrapperClass,
+} from "../../components/LegalPage/LegalPage.styles";
+import { RichText } from "../../components/RichText/RichText";
 import { SiteFooter } from "../../components/SiteFooter/SiteFooter";
 import { getTranslations } from "../dictionaries";
+import { getPrivacyPolicy } from "@/lib/contentful";
 import { buildFooterLinks } from "@/lib/footerLinks";
 import { localePath } from "@/lib/localePath";
 
@@ -24,19 +30,26 @@ export default async function PrivacyPage({
   const { lang } = await params;
   const dict = await getTranslations(params);
   const { legal, footer } = dict;
+  const content = await getPrivacyPolicy();
 
   return (
     <div className={legalPageWrapperClass}>
       <LegalPage
         eyebrow={legal.privacy.eyebrow}
         title={legal.privacy.title}
-        updatedLabel={legal.updatedLabel}
-        updatedValue={legal.privacy.updated}
-        lead={legal.privacy.lead}
-        body={legal.placeholder}
         backLabel={legal.backLabel}
         backHref={localePath(lang, "/")}
-      />
+      >
+        {content ? (
+          <RichText document={content} />
+        ) : (
+          <div className={legalBodyClass}>
+            {legal.placeholder.map((paragraph, index) => (
+              <Text key={index}>{paragraph}</Text>
+            ))}
+          </div>
+        )}
+      </LegalPage>
       <SiteFooter
         colophon={footer.colophon}
         links={buildFooterLinks(dict, lang)}

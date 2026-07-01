@@ -12,7 +12,16 @@
  * The mappers are pure and left un-mocked: for each entity we build a raw DTO
  * exactly as the service would return it, then assert the fully-mapped entity.
  */
-import { getAbout, getContact, getHero, getProjects } from "@/lib/contentful";
+import type { Document } from "@contentful/rich-text-types";
+
+import {
+  getAbout,
+  getContact,
+  getHero,
+  getPrivacyPolicy,
+  getProjects,
+  getTermsAndConditions,
+} from "@/lib/contentful";
 import type {
   RawAboutFields,
   RawContactFields,
@@ -23,6 +32,7 @@ import {
   fetchAboutEntry,
   fetchContactEntry,
   fetchHeroEntry,
+  fetchLegalDocument,
   fetchProjects,
 } from "@/services/contentful/contentful";
 
@@ -31,6 +41,9 @@ jest.mock("@/services/contentful/contentful", () => ({
   fetchAboutEntry: jest.fn(),
   fetchContactEntry: jest.fn(),
   fetchProjects: jest.fn(),
+  fetchLegalDocument: jest.fn(),
+  PRIVACY_CONTENT_TYPES: ["privacyPolicy"],
+  TERMS_CONTENT_TYPES: ["termsAndConditions", "terms"],
 }));
 
 // unstable_cache wraps a fn and returns a cached variant; unwrap to passthrough
@@ -43,6 +56,20 @@ const mockFetchHeroEntry = jest.mocked(fetchHeroEntry);
 const mockFetchAboutEntry = jest.mocked(fetchAboutEntry);
 const mockFetchContactEntry = jest.mocked(fetchContactEntry);
 const mockFetchProjects = jest.mocked(fetchProjects);
+const mockFetchLegalDocument = jest.mocked(fetchLegalDocument);
+
+/** A minimal, valid Rich Text document (one paragraph). */
+const sampleDocument = {
+  nodeType: "document",
+  data: {},
+  content: [
+    {
+      nodeType: "paragraph",
+      data: {},
+      content: [{ nodeType: "text", value: "Hello.", marks: [], data: {} }],
+    },
+  ],
+} as unknown as Document;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -230,5 +257,50 @@ describe("getProjects()", () => {
     mockFetchProjects.mockRejectedValue(new Error("boom"));
 
     await expect(getProjects()).resolves.toBeNull();
+  });
+});
+
+describe("getPrivacyPolicy()", () => {
+  it("returns the Rich Text document from the service", async () => {
+    mockFetchLegalDocument.mockResolvedValue(sampleDocument);
+
+    await expect(getPrivacyPolicy()).resolves.toEqual(sampleDocument);
+    expect(mockFetchLegalDocument).toHaveBeenCalledWith(["privacyPolicy"]);
+  });
+
+  it("returns null when nothing is published (fetch resolves null)", async () => {
+    mockFetchLegalDocument.mockResolvedValue(null);
+
+    await expect(getPrivacyPolicy()).resolves.toBeNull();
+  });
+
+  it("returns null (never throws) when the fetch rejects", async () => {
+    mockFetchLegalDocument.mockRejectedValue(new Error("boom"));
+
+    await expect(getPrivacyPolicy()).resolves.toBeNull();
+  });
+});
+
+describe("getTermsAndConditions()", () => {
+  it("returns the Rich Text document from the service", async () => {
+    mockFetchLegalDocument.mockResolvedValue(sampleDocument);
+
+    await expect(getTermsAndConditions()).resolves.toEqual(sampleDocument);
+    expect(mockFetchLegalDocument).toHaveBeenCalledWith([
+      "termsAndConditions",
+      "terms",
+    ]);
+  });
+
+  it("returns null when nothing is published (fetch resolves null)", async () => {
+    mockFetchLegalDocument.mockResolvedValue(null);
+
+    await expect(getTermsAndConditions()).resolves.toBeNull();
+  });
+
+  it("returns null (never throws) when the fetch rejects", async () => {
+    mockFetchLegalDocument.mockRejectedValue(new Error("boom"));
+
+    await expect(getTermsAndConditions()).resolves.toBeNull();
   });
 });

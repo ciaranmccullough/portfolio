@@ -41,6 +41,12 @@ importers:
 
   apps/web:
     dependencies:
+      '@contentful/rich-text-react-renderer':
+        specifier: ^16.2.1
+        version: 16.2.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@contentful/rich-text-types':
+        specifier: ^17.2.7
+        version: 17.2.7
       '@formatjs/intl-localematcher':
         specifier: ^0.8.10
         version: 0.8.10
@@ -61,7 +67,7 @@ importers:
         version: 1.0.0
       next:
         specifier: ^16.2.9
-        version: 16.2.9(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 16.2.9(@babel/core@7.29.7)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react:
         specifier: ^19.2.7
         version: 19.2.7
@@ -395,9 +401,20 @@ packages:
   '@contentful/content-source-maps@0.11.44':
     resolution: {integrity: sha512-tu1gfmZI59hQ7qKhmGOV0dA5brxhsc+LOfPwBsQQMDAVy5kVpTrKf/AGlL2y9QhKHu/NtCrwX/ZrmRFgtGEtIA==}
 
+  '@contentful/rich-text-react-renderer@16.2.1':
+    resolution: {integrity: sha512-CZTqlaa/Je3T6JfFaHDAaDWuJrDAYBlBEptedlyBml+hojpMFRRz3Vmv5iU7AI7d80BJ1MlXdA7srLXK7ik/HA==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      react: ^16.8.6 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.6 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   '@contentful/rich-text-types@16.8.5':
     resolution: {integrity: sha512-q18RJuJCOuYveGiCIjE5xLCQc5lZ3L2Qgxrlg/H2YEobDFqdtmklazRi1XwEWaK3tMg6yVXBzKKkQfLB4qW14A==}
     engines: {node: '>=6.0.0'}
+
+  '@contentful/rich-text-types@17.2.7':
+    resolution: {integrity: sha512-aIdozk8vk5gsYcallOrwEiL6+GSlMXZorDOmiVELfpbVaXMJPJPlf2CBw3LUzviAqCw0UPQcKHHCwG7SdY7u5w==}
+    engines: {node: '>=20.0.0'}
 
   '@emnapi/runtime@1.11.1':
     resolution: {integrity: sha512-vgj7R3y3Wgx24IQaGPA/R6YFXLHVMOZ0uVEyIQPaWs+rd1AzfEMXlAC22FYwO1XkKR6NPsq7mUandH8oIRdZFw==}
@@ -4242,7 +4259,15 @@ snapshots:
       '@vercel/stega': 0.1.2
       json-pointer: 0.6.2
 
+  '@contentful/rich-text-react-renderer@16.2.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      '@contentful/rich-text-types': 17.2.7
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+
   '@contentful/rich-text-types@16.8.5': {}
+
+  '@contentful/rich-text-types@17.2.7': {}
 
   '@emnapi/runtime@1.11.1':
     dependencies:
@@ -7274,7 +7299,7 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  next@16.2.9(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  next@16.2.9(@babel/core@7.29.7)(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
       '@next/env': 16.2.9
       '@swc/helpers': 0.5.15
@@ -7283,7 +7308,7 @@ snapshots:
       postcss: 8.4.31
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
-      styled-jsx: 5.1.6(react@19.2.7)
+      styled-jsx: 5.1.6(@babel/core@7.29.7)(react@19.2.7)
     optionalDependencies:
       '@next/swc-darwin-arm64': 16.2.9
       '@next/swc-darwin-x64': 16.2.9
@@ -7874,10 +7899,12 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  styled-jsx@5.1.6(react@19.2.7):
+  styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.7):
     dependencies:
       client-only: 0.0.1
       react: 19.2.7
+    optionalDependencies:
+      '@babel/core': 7.29.7
 
   supports-color@7.2.0:
     dependencies:

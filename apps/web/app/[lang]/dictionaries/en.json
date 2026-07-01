@@ -120,22 +120,17 @@
   },
   "legal": {
     "backLabel": "← Back to home",
-    "updatedLabel": "Last updated",
     "placeholder": [
       "This page is a placeholder — the full text is coming soon. It's here so the site's structure, navigation and footer links all work end to end.",
       "Check back shortly for the complete, finalised wording."
     ],
     "terms": {
       "eyebrow": "Legal",
-      "title": "Terms of Service",
-      "updated": "Coming soon",
-      "lead": "The terms that govern your use of this site. This is placeholder content while the final copy is prepared."
+      "title": "Terms of Service"
     },
     "privacy": {
       "eyebrow": "Legal",
-      "title": "Privacy Policy",
-      "updated": "Coming soon",
-      "lead": "How this site handles your data and cookies. This is placeholder content while the final copy is prepared."
+      "title": "Privacy Policy"
     }
   },
   "cookies": {

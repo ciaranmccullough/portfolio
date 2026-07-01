@@ -8,10 +8,7 @@ export const legalMainClass =
 
 export const legalTitleClass = "mt-3";
 
-export const legalMetaClass = "mt-4 font-mono text-xs text-fg-faint";
-
-export const legalLeadClass = "mt-6";
-
-export const legalBodyClass = "mt-6 flex flex-col gap-4";
+/** Placeholder-fallback body wrapper (used when Contentful has no content). */
+export const legalBodyClass = "mt-8 space-y-4";
 
 export const legalBackClass = "mt-10 inline-flex";
