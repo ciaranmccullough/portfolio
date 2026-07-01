@@ -4,6 +4,7 @@ import { LegalPage } from "../../components/LegalPage/LegalPage";
 import { SiteFooter } from "../../components/SiteFooter/SiteFooter";
 import { getTranslations } from "../dictionaries";
 import { buildFooterLinks } from "@/lib/footerLinks";
+import { localePath } from "@/lib/localePath";
 
 export async function generateMetadata({
   params,
@@ -33,7 +34,7 @@ export default async function PrivacyPage({
         lead={legal.privacy.lead}
         body={legal.placeholder}
         backLabel={legal.backLabel}
-        backHref={`/${lang}`}
+        backHref={localePath(lang, "/")}
       />
       <SiteFooter
         colophon={footer.colophon}

@@ -13,6 +13,7 @@ import { CookieConsent } from "../components/CookieConsent/CookieConsent";
 import { CookieConsentProvider } from "../components/CookieConsentProvider/CookieConsentProvider";
 import { i18n } from "../../i18n-config";
 import { getTranslations } from "./dictionaries";
+import { localePath } from "@/lib/localePath";
 
 import "../globals.css";
 
@@ -90,7 +91,7 @@ export default async function RootLayout({
           <CookieConsent
             copy={cookies.copy}
             categories={cookies.categories as CookieCategory[]}
-            privacyHref={`/${lang}/privacy`}
+            privacyHref={localePath(lang, "/privacy")}
           />
         </CookieConsentProvider>
       </body>
