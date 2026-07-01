@@ -1,5 +1,6 @@
 export * from "./About";
 export * from "./Contact";
+export * from "./CookieBanner";
 export * from "./Footer";
 export * from "./Hero";
 export * from "./Navbar";

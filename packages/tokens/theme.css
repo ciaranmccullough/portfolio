@@ -94,6 +94,9 @@
   /* ---- Shadows ---- */
   --shadow-brutal: 3px 3px 0 #17161d;
   --shadow-brand: 0 12px 30px -10px rgba(106, 71, 255, 0.5);
+  /* A larger brutal offset + soft drop for prominent floating surfaces (the
+     Cookie Banner). */
+  --shadow-cookie: 6px 8px 0 #17161d, 0 40px 60px -30px rgba(23, 22, 29, 0.6);
 
   /* ---- Animation ---- */
   /* Gentle bob for the hero's floating tech tabs (gate with motion-safe:). */
@@ -102,6 +105,11 @@
   --animate-floaty-3: floaty 8s ease-in-out -2.4s infinite;
   --animate-floaty-4: floaty 6.9s ease-in-out -3.6s infinite;
 
+  /* Cookie Banner entrances (gate with motion-safe:): the card rises up from the
+     foot of the viewport; the status pill pops in. */
+  --animate-cookie-rise: cookie-rise 0.5s cubic-bezier(0.2, 0.75, 0.25, 1);
+  --animate-cookie-pop: cookie-pop 0.3s ease;
+
   @keyframes floaty {
     0%,
     100% {
@@ -109,6 +117,28 @@
     }
     50% {
       transform: translateY(-14px);
+    }
+  }
+
+  @keyframes cookie-rise {
+    from {
+      opacity: 0;
+      transform: translateY(26px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes cookie-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
     }
   }
 }
