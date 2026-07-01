@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { LegalPage } from "../../components/LegalPage/LegalPage";
+import { legalPageWrapperClass } from "../../components/LegalPage/LegalPage.styles";
 import { SiteFooter } from "../../components/SiteFooter/SiteFooter";
 import { getTranslations } from "../dictionaries";
 import { buildFooterLinks } from "@/lib/footerLinks";
@@ -25,7 +26,7 @@ export default async function PrivacyPage({
   const { legal, footer } = dict;
 
   return (
-    <>
+    <div className={legalPageWrapperClass}>
       <LegalPage
         eyebrow={legal.privacy.eyebrow}
         title={legal.privacy.title}
@@ -40,6 +41,6 @@ export default async function PrivacyPage({
         colophon={footer.colophon}
         links={buildFooterLinks(dict, lang)}
       />
-    </>
+    </div>
   );
 }
