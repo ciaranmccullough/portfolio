@@ -1,4 +1,15 @@
 export const openSourceClass = "mx-auto max-w-7xl px-6 py-16 sm:px-10 lg:px-14";
 
+/* Section header: heading block on the left, an action (e.g. a GitHub link)
+   opposite it, both baseline-aligned — mirrors the WorkGrid header. */
+export const openSourceHeaderClass =
+  "mb-9 flex items-end justify-between gap-5";
+
+export const openSourceEyebrowClass = "mb-2.5";
+
+export const openSourceActionClass = "shrink-0 whitespace-nowrap pb-1.5";
+
+/* One seamless panel: rows divide themselves with a top border, and
+   `overflow-hidden` rounds the first/last rows to the panel's radius. */
 export const openSourcePanelClass =
-  "flex list-none flex-col gap-2 rounded-2xl border border-line bg-inset p-4";
+  "list-none overflow-hidden rounded-2xl border border-line bg-card";

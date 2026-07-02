@@ -21,7 +21,13 @@ import mixpanel from "mixpanel-browser";
 const MIXPANEL_TOKEN = process.env.NEXT_PUBLIC_MIXPANEL_TOKEN;
 
 /** The home-page sections, tracked as `feature_viewed` impressions. */
-export type Feature = "hero" | "project" | "toolbox" | "about" | "contact";
+export type Feature =
+  | "hero"
+  | "project"
+  | "toolbox"
+  | "about"
+  | "open_source"
+  | "contact";
 
 /** The tracked events and the exact property shape each one carries. */
 export interface AnalyticsEventProperties {

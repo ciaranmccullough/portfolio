@@ -2,8 +2,11 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 
 import { RepoRow } from "./RepoRow";
 import {
-  repoRowDotClass,
+  repoRowDescClass,
+  repoRowDotBase,
+  repoRowDotTone,
   repoRowItemClass,
+  repoRowLangClass,
   repoRowLinkClass,
   repoRowNameClass,
   repoRowStarsClass,
@@ -59,10 +62,81 @@ describe("RepoRow", () => {
       <RepoRow name="repo" href="https://x.dev" />,
     );
 
-    const dot = container.querySelector(`.${repoRowDotClass.split(" ")[0]}`);
+    const dot = container.querySelector(`.${repoRowDotBase.split(" ")[0]}`);
     expect(dot).not.toBeNull();
-    expect(dot).toHaveClass(repoRowDotClass);
+    expect(dot).toHaveClass(repoRowDotBase);
+    // Defaults to the violet tone.
+    expect(dot).toHaveClass(repoRowDotTone.violet);
     expect(dot).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("colours the status dot from the tone prop", () => {
+    const { container } = renderRow(
+      <RepoRow name="repo" href="https://x.dev" tone="amber" />,
+    );
+
+    const dot = container.querySelector(`.${repoRowDotBase.split(" ")[0]}`);
+    expect(dot).toHaveClass(repoRowDotTone.amber);
+    expect(dot).not.toHaveClass(repoRowDotTone.violet);
+  });
+
+  it("renders the description when provided, inside the link", () => {
+    renderRow(
+      <RepoRow
+        name="repo"
+        href="https://x.dev"
+        description="A tiny, tree-shakeable UI kit"
+      />,
+    );
+
+    const descEl = screen.getByText("A tiny, tree-shakeable UI kit");
+    expect(descEl.tagName).toBe("SPAN");
+    expect(descEl).toHaveClass(repoRowDescClass);
+    expect(screen.getByRole("link")).toContainElement(descEl);
+  });
+
+  it("does not render the description element when it is omitted", () => {
+    const { container } = renderRow(
+      <RepoRow name="repo" href="https://x.dev" />,
+    );
+
+    expect(
+      container.querySelector(`.${repoRowDescClass.split(" ")[0]}`),
+    ).toBeNull();
+  });
+
+  it("renders the language with its own decorative tone dot", () => {
+    const { container } = renderRow(
+      <RepoRow
+        name="repo"
+        href="https://x.dev"
+        lang="TypeScript"
+        tone="green"
+      />,
+    );
+
+    const langEl = screen.getByText("TypeScript");
+    expect(langEl).toHaveClass(repoRowLangClass);
+    // Both the leading dot and the language dot pick up the tone → two dots.
+    const dots = container.querySelectorAll(`.${repoRowDotBase.split(" ")[0]}`);
+    expect(dots).toHaveLength(2);
+    dots.forEach((dot) => {
+      expect(dot).toHaveClass(repoRowDotTone.green);
+      expect(dot).toHaveAttribute("aria-hidden", "true");
+    });
+    // The language label is part of the link's accessible name; the dot is not.
+    expect(screen.getByRole("link")).toHaveAccessibleName("repo TypeScript");
+  });
+
+  it("does not render the language element when it is omitted", () => {
+    const { container } = renderRow(
+      <RepoRow name="repo" href="https://x.dev" />,
+    );
+
+    // With no language there is no language dot — only the single leading dot.
+    expect(
+      container.querySelectorAll(`.${repoRowDotBase.split(" ")[0]}`),
+    ).toHaveLength(1);
   });
 
   it("renders the star count and its decorative star glyph when stars is provided", () => {

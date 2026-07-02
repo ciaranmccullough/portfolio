@@ -1,7 +1,10 @@
 import { cn } from "../../cn";
 import {
-  repoRowDotClass,
+  repoRowDescClass,
+  repoRowDotBase,
+  repoRowDotTone,
   repoRowItemClass,
+  repoRowLangClass,
   repoRowLinkClass,
   repoRowNameClass,
   repoRowStarsClass,
@@ -9,21 +12,35 @@ import {
 import type { RepoRowProps } from "./RepoRow.types";
 
 /**
- * RepoRow — a repository link: status dot, name and star count in one anchor.
- * Renders an `<li>`; place inside a `<ul>`.
+ * RepoRow — a repository link: a tone dot, the name, an optional description and
+ * language, and a star count, all in one anchor. Renders an `<li>`; place inside
+ * a `<ul>` (the OpenSource panel).
  */
 export function RepoRow({
   name,
   href,
+  description,
+  lang,
   stars,
+  tone = "violet",
   className,
   ...props
 }: RepoRowProps) {
+  const dotClass = cn(repoRowDotBase, repoRowDotTone[tone]);
   return (
     <li className={cn(repoRowItemClass, className)} {...props}>
       <a href={href} className={repoRowLinkClass}>
-        <span aria-hidden="true" className={repoRowDotClass} />
+        <span aria-hidden="true" className={dotClass} />
         <span className={repoRowNameClass}>{name}</span>
+        {description != null ? (
+          <span className={repoRowDescClass}>{description}</span>
+        ) : null}
+        {lang != null ? (
+          <span className={repoRowLangClass}>
+            <span aria-hidden="true" className={dotClass} />
+            {lang}
+          </span>
+        ) : null}
         {stars != null ? (
           <span className={repoRowStarsClass}>
             <span aria-hidden="true">★ </span>

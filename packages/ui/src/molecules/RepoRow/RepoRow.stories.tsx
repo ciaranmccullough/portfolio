@@ -20,6 +20,30 @@ export const Default: Story = {
   args: {
     name: "ciaran/enterprise-ui",
     href: "https://github.com/ciaran/enterprise-ui",
+    description: "A tiny, tree-shakeable component kit",
+    lang: "TypeScript",
     stars: "1.2k",
+    tone: "violet",
+  },
+};
+
+/** Name + stars only — description and language are optional. */
+export const NameAndStarsOnly: Story = {
+  args: {
+    name: "ciaran/cli-kit",
+    href: "https://github.com/ciaran/cli-kit",
+    stars: "312",
+  },
+};
+
+/** The dots pick up any brand tone. */
+export const AmberTone: Story = {
+  args: {
+    name: "ciaran/design-tokens",
+    href: "https://github.com/ciaran/design-tokens",
+    description: "Design tokens as CSS, shipped to every surface",
+    lang: "CSS",
+    stars: "640",
+    tone: "amber",
   },
 };
