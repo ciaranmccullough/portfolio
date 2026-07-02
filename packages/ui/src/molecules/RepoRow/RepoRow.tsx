@@ -13,8 +13,8 @@ import type { RepoRowProps } from "./RepoRow.types";
 
 /**
  * RepoRow — a repository link: a tone dot, the name, an optional description and
- * language, and a star count, all in one anchor. Renders an `<li>`; place inside
- * a `<ul>` (the OpenSource panel).
+ * language, and a star count, all in one anchor. The anchor opens the repo in a
+ * new tab. Renders an `<li>`; place inside a `<ul>` (the OpenSource panel).
  */
 export function RepoRow({
   name,
@@ -29,7 +29,12 @@ export function RepoRow({
   const dotClass = cn(repoRowDotBase, repoRowDotTone[tone]);
   return (
     <li className={cn(repoRowItemClass, className)} {...props}>
-      <a href={href} className={repoRowLinkClass}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={repoRowLinkClass}
+      >
         <span aria-hidden="true" className={dotClass} />
         <span className={repoRowNameClass}>{name}</span>
         {description != null ? (

@@ -1,5 +1,6 @@
 import {
   About,
+  ArrowUpRightIcon,
   Contact,
   Hero,
   Link,
@@ -204,8 +205,13 @@ export default async function HomePage({
             eyebrow={dict.openSource.eyebrow}
             title={dict.openSource.title}
             action={
-              <Link href={dict.openSource.actionHref} variant="inline">
+              <Link
+                href={dict.openSource.actionHref}
+                variant="inline"
+                className="inline-flex items-center gap-1.5"
+              >
                 {dict.openSource.action}
+                <ArrowUpRightIcon className="size-4" />
               </Link>
             }
           >
