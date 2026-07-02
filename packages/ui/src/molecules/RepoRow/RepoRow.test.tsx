@@ -49,6 +49,14 @@ describe("RepoRow", () => {
     expect(link).toHaveClass(repoRowLinkClass);
   });
 
+  it("opens the repo in a new tab with a safe rel", () => {
+    renderRow(<RepoRow name="repo" href="https://github.com/ciaran/repo" />);
+
+    const link = screen.getByRole("link");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
   it("renders the repo name in a styled span child atom", () => {
     renderRow(<RepoRow name="ciaran/enterprise-ui" href="https://x.dev" />);
 
