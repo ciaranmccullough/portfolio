@@ -1,9 +1,10 @@
 export const openSourceClass = "mx-auto max-w-7xl px-6 py-16 sm:px-10 lg:px-14";
 
 /* Section header: heading block on the left, an action (e.g. a GitHub link)
-   opposite it, both baseline-aligned — mirrors the WorkGrid header. */
+   opposite it, both baseline-aligned — mirrors the WorkGrid header. Wraps on
+   mobile so the (nowrap) action drops below the heading instead of overflowing. */
 export const openSourceHeaderClass =
-  "mb-9 flex items-end justify-between gap-5";
+  "mb-9 flex flex-wrap items-end justify-between gap-x-5 gap-y-3";
 
 export const openSourceEyebrowClass = "mb-2.5";
 
