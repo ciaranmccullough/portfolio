@@ -3,6 +3,8 @@ import {
   Contact,
   Hero,
   Link,
+  OpenSource,
+  RepoRow,
   SkillCategory,
   Tag,
   Toolbox,
@@ -20,21 +22,30 @@ import { SiteFooter } from "../components/SiteFooter/SiteFooter";
 import { SiteNav } from "../components/SiteNav/SiteNav";
 import { getTranslations } from "./dictionaries";
 import { heroTabs } from "../data/heroTabs";
-import { getAbout, getContact, getHero, getProjects } from "@/lib/contentful";
+import {
+  getAbout,
+  getContact,
+  getHero,
+  getOpenSource,
+  getProjects,
+} from "@/lib/contentful";
 import { buildFooterLinks } from "@/lib/footerLinks";
 import { SITE_NAME, SITE_URL } from "@/site-config";
 
-// Toolbox cards cycle the brand accents in order (the colour is positional
-// presentation, not category data — see SkillCategory `tone`).
+// Toolbox cards — and Open Source repo dots — cycle the brand accents in order
+// (the colour is positional presentation, not data — see SkillCategory `tone`).
 const TOOLBOX_TONES = ["violet", "orange", "green", "amber"] as const;
+const REPO_TONES = ["violet", "orange", "green", "amber"] as const;
 
 // Home-page sections tracked as `feature_viewed` impressions — ids must match
-// the `id` props on the sections below (About is only present when it renders).
+// the `id` props on the sections below (About and Open Source are only present
+// when they render; the observer simply never fires for an absent id).
 const HOME_SECTIONS: HomeSection[] = [
   { id: "top", feature: "hero" },
   { id: "work", feature: "project" },
   { id: "stack", feature: "toolbox" },
   { id: "about", feature: "about" },
+  { id: "oss", feature: "open_source" },
   { id: "contact", feature: "contact" },
 ];
 
@@ -49,11 +60,12 @@ export default async function HomePage({
   // Server-side Contentful data access (services -> mappers -> here), fetched in
   // parallel. getHero returns null when Contentful is unreachable; show an error
   // screen rather than fake fallback content.
-  const [hero, about, contact, projects] = await Promise.all([
+  const [hero, about, contact, projects, openSource] = await Promise.all([
     getHero(),
     getAbout(),
     getContact(),
     getProjects(),
+    getOpenSource(),
   ]);
   if (!hero) {
     return (
@@ -183,6 +195,32 @@ export default async function HomePage({
               />
             }
           />
+        ) : null}
+
+        {/* #oss — open-source repos (only when the CMS entry has any) */}
+        {openSource?.length ? (
+          <OpenSource
+            id="oss"
+            eyebrow={dict.openSource.eyebrow}
+            title={dict.openSource.title}
+            action={
+              <Link href={dict.openSource.actionHref} variant="inline">
+                {dict.openSource.action}
+              </Link>
+            }
+          >
+            {openSource.map((repo, index) => (
+              <RepoRow
+                key={repo.href}
+                name={repo.name}
+                href={repo.href}
+                description={repo.description}
+                lang={repo.lang}
+                stars={repo.stars}
+                tone={repo.tone ?? REPO_TONES[index % REPO_TONES.length]}
+              />
+            ))}
+          </OpenSource>
         ) : null}
 
         {/* #contact */}

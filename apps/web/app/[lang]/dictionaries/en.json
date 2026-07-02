@@ -78,6 +78,12 @@
     "imageAlt": "Ciaran McCullough",
     "sticker": "// hi there 👋"
   },
+  "openSource": {
+    "eyebrow": "In the open",
+    "title": "Open source",
+    "action": "github.com/ciaranmccullough ↗",
+    "actionHref": "https://github.com/ciaranmccullough"
+  },
   "contact": {
     "eyebrow": "Say hello",
     "title": "Let's build something together.",

@@ -126,6 +126,25 @@ type ProjectsSkeleton = EntrySkeletonType<
   "projects"
 >;
 
+/**
+ * One repo inside the "openSource" entry's freeform `openSource` Object array.
+ * Only `name` + `href` are required; `description`, `lang`, `stars` and `tone`
+ * enrich the row when present. `stars` may be a number or a pre-formatted label.
+ */
+export interface RawRepo {
+  name: string;
+  href: string;
+  description?: string;
+  lang?: string;
+  stars?: string | number;
+  tone?: string;
+}
+
+type OpenSourceSkeleton = EntrySkeletonType<
+  { openSource: EntryFieldTypes.Object },
+  "openSource"
+>;
+
 // --- Service --------------------------------------------------------------
 
 /**
@@ -208,6 +227,22 @@ export async function fetchProjects(): Promise<RawProject[] | null> {
   const fields = res.items[0]?.fields;
   if (!fields) return null;
   return (fields.projects as unknown as RawProject[] | undefined) ?? [];
+}
+
+/**
+ * Fetch the raw open-source repo list from the single "openSource" entry's JSON
+ * field. Returns `null` when credentials are absent or nothing is published;
+ * throws on a failed request.
+ */
+export async function fetchOpenSource(): Promise<RawRepo[] | null> {
+  if (!hasContentfulCredentials) return null;
+  const res = await contentfulClient.getEntries<OpenSourceSkeleton>({
+    content_type: "openSource",
+    limit: 1,
+  });
+  const fields = res.items[0]?.fields;
+  if (!fields) return null;
+  return (fields.openSource as unknown as RawRepo[] | undefined) ?? [];
 }
 
 /**

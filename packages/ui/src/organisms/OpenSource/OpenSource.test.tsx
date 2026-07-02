@@ -126,4 +126,42 @@ describe("OpenSource", () => {
     expect(list.tagName).toBe("UL");
     expect(within(list).queryAllByRole("listitem")).toHaveLength(0);
   });
+
+  it("renders the eyebrow and title in the section header when provided", () => {
+    render(
+      <OpenSource eyebrow="In the open" title="Open source">
+        <RepoRow name="repo" href="https://x.dev" />
+      </OpenSource>,
+    );
+
+    expect(screen.getByText("In the open")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Open source", level: 2 }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders the action node (e.g. a GitHub link) opposite the heading", () => {
+    render(
+      <OpenSource
+        title="Open source"
+        action={<a href="https://github.com/ciaran">github.com/ciaran ↗</a>}
+      >
+        <RepoRow name="repo" href="https://x.dev" />
+      </OpenSource>,
+    );
+
+    const action = screen.getByRole("link", { name: /github\.com\/ciaran/ });
+    expect(action).toHaveAttribute("href", "https://github.com/ciaran");
+  });
+
+  it("omits the header entirely when no eyebrow, title or action is given", () => {
+    render(
+      <OpenSource>
+        <RepoRow name="repo" href="https://x.dev" />
+      </OpenSource>,
+    );
+
+    // No section heading is emitted; only the repo row's link is present.
+    expect(screen.queryByRole("heading")).not.toBeInTheDocument();
+  });
 });

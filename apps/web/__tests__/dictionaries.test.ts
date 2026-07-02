@@ -32,6 +32,7 @@ describe("getDictionary", () => {
         "work",
         "toolbox",
         "about",
+        "openSource",
         "contact",
         "footer",
         "legal",

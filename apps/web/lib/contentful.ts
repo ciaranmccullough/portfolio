@@ -3,6 +3,7 @@ import { unstable_cache } from "next/cache";
 import { mapAbout } from "@/mappers/aboutMapper";
 import { mapContact } from "@/mappers/contactMapper";
 import { mapHero } from "@/mappers/heroMapper";
+import { mapOpenSource } from "@/mappers/openSourceMapper";
 import { mapProjects } from "@/mappers/projectsMapper";
 import {
   PRIVACY_CONTENT_TYPES,
@@ -11,6 +12,7 @@ import {
   fetchContactEntry,
   fetchHeroEntry,
   fetchLegalDocument,
+  fetchOpenSource,
   fetchProjects,
 } from "@/services/contentful/contentful";
 import type { About } from "@/types/about";
@@ -18,6 +20,7 @@ import type { Contact } from "@/types/contact";
 import type { Hero } from "@/types/hero";
 import type { LegalDocument } from "@/types/legal";
 import type { Project } from "@/types/project";
+import type { Repo } from "@/types/openSource";
 
 /**
  * Seconds Next serves cached content before regenerating it in the background
@@ -109,6 +112,23 @@ const getProjectsCached = withCache(async () => {
 export async function getProjects(): Promise<Project[] | null> {
   try {
     return await getProjectsCached();
+  } catch {
+    return null;
+  }
+}
+
+const getOpenSourceCached = withCache(async () => {
+  const raw = await fetchOpenSource();
+  return raw ? mapOpenSource(raw) : null;
+}, ["contentful-open-source-v1"]);
+
+/**
+ * Server-side data access for the Open Source section: fetch (service) → map
+ * (mapper), cached as ISR. Returns `null` when the entry is missing or fails.
+ */
+export async function getOpenSource(): Promise<Repo[] | null> {
+  try {
+    return await getOpenSourceCached();
   } catch {
     return null;
   }
