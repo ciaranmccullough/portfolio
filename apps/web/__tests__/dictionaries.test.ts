@@ -36,6 +36,7 @@ describe("getDictionary", () => {
         "contact",
         "footer",
         "legal",
+        "story",
         "cookies",
       ].sort(),
     );

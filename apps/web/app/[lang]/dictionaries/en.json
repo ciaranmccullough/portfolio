@@ -139,6 +139,39 @@
       "title": "Privacy Policy"
     }
   },
+  "story": {
+    "backLabel": "Back to work",
+    "hero": {
+      "eyebrow": "// Case study",
+      "roleLabel": "ROLE",
+      "platformLabel": "PLATFORM",
+      "yearLabel": "YEAR",
+      "scrollCueLabel": "Scroll to begin"
+    },
+    "brief": {
+      "eyebrow": "// The brief"
+    },
+    "principles": {
+      "eyebrow": "// Principles"
+    },
+    "walkthrough": {
+      "eyebrow": "// The walkthrough",
+      "imageFallback": "Preview coming soon"
+    },
+    "reflection": {
+      "eyebrow": "// Reflection"
+    },
+    "role": {
+      "eyebrow": "// The role",
+      "backToWorkCta": "← Back to all work"
+    },
+    "notFound": {
+      "eyebrow": "404",
+      "title": "Story not found",
+      "message": "We couldn't find that case study — it may have moved, or the link is out of date.",
+      "backLabel": "← Back to home"
+    }
+  },
   "cookies": {
     "copy": {
       "eyebrow": "// Your privacy",

@@ -31,6 +31,7 @@ import {
   getProjects,
 } from "@/lib/contentful";
 import { buildFooterLinks } from "@/lib/footerLinks";
+import { localePath } from "@/lib/localePath";
 import { SITE_NAME, SITE_URL } from "@/site-config";
 
 // Toolbox cards — and Open Source repo dots — cycle the brand accents in order
@@ -144,7 +145,14 @@ export default async function HomePage({
           projects={(projects ?? []).map((project) => ({
             title: project.title,
             description: project.description,
-            href: project.href,
+            // A project with a CMS `id` has a matching `/story/:id` case
+            // study — link the card in-app instead of out to its external
+            // `href`. Projects without one (predating the "story" content
+            // type) keep today's external-link behaviour untouched.
+            href: project.id
+              ? localePath(lang, `/story/${project.id}`)
+              : project.href,
+            internal: Boolean(project.id),
             tags: project.tags,
             media: project.imageUrl ? (
               <Image
