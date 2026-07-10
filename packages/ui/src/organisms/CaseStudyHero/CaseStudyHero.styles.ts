@@ -30,25 +30,35 @@ export const caseStudyHeroWashLeftClass =
 export const caseStudyHeroWashBottomClass =
   "absolute inset-0 bg-gradient-to-b from-transparent from-54% to-paper";
 
+/* `[--rise-scale:1]` cancels the shared `rise` keyframe's default scale-in
+   (see theme.css) for every rise child below — the hero's load-time reveal
+   is opacity/translateY only, no scale (design-spec E), unlike the Cookie
+   Banner which relies on that same keyframe's default. Set once here so it
+   cascades to eyebrow/title/standfirst/meta/scroll-cue via inheritance. */
 export const caseStudyHeroContentClass =
-  "relative mx-auto w-full max-w-7xl px-6 py-5 sm:px-10 lg:px-14";
+  "relative mx-auto w-full max-w-7xl px-6 py-5 sm:px-10 lg:px-14 [--rise-scale:1]";
 
-export const caseStudyHeroEyebrowClass = "mb-4";
+/* Load-time entrance, step 1 of 5 (see design-spec E: `.rise`/`.r2`-`.r5`
+   stagger, eyebrow → title → standfirst → meta row → scroll cue). */
+export const caseStudyHeroEyebrowClass = "mb-4 motion-safe:animate-hero-rise";
 
-export const caseStudyHeroTitleClass = "mt-4";
+/* Step 2 of 5. */
+export const caseStudyHeroTitleClass = "mt-4 motion-safe:animate-hero-rise-2";
 
 /* Standfirst: fluid statement-adjacent scale (measured off the design doc —
    see design-spec section A), bigger than the `body` Text variant tops out
    at, so this is rendered as a plain `<p>` with its own type classes rather
    than through the Text atom (avoids stacking a conflicting `text-lg` class
-   the atom's `body` variant would otherwise apply). */
+   the atom's `body` variant would otherwise apply). Step 3 of 5 of the hero
+   entrance stagger. */
 export const caseStudyHeroDescriptionClass =
-  "mt-5 max-w-[44ch] font-body text-[clamp(18px,2.2vw,24px)] leading-[1.45] text-fg-muted";
+  "mt-5 max-w-[44ch] font-body text-[clamp(18px,2.2vw,24px)] leading-[1.45] text-fg-muted motion-safe:animate-hero-rise-3";
 
 /* `m-0` cancels the <dl>'s default block margin so the row's spacing is
-   controlled entirely by `mt-9`, matching every other section's rhythm. */
+   controlled entirely by `mt-9`, matching every other section's rhythm.
+   Step 4 of 5 of the hero entrance stagger. */
 export const caseStudyHeroMetaClass =
-  "m-0 mt-9 flex flex-wrap gap-x-10 gap-y-3 font-mono text-xs font-bold text-fg";
+  "m-0 mt-9 flex flex-wrap gap-x-10 gap-y-3 font-mono text-xs font-bold text-fg motion-safe:animate-hero-rise-4";
 
 export const caseStudyHeroMetaItemClass = "flex flex-col gap-1";
 
@@ -59,8 +69,12 @@ export const caseStudyHeroMetaLabelClass = "text-[11px] text-fg-soft";
 /* `m-0` cancels the <dd>'s default inline-start margin. */
 export const caseStudyHeroMetaValueClass = "m-0";
 
+/* Step 5 of 5 of the hero entrance stagger — the rise plays on this wrapper,
+   distinct from the arrow's own continuous `motion-safe:animate-floaty` bob
+   below, so the one-shot entrance and the infinite bob compose on separate
+   elements instead of colliding on the `animation` shorthand of one. */
 export const caseStudyHeroScrollCueClass =
-  "mt-12 flex items-center gap-2 font-mono text-xs font-bold tracking-wide text-fg-soft";
+  "mt-12 flex items-center gap-2 font-mono text-xs font-bold tracking-wide text-fg-soft motion-safe:animate-hero-rise-5";
 
 /* Reuses the existing floaty token (rather than a new bespoke keyframe) for
    the cue's gentle bob — see design-spec E's own note that this is a strong

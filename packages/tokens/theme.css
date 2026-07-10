@@ -120,8 +120,31 @@
   --animate-floaty-4: floaty 6.9s ease-in-out -3.6s infinite;
 
   /* Cookie Banner entrance (gate with motion-safe:): the card rises up from the
-     foot of the viewport. */
-  --animate-cookie-rise: cookie-rise 0.5s cubic-bezier(0.2, 0.75, 0.25, 1);
+     foot of the viewport. Shares the `rise` keyframe below with the
+     case-study hero entrance tokens rather than a duplicate keyframe — this
+     token doesn't set `--rise-scale`, so `rise` falls back to its default
+     (0.985), giving the banner the same slight scale-in it always had. Leave
+     that default alone; it's this token's only source of the scale. */
+  --animate-cookie-rise: rise 0.5s cubic-bezier(0.2, 0.75, 0.25, 1);
+
+  /* Case-study hero entrance (gate with motion-safe:): eyebrow, title,
+     standfirst, meta row and scroll cue rise in one after another. Same
+     `rise` keyframe and cubic-bezier curve as --animate-cookie-rise above
+     (per design-spec E, the two easings are identical) — just a slower
+     duration and, via `--rise-scale: 1` set on the hero's content wrapper,
+     no scale. `backwards` holds each child at the keyframe's `from` state
+     for the length of its delay, so nothing flashes visible before its turn.
+     Delays step by 0.1s per child, the same way --animate-floaty-2/3/4 above
+     encode stagger via delay. */
+  --animate-hero-rise: rise 0.8s cubic-bezier(0.2, 0.75, 0.25, 1) backwards;
+  --animate-hero-rise-2: rise 0.8s cubic-bezier(0.2, 0.75, 0.25, 1) 0.1s
+    backwards;
+  --animate-hero-rise-3: rise 0.8s cubic-bezier(0.2, 0.75, 0.25, 1) 0.2s
+    backwards;
+  --animate-hero-rise-4: rise 0.8s cubic-bezier(0.2, 0.75, 0.25, 1) 0.3s
+    backwards;
+  --animate-hero-rise-5: rise 0.8s cubic-bezier(0.2, 0.75, 0.25, 1) 0.4s
+    backwards;
 
   @keyframes floaty {
     0%,
@@ -133,10 +156,16 @@
     }
   }
 
-  @keyframes cookie-rise {
+  /* Shared rise/reveal shape (opacity 0→1, translateY(26px)→0) used by both
+     --animate-cookie-rise and --animate-hero-rise* above. `--rise-scale`
+     lets the Cookie Banner keep its extra scale-in (defaults to 0.985)
+     without the hero picking it up unintentionally — the hero cancels it by
+     setting `--rise-scale: 1` on its content wrapper (see
+     CaseStudyHero.styles.ts). */
+  @keyframes rise {
     from {
       opacity: 0;
-      transform: translateY(26px) scale(0.985);
+      transform: translateY(26px) scale(var(--rise-scale, 0.985));
     }
     to {
       opacity: 1;
