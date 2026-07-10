@@ -27,7 +27,15 @@ export const storyWalkthroughStickyClass =
 export const storyWalkthroughGridClass =
   "grid grid-cols-1 gap-10 md:grid-cols-[minmax(280px,0.85fr)_1fr] md:gap-16";
 
-export const storyWalkthroughPhoneColClass = "mx-auto w-full md:mx-0";
+/* Height-aware width caps: the pinned viewport is exactly `h-screen` with
+   `overflow-hidden`, and at PhoneMockup's natural 320px width the bezel +
+   step-progress stack runs ~800px tall — on short viewports (~800px laptop
+   windows) that clips the progress pips/label straddling the bottom edge.
+   Shrinking the phone on short viewports keeps the whole stack inside the
+   pin. (No `max-vh` variant exists in Tailwind; arbitrary media queries are
+   the idiomatic escape hatch.) */
+export const storyWalkthroughPhoneColClass =
+  "mx-auto w-full max-w-[320px] [@media(max-height:900px)]:max-w-[280px] [@media(max-height:820px)]:max-w-[240px] md:mx-0";
 
 /* All panels share one grid cell ("grid-stack": every child placed at
    row 1/column 1) so they overlap for the crossfade *and* the container

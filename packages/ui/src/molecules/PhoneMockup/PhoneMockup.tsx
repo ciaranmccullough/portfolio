@@ -10,6 +10,7 @@ import {
   phoneMockupScreenClass,
   phoneMockupSegmentActiveClass,
   phoneMockupSegmentClass,
+  phoneMockupSegmentInactiveClass,
   phoneMockupSegmentsClass,
 } from "./PhoneMockup.styles";
 import type { PhoneMockupProps } from "./PhoneMockup.types";
@@ -47,7 +48,9 @@ export function PhoneMockup({
                 key={index}
                 className={cn(
                   phoneMockupSegmentClass,
-                  index <= activeStep && phoneMockupSegmentActiveClass,
+                  index <= activeStep
+                    ? phoneMockupSegmentActiveClass
+                    : phoneMockupSegmentInactiveClass,
                 )}
               />
             ))}

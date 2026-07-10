@@ -1,7 +1,10 @@
 import { render, screen } from "@testing-library/react";
 
 import { PhoneMockup } from "./PhoneMockup";
-import { phoneMockupSegmentActiveClass } from "./PhoneMockup.styles";
+import {
+  phoneMockupSegmentActiveClass,
+  phoneMockupSegmentInactiveClass,
+} from "./PhoneMockup.styles";
 import type { PhoneMockupStep } from "./PhoneMockup.types";
 
 const steps: PhoneMockupStep[] = [
@@ -70,6 +73,11 @@ describe("PhoneMockup", () => {
     expect(segments[0]).toHaveClass(phoneMockupSegmentActiveClass);
     expect(segments[1]).toHaveClass(phoneMockupSegmentActiveClass);
     expect(segments[2]).not.toHaveClass(phoneMockupSegmentActiveClass);
+    // exactly one background utility per segment — stacking both would leave
+    // the painted colour to the stylesheet's emission order (see styles file)
+    expect(segments[0]).not.toHaveClass(phoneMockupSegmentInactiveClass);
+    expect(segments[1]).not.toHaveClass(phoneMockupSegmentInactiveClass);
+    expect(segments[2]).toHaveClass(phoneMockupSegmentInactiveClass);
   });
 
   it("hides the decorative segment row from the accessibility tree", () => {

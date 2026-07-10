@@ -42,8 +42,34 @@ export function ScrollReveal({
   staggerIndex = 0,
   variant = "rise",
 }: ScrollRevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
   const enabled = useScrollAnimationsEnabled();
+
+  if (!enabled) {
+    return <>{children}</>;
+  }
+
+  return (
+    <EnabledScrollReveal staggerIndex={staggerIndex} variant={variant}>
+      {children}
+    </EnabledScrollReveal>
+  );
+}
+
+/**
+ * Inner component mounted only once animations are enabled, so the
+ * `useScroll` target ref is guaranteed to attach on its very first render.
+ * Registering `useScroll({ target })` in a component that can return without
+ * rendering the ref'd element (the `!enabled` branch above) makes Motion
+ * throw "Target ref is defined but not hydrated" on that pre-enabled render
+ * pass — the same reason StoryWalkthrough splits into a mounted-only
+ * PinnedWalkthrough.
+ */
+function EnabledScrollReveal({
+  children,
+  staggerIndex = 0,
+  variant = "rise",
+}: ScrollRevealProps) {
+  const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     // Starts when the element's top is 92% of the way down the viewport
@@ -66,10 +92,6 @@ export function ScrollReveal({
     inputRange,
     variant === "scale" ? [SCALE_FROM, 1] : [1, 1],
   );
-
-  if (!enabled) {
-    return <>{children}</>;
-  }
 
   return (
     <motion.div ref={ref} style={{ opacity, y, scale }}>

@@ -19,10 +19,16 @@ export const phoneMockupProgressClass = "mt-5";
 
 export const phoneMockupSegmentsClass = "flex list-none gap-1.5";
 
-export const phoneMockupSegmentClass =
-  "h-1.5 flex-1 rounded-full bg-line-strong";
+/* Background is applied by exactly one of the two state classes below —
+   never both. `cn` is a plain joiner (no tailwind-merge), so stacking two
+   `bg-*` utilities would leave the winner to the stylesheet's emission
+   order, which resolves in `bg-line-strong`'s favour and paints every
+   segment grey. */
+export const phoneMockupSegmentClass = "h-1.5 flex-1 rounded-full";
 
 export const phoneMockupSegmentActiveClass = "bg-brand-violet";
+
+export const phoneMockupSegmentInactiveClass = "bg-line-strong";
 
 export const phoneMockupProgressLabelRowClass =
   "mt-2.5 flex items-center justify-between gap-3 font-mono text-xs font-bold text-fg";
