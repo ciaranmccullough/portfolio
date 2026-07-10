@@ -1,6 +1,8 @@
 import { Eyebrow, Link, Text } from "@portfolio/ui";
 import NextLink from "next/link";
 
+import { MAIN_CONTENT_ID } from "@/lib/mainContentId";
+
 import {
   legalBackClass,
   legalMainClass,
@@ -21,7 +23,7 @@ export function LegalPage({
   children,
 }: LegalPageProps) {
   return (
-    <main className={legalMainClass}>
+    <main id={MAIN_CONTENT_ID} className={legalMainClass}>
       <Eyebrow>{eyebrow}</Eyebrow>
       <Text as="h1" variant="h1" className={legalTitleClass}>
         {title}

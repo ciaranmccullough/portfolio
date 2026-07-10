@@ -40,7 +40,11 @@ export function WalkthroughPanel({
       {eyebrow ? (
         <Eyebrow className={walkthroughPanelEyebrowClass}>{eyebrow}</Eyebrow>
       ) : null}
-      <Text as="h3" variant="h2" className={walkthroughPanelTitleClass}>
+      {/* `variant="h1"` (not the semantic-sounding "h2") is deliberate: it's
+          the type-scale tier that measures correctly against the design
+          mock's panel heading — `as="h3"` still renders the correct
+          semantic level regardless of which visual scale is applied. */}
+      <Text as="h3" variant="h1" className={walkthroughPanelTitleClass}>
         {title}
       </Text>
       {description ? (

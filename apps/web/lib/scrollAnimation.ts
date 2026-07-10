@@ -64,51 +64,99 @@ export function getStaggeredProgress(
 }
 
 /**
- * Which panel (0-based) is "active" at a given overall scroll `progress`
- * (0–1) through a sequence of `count` equal-width panels. Used for the
- * walkthrough's discrete UI (the phone's step label/counter) — the
- * continuous crossfade itself is {@link getPanelOpacity}.
+ * The canonical scroll-progress (0–1) "resting" position for panel `index`
+ * of `count` evenly-spaced panels in the snap-stepper — index `0` rests at
+ * progress `0`, the last index rests at progress `1`, evenly spaced in
+ * between. Used to compute where to programmatically settle the tall
+ * region's scroll position after a step, so the page scrollbar always
+ * reflects a whole panel, never a point between two.
+ *
+ * The exact inverse of {@link resolveNearestPanelIndex} — round-tripping
+ * `resolveNearestPanelIndex(getPanelRestProgress(i, count), count)` always
+ * returns `i` — which matters: the stepper and the "settle a stray scroll
+ * position" correction (scrollbar drags, keyboard scroll, deep-anchor
+ * arrivals) must agree on the same resting points, or they'd fight each
+ * other back and forth.
  */
-export function getActivePanelIndex(progress: number, count: number): number {
-  if (count <= 0) return 0;
-  const index = Math.floor(clamp01(progress) * count);
-  return Math.min(count - 1, Math.max(0, index));
+export function getPanelRestProgress(index: number, count: number): number {
+  if (count <= 1) return 0;
+  return clamp01(index / (count - 1));
 }
 
 /**
- * Opacity (0–1) for panel `index` of `count` equal-width panels at overall
- * scroll `progress` (0–1).
- *
- * Each panel has a triangular visibility profile peaking (opacity 1) at its
- * own centre and falling linearly to 0 by the time `progress` reaches the
- * *next* panel's centre — so adjacent panels are exactly 50/50 at the
- * boundary between them (a smooth crossfade, not a jump-cut). `fade` scales
- * that fall-off distance as a multiple of one panel's width (`1` = falls off
- * over exactly one panel-width, matching the neighbour's centre; `< 1`
- * sharpens the transition and adds a fully-opaque plateau in the middle of
- * each panel's slice).
- *
- * The first panel doesn't fade in before `progress` reaches its own centre
- * (it's already fully visible when the sequence begins) and the last panel
- * doesn't fade out after its centre (it stays visible through the end) —
- * there's no earlier/later panel to crossfade with at either end.
+ * The nearest whole panel (0-based) for a given scroll `progress` (0–1)
+ * through `count` evenly-spaced panels — the exact inverse of
+ * {@link getPanelRestProgress}. Used to resolve an arbitrary scroll position
+ * (scrollbar drag, keyboard scroll, deep-anchor arrival — anything that
+ * didn't go through the debounced wheel/touch stepper) to a single discrete
+ * panel, so the visible state is always a whole panel, never a blend of two.
  */
-export function getPanelOpacity(
+export function resolveNearestPanelIndex(
   progress: number,
-  index: number,
   count: number,
-  fade = 1,
 ): number {
   if (count <= 0) return 0;
-  const p = clamp01(progress);
-  const step = 1 / count;
-  const center = (index + 0.5) * step;
-  const isFirst = index === 0;
-  const isLast = index === count - 1;
+  const index = Math.round(clamp01(progress) * (count - 1));
+  return Math.min(count - 1, Math.max(0, index));
+}
 
-  const effectiveP =
-    (isFirst && p < center) || (isLast && p > center) ? center : p;
-  const distance = Math.abs(effectiveP - center);
-  const falloff = step * Math.max(fade, 0.0001);
-  return clamp01(1 - distance / falloff);
+/** One accepted-or-swallowed step attempt's resulting state — see
+ *  {@link resolveWalkthroughStep}. */
+export interface WalkthroughStepState {
+  /** The active panel index (0-based). */
+  index: number;
+  /** Timestamp (`Date.now()`/`performance.now()`, same clock as `now` below)
+   *  of the last *accepted* step — the debounce window is measured from
+   *  this, not from every attempt. */
+  lastStepAt: number;
+}
+
+/**
+ * Whether stepping `direction` (`1` = next, `-1` = previous) from `index`
+ * would go out of bounds — i.e. the gesture should be released to native
+ * scroll (not intercepted) rather than stepped. Callers check this *before*
+ * calling `preventDefault()`/{@link resolveWalkthroughStep}: at the first
+ * panel scrolling up, or the last panel scrolling down, the page must scroll
+ * straight past the section instead of trapping the gesture.
+ */
+export function isWalkthroughBoundary(
+  index: number,
+  direction: 1 | -1,
+  count: number,
+): boolean {
+  return (direction > 0 && index >= count - 1) || (direction < 0 && index <= 0);
+}
+
+/**
+ * The snap-stepper's core, dependency-free state transition: attempt to move
+ * one step (`direction`: `1` next, `-1` previous) from `state`, honouring a
+ * `debounceMs` cooldown since the last *accepted* step.
+ *
+ * Returns `state` unchanged (same object reference — callers can use that to
+ * detect a no-op) in two cases: the step would go out of bounds (the caller
+ * should have already checked {@link isWalkthroughBoundary} and released the
+ * gesture instead of calling this at all — this is a defensive second
+ * guard), or `now` is within `debounceMs` of `state.lastStepAt` — an
+ * inertial wheel/trackpad fling delivers many discrete events over its
+ * deceleration curve, and a real touch swipe can cross the move threshold
+ * more than once; only the *first* event of such a burst should ever advance
+ * the index, so every following one in the same ~700ms window is swallowed,
+ * never skipped-ahead. This is what guarantees "one gesture = exactly one
+ * panel, never two."
+ *
+ * Pure and clock-agnostic (`now` is a parameter, not read internally) so the
+ * debounce boundary is exactly, deterministically testable without fake
+ * timers.
+ */
+export function resolveWalkthroughStep(
+  state: WalkthroughStepState,
+  direction: 1 | -1,
+  count: number,
+  now: number,
+  debounceMs = 700,
+): WalkthroughStepState {
+  const next = state.index + direction;
+  if (next < 0 || next >= count) return state;
+  if (now - state.lastStepAt < debounceMs) return state;
+  return { index: next, lastStepAt: now };
 }

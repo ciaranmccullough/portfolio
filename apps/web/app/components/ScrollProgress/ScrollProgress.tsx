@@ -25,8 +25,14 @@ import type { ScrollProgressProps } from "./ScrollProgress.types";
  * -viewport-width step on a 3px-tall bar is imperceptible.
  *
  * Honors reduced motion: while `useScrollAnimationsEnabled` is false (not
- * yet mounted, or the user prefers reduced motion), the bar renders
- * statically at 0% instead of scrubbing with scroll position.
+ * yet mounted, or the user prefers reduced motion), renders nothing at all
+ * — not a bar frozen at 0%. A frozen bar would misreport actual reading
+ * progress as the reduced-motion user scrolls (it would sit at
+ * `aria-valuenow="0"` indefinitely), which is worse than no indicator; those
+ * users still have the browser's own native scrollbar for that. This is
+ * true from the very first server-rendered paint (`enabled` starts `false`
+ * pre-hydration — see `useScrollAnimationsEnabled`), so nothing ever lies
+ * mid-scroll, not even briefly before JS runs.
  */
 export function ScrollProgress({ label }: ScrollProgressProps) {
   const enabled = useScrollAnimationsEnabled();
@@ -48,9 +54,11 @@ export function ScrollProgress({ label }: ScrollProgressProps) {
     setPercent((previous) => (previous === rounded ? previous : rounded));
   });
 
+  if (!enabled) return null;
+
   return (
     <ScrollProgressBar
-      progress={enabled ? percent : 0}
+      progress={percent}
       aria-label={label}
       className={scrollProgressClass}
     />

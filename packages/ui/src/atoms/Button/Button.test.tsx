@@ -47,6 +47,7 @@ describe("Button", () => {
       "dark",
       "ghost",
       "ghost-dark",
+      "light",
     ];
 
     it.each(variants)("variant='%s' applies its variant tokens", (variant) => {

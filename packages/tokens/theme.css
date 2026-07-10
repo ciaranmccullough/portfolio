@@ -32,6 +32,13 @@
   --color-brand-orange-deep: #bf4228;
   --color-brand-green-deep: #0b7c58;
   --color-brand-amber-deep: #956208;
+  /* Lighter violet tint for use as *text* on dark surfaces (e.g. the Role
+     card's "// THE ROLE" eyebrow) — mirrors the -deep shades above but in
+     the opposite direction: on a dark surface the accent needs pulling
+     *toward* white, not black, to clear contrast. The base
+     --color-brand-violet only clears ~3.4:1 on ink (fails WCAG AA's 4.5:1);
+     this clears ~7.5:1. */
+  --color-brand-violet-on-dark: #a99bff;
   --color-accent-android: #3ddc84;
   --color-accent-react: #61dafb;
 
@@ -71,6 +78,13 @@
   --text-3xl: 26px;
   --text-heading: clamp(28px, 4vw, 44px);
   --text-display: clamp(34px, 6vw, 64px);
+  /* Case-study hero scale — appreciably larger than `--text-display`, which
+     tops out well below the design doc's hero H1 (see design-spec F: "the
+     story's clamp(52px,10vw,140px) display size is larger than any current
+     `--text-*` token"). A dedicated tier rather than raising `--text-display`
+     itself, since every other display-scale heading in the system is sized
+     correctly today. */
+  --text-display-xl: clamp(52px, 10vw, 140px);
 
   --tracking-tighter: -0.03em;
   --tracking-tight: -0.025em;

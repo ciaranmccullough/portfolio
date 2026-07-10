@@ -14,8 +14,11 @@ export const eyebrowTone: Record<EyebrowTone, string> = {
 
 // Dark-surface palette (`onDark`) — for eyebrows on the dark ink panel, where
 // the bright accents read well and the `-deep` shades would be too dim.
+// violet uses its own lighter `-on-dark` tint instead of the base brand
+// colour: the base only clears ~3.4:1 on ink (fails WCAG AA's 4.5:1 — see
+// theme.css), where orange/green's bright shades already clear it there.
 export const eyebrowToneOnDark: Record<EyebrowTone, string> = {
-  violet: "text-brand-violet",
+  violet: "text-brand-violet-on-dark",
   orange: "text-brand-orange",
   green: "text-brand-green",
 };

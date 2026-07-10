@@ -1,7 +1,10 @@
 /* Section wrapper — matches Contact's pattern: align with the shared content
    width, `pb` only (the top gap comes from the previous section's own
-   padding). */
-export const roleClass = "mx-auto max-w-7xl px-6 pb-16 sm:px-10 lg:px-14";
+   padding, matching the design doc's own `padding-top:0` on this wrapper).
+   Bottom fluid rhythm measured off the design doc (clamp(70px,10vw,130px)),
+   approximated on the Tailwind breakpoint scale. */
+export const roleClass =
+  "mx-auto max-w-7xl px-6 pb-16 sm:px-10 sm:pb-20 lg:px-14 lg:pb-32";
 
 /* The dark card. `rounded-3xl` is Tailwind's built-in 24px step (untouched by
    this theme's `--radius-*` overrides, which stop at `2xl`) — close to the

@@ -1,6 +1,11 @@
 import type { ComponentPropsWithoutRef } from "react";
 
-export type ButtonVariant = "primary" | "dark" | "ghost" | "ghost-dark";
+export type ButtonVariant =
+  | "primary"
+  | "dark"
+  | "ghost"
+  | "ghost-dark"
+  | "light";
 export type ButtonSize = "sm" | "md" | "lg";
 
 /** Props for the {@link Button} atom. Extends native `<button>` attributes. */

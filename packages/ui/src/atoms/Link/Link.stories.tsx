@@ -27,3 +27,26 @@ export const Social: Story = {
     </div>
   ),
 };
+
+/**
+ * Button-styled pill mode — reuses Button's own visual grammar instead of a
+ * text-link `variant`. Used for the Story page's Role/Close card CTAs, which
+ * the design renders as two large pills, not text links.
+ */
+export const ButtonPill: Story = {
+  args: { buttonVariant: "primary", buttonSize: "lg", children: "Let's talk" },
+};
+
+/** The pill mode's secondary tone, as used on a dark surface (e.g. the Role card). */
+export const ButtonPillGhostDark: Story = {
+  args: {
+    buttonVariant: "ghost-dark",
+    buttonSize: "lg",
+    children: "← Back to all work",
+  },
+  render: (args) => (
+    <div style={{ background: "#17161d", padding: 24 }}>
+      <Link {...args} />
+    </div>
+  ),
+};

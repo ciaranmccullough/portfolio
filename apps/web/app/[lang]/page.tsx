@@ -32,6 +32,7 @@ import {
 } from "@/lib/contentful";
 import { buildFooterLinks } from "@/lib/footerLinks";
 import { localePath } from "@/lib/localePath";
+import { MAIN_CONTENT_ID } from "@/lib/mainContentId";
 import { SITE_NAME, SITE_URL } from "@/site-config";
 
 // Toolbox cards — and Open Source repo dots — cycle the brand accents in order
@@ -114,7 +115,7 @@ export default async function HomePage({
         }
       />
 
-      <main className="relative z-10 min-h-screen">
+      <main id={MAIN_CONTENT_ID} className="relative z-10 min-h-screen">
         {/* #top — hero (the brand wordmark / return target) */}
         <Hero
           id="top"

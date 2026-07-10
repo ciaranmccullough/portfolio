@@ -3,11 +3,14 @@
  */
 import {
   clamp01,
-  getActivePanelIndex,
-  getPanelOpacity,
+  getPanelRestProgress,
   getStaggeredProgress,
   getStaggeredRange,
+  isWalkthroughBoundary,
+  resolveNearestPanelIndex,
+  resolveWalkthroughStep,
   roundTo,
+  type WalkthroughStepState,
 } from "@/lib/scrollAnimation";
 
 describe("clamp01", () => {
@@ -101,88 +104,148 @@ describe("getStaggeredProgress", () => {
   });
 });
 
-describe("getActivePanelIndex", () => {
-  it("returns 0 at the very start of the sequence", () => {
-    expect(getActivePanelIndex(0, 5)).toBe(0);
+describe("getPanelRestProgress / resolveNearestPanelIndex (round-trip inverses)", () => {
+  const COUNT = 5;
+
+  it("rests index 0 at progress 0 and the last index at progress 1", () => {
+    expect(getPanelRestProgress(0, COUNT)).toBe(0);
+    expect(getPanelRestProgress(COUNT - 1, COUNT)).toBe(1);
   });
 
-  it("returns the last index at the very end of the sequence", () => {
-    expect(getActivePanelIndex(1, 5)).toBe(4);
+  it("spaces the middle indices evenly", () => {
+    expect(getPanelRestProgress(1, COUNT)).toBeCloseTo(0.25, 5);
+    expect(getPanelRestProgress(2, COUNT)).toBeCloseTo(0.5, 5);
+    expect(getPanelRestProgress(3, COUNT)).toBeCloseTo(0.75, 5);
   });
 
-  it("returns the panel whose equal-width slice contains progress", () => {
-    // 5 panels -> slices [0,.2) [.2,.4) [.4,.6) [.6,.8) [.8,1]
-    expect(getActivePanelIndex(0.05, 5)).toBe(0);
-    expect(getActivePanelIndex(0.25, 5)).toBe(1);
-    expect(getActivePanelIndex(0.45, 5)).toBe(2);
-    expect(getActivePanelIndex(0.65, 5)).toBe(3);
-    expect(getActivePanelIndex(0.95, 5)).toBe(4);
+  it("always rests at progress 0 for a single-panel sequence (no divide-by-zero)", () => {
+    expect(getPanelRestProgress(0, 1)).toBe(0);
   });
 
-  it("clamps out-of-range progress into [0, count-1]", () => {
-    expect(getActivePanelIndex(-1, 5)).toBe(0);
-    expect(getActivePanelIndex(2, 5)).toBe(4);
+  it("resolveNearestPanelIndex is the exact inverse of getPanelRestProgress for every index", () => {
+    for (let i = 0; i < COUNT; i += 1) {
+      const progress = getPanelRestProgress(i, COUNT);
+      expect(resolveNearestPanelIndex(progress, COUNT)).toBe(i);
+    }
   });
 
-  it("returns 0 for a non-positive count instead of dividing by zero", () => {
-    expect(getActivePanelIndex(0.5, 0)).toBe(0);
+  it("resolveNearestPanelIndex rounds an in-between progress to the closer panel", () => {
+    // Rest points at 0, .25, .5, .75, 1 — .3 is closer to .25 (index 1) than .5 (index 2).
+    expect(resolveNearestPanelIndex(0.3, COUNT)).toBe(1);
+    expect(resolveNearestPanelIndex(0.4, COUNT)).toBe(2);
+  });
+
+  it("resolveNearestPanelIndex clamps out-of-range progress into [0, count-1]", () => {
+    expect(resolveNearestPanelIndex(-1, COUNT)).toBe(0);
+    expect(resolveNearestPanelIndex(2, COUNT)).toBe(COUNT - 1);
+  });
+
+  it("resolveNearestPanelIndex returns 0 for a non-positive count instead of dividing by zero", () => {
+    expect(resolveNearestPanelIndex(0.5, 0)).toBe(0);
   });
 });
 
-describe("getPanelOpacity", () => {
-  const COUNT = 5; // slice width = 0.2, centres at .1 .3 .5 .7 .9
+describe("isWalkthroughBoundary", () => {
+  const COUNT = 5;
 
-  it("is fully opaque at its own centre", () => {
-    expect(getPanelOpacity(0.5, 2, COUNT)).toBe(1);
+  it("is a boundary when stepping forward from the last index", () => {
+    expect(isWalkthroughBoundary(COUNT - 1, 1, COUNT)).toBe(true);
   });
 
-  it("is fully transparent at the next panel's centre", () => {
-    // panel 2's centre is .5; panel 3's centre (.7) is a full step away.
-    expect(getPanelOpacity(0.7, 2, COUNT)).toBeCloseTo(0, 5);
+  it("is a boundary when stepping backward from the first index", () => {
+    expect(isWalkthroughBoundary(0, -1, COUNT)).toBe(true);
   });
 
-  it("is exactly 50/50 with its neighbour at the shared boundary", () => {
-    // boundary between panel 1 (.2-.4) and panel 2 (.4-.6) is progress = .4
-    const outgoing = getPanelOpacity(0.4, 1, COUNT);
-    const incoming = getPanelOpacity(0.4, 2, COUNT);
-    expect(outgoing).toBeCloseTo(0.5, 5);
-    expect(incoming).toBeCloseTo(0.5, 5);
+  it("is not a boundary anywhere in the interior", () => {
+    expect(isWalkthroughBoundary(2, 1, COUNT)).toBe(false);
+    expect(isWalkthroughBoundary(2, -1, COUNT)).toBe(false);
   });
 
-  it("the first panel is fully visible from progress 0 (no fade-in before the sequence starts)", () => {
-    expect(getPanelOpacity(0, 0, COUNT)).toBe(1);
-    expect(getPanelOpacity(0.05, 0, COUNT)).toBe(1);
+  it("is not a boundary stepping forward from the first index or backward from the last", () => {
+    expect(isWalkthroughBoundary(0, 1, COUNT)).toBe(false);
+    expect(isWalkthroughBoundary(COUNT - 1, -1, COUNT)).toBe(false);
+  });
+});
+
+describe("resolveWalkthroughStep", () => {
+  const COUNT = 5;
+
+  it("advances by exactly one index on a fresh step", () => {
+    const state: WalkthroughStepState = { index: 1, lastStepAt: 0 };
+    const next = resolveWalkthroughStep(state, 1, COUNT, 1000);
+    expect(next).toEqual({ index: 2, lastStepAt: 1000 });
   });
 
-  it("the last panel stays fully visible through progress 1 (no fade-out after the sequence ends)", () => {
-    expect(getPanelOpacity(1, COUNT - 1, COUNT)).toBe(1);
-    expect(getPanelOpacity(0.95, COUNT - 1, COUNT)).toBe(1);
+  it("steps backward by exactly one index", () => {
+    const state: WalkthroughStepState = { index: 3, lastStepAt: 0 };
+    const next = resolveWalkthroughStep(state, -1, COUNT, 1000);
+    expect(next.index).toBe(2);
   });
 
-  it("the first panel still fades out as later panels take over", () => {
-    expect(getPanelOpacity(0.3, 0, COUNT)).toBeCloseTo(0, 5);
-  });
-
-  it("the last panel still fades in from earlier panels", () => {
-    expect(getPanelOpacity(0.7, COUNT - 1, COUNT)).toBe(0);
-  });
-
-  it("exactly two adjacent panels are ever substantially visible at once (no triple-overlap)", () => {
-    const progress = 0.42;
-    const opacities = [0, 1, 2, 3, 4].map((i) =>
-      getPanelOpacity(progress, i, COUNT),
+  it("swallows a second step attempt inside the debounce window (still one step)", () => {
+    const first = resolveWalkthroughStep(
+      { index: 0, lastStepAt: 0 },
+      1,
+      COUNT,
+      1000,
     );
-    const visible = opacities.filter((o) => o > 0.001);
-    expect(visible.length).toBeLessThanOrEqual(2);
+    expect(first.index).toBe(1);
+
+    // A second burst 200ms later — well inside the 700ms window.
+    const second = resolveWalkthroughStep(first, 1, COUNT, 1200);
+    expect(second).toBe(first); // same reference: genuinely unchanged, not just equal
+    expect(second.index).toBe(1);
   });
 
-  it("a sharper fade (fade < 1) still peaks at 1 at the centre and 0 by the boundary", () => {
-    expect(getPanelOpacity(0.5, 2, COUNT, 0.5)).toBe(1);
-    // boundary is a full step (.1) from centre; fade=0.5 falls off over .1 (0.2 * 0.5)
-    expect(getPanelOpacity(0.6, 2, COUNT, 0.5)).toBeCloseTo(0, 5);
+  it("accepts a new step once the debounce window has fully elapsed", () => {
+    const first = resolveWalkthroughStep(
+      { index: 0, lastStepAt: 0 },
+      1,
+      COUNT,
+      1000,
+    );
+    const second = resolveWalkthroughStep(first, 1, COUNT, 1700);
+    expect(second.index).toBe(2);
   });
 
-  it("returns 0 for a non-positive count instead of dividing by zero", () => {
-    expect(getPanelOpacity(0.5, 0, 0)).toBe(0);
+  it("respects a custom debounce duration", () => {
+    const first = resolveWalkthroughStep(
+      { index: 0, lastStepAt: 0 },
+      1,
+      COUNT,
+      1000,
+      300,
+    );
+    const tooSoon = resolveWalkthroughStep(first, 1, COUNT, 1200, 300);
+    expect(tooSoon.index).toBe(1);
+
+    const longEnough = resolveWalkthroughStep(first, 1, COUNT, 1301, 300);
+    expect(longEnough.index).toBe(2);
+  });
+
+  it("never advances past the last index — returns state unchanged at the upper bound", () => {
+    const state: WalkthroughStepState = { index: COUNT - 1, lastStepAt: 0 };
+    const next = resolveWalkthroughStep(state, 1, COUNT, 1000);
+    expect(next).toBe(state);
+  });
+
+  it("never advances past the first index — returns state unchanged at the lower bound", () => {
+    const state: WalkthroughStepState = { index: 0, lastStepAt: 0 };
+    const next = resolveWalkthroughStep(state, -1, COUNT, 1000);
+    expect(next).toBe(state);
+  });
+
+  it("a rapid burst of many events only ever advances one step, however many fire", () => {
+    // `-Infinity` is the "no step has ever happened yet" sentinel (matches
+    // the real component's initial state) — using `0` here would make the
+    // very first event of the burst its own false debounce hit against a
+    // coincidentally-equal `now`.
+    let state: WalkthroughStepState = { index: 0, lastStepAt: -Infinity };
+    // Simulate an inertial fling: 20 wheel events 10ms apart (200ms total),
+    // all well inside the 700ms debounce window.
+    for (let i = 0; i < 20; i += 1) {
+      state = resolveWalkthroughStep(state, 1, COUNT, i * 10);
+    }
+    expect(state.index).toBe(1);
   });
 });

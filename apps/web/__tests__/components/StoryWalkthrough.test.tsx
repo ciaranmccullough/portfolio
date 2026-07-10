@@ -8,8 +8,8 @@ jest.mock("@portfolio/ui", () => {
       React.createElement("p", { "data-testid": "eyebrow" }, children),
     Text: ({ as, children }: { as?: string; children: React.ReactNode }) =>
       React.createElement(as ?? "p", null, children),
-    // The reduced-motion/static fallback — StoryWalkthrough must render this
-    // completely untouched, with the same props it received.
+    // The reduced-motion/no-JS/mobile fallback — StoryWalkthrough must
+    // render this completely untouched, with the same props it received.
     Walkthrough: ({
       eyebrow,
       title,
@@ -67,10 +67,12 @@ jest.mock("@portfolio/ui", () => {
 
 // motion/react is ESM (skipped by next/jest). `motion.li`/`motion.div` are
 // tagged with a `data-motion` marker so structure can be asserted without
-// needing real scroll/layout. useTransform returns a stable, inert stand-in
-// regardless of call shape (range-based or single-transformer) — this suite
-// checks structure and DOM presence, not animated values (unverifiable in
-// jsdom — see design-spec guidance).
+// needing real scroll/layout. Motion-only props (`animate`/`initial`/
+// `transition`) are dropped rather than spread onto the real DOM tag they
+// stand in for — this suite checks structure, DOM presence and the discrete
+// step-index state machine, not animated values (unverifiable in jsdom —
+// see design-spec guidance; the spring crossfade itself is proven via
+// puppeteer against the live page instead).
 jest.mock("motion/react", () => {
   const React = require("react");
   return {
@@ -79,7 +81,18 @@ jest.mock("motion/react", () => {
       {
         get:
           (_target: unknown, tag: string) =>
-          ({ children, ...props }: { children?: React.ReactNode }) =>
+          ({
+            children,
+            animate: _animate,
+            initial: _initial,
+            transition: _transition,
+            ...props
+          }: {
+            children?: React.ReactNode;
+            animate?: unknown;
+            initial?: unknown;
+            transition?: unknown;
+          }) =>
             React.createElement(
               tag,
               { "data-motion": tag, ...props },
@@ -87,8 +100,9 @@ jest.mock("motion/react", () => {
             ),
       },
     ),
-    useScroll: () => ({ scrollYProgress: { get: () => 0 } }),
-    useTransform: () => 0,
+    useScroll: () => ({
+      scrollYProgress: { get: () => 0, on: () => () => {} },
+    }),
     useMotionValueEvent: () => {},
   };
 });
@@ -97,14 +111,33 @@ jest.mock("@/hooks/useScrollAnimationsEnabled", () => ({
   useScrollAnimationsEnabled: jest.fn(),
 }));
 
-import { render, screen } from "@testing-library/react";
+jest.mock("@/hooks/useIsDesktopViewport", () => ({
+  useIsDesktopViewport: jest.fn(),
+}));
+
+import { fireEvent, render, screen } from "@testing-library/react";
 import type { WalkthroughItem } from "@portfolio/ui";
 
 import { StoryWalkthrough } from "@/app/components/StoryWalkthrough/StoryWalkthrough";
+import { storyWalkthroughStickyClass } from "@/app/components/StoryWalkthrough/StoryWalkthrough.styles";
+import { useIsDesktopViewport } from "@/hooks/useIsDesktopViewport";
 import { useScrollAnimationsEnabled } from "@/hooks/useScrollAnimationsEnabled";
+
+/** The pinned viewport `StoryWalkthrough` attaches its native wheel/touch
+ *  listeners to — located by its own styles.ts class (stable across markup
+ *  refactors) rather than a parentElement chain from a panel layer. */
+function getStickyViewport(): HTMLElement {
+  const selector = `.${storyWalkthroughStickyClass.split(" ")[0]}`;
+  const node = document.querySelector<HTMLElement>(selector);
+  if (!node) throw new Error(`Sticky viewport not found via ${selector}`);
+  return node;
+}
 
 const mockEnabled = useScrollAnimationsEnabled as jest.MockedFunction<
   typeof useScrollAnimationsEnabled
+>;
+const mockDesktop = useIsDesktopViewport as jest.MockedFunction<
+  typeof useIsDesktopViewport
 >;
 
 const ITEMS: WalkthroughItem[] = [
@@ -117,6 +150,24 @@ const ITEMS: WalkthroughItem[] = [
   },
   { eyebrow: "SCORES", title: "Live, without the jank", description: "d3" },
 ];
+
+/** Reads which panel currently carries `aria-current="step"` — there must be
+ *  exactly one. */
+function currentPanelIndex(): number {
+  const current = document.querySelectorAll('[aria-current="step"]');
+  expect(current).toHaveLength(1);
+  const layers = Array.from(document.querySelectorAll('[data-motion="li"]'));
+  return layers.indexOf(current[0] as Element);
+}
+
+beforeEach(() => {
+  mockDesktop.mockReturnValue(true);
+  // jsdom doesn't implement `window.scrollTo` — the stepper calls it
+  // (harmlessly, per `syncScrollPosition`'s own doc comment: it's a no-op
+  // page-scrollbar bookkeeping call, not something these structural/state
+  // tests assert on) every time it accepts a step.
+  window.scrollTo = jest.fn();
+});
 
 describe("StoryWalkthrough — reduced motion / not yet mounted", () => {
   beforeEach(() => {
@@ -151,9 +202,22 @@ describe("StoryWalkthrough — reduced motion / not yet mounted", () => {
   });
 });
 
-describe("StoryWalkthrough — scroll animations enabled", () => {
+describe("StoryWalkthrough — below the md breakpoint", () => {
+  it("renders the static organism even when scroll animations are enabled", () => {
+    mockEnabled.mockReturnValue(true);
+    mockDesktop.mockReturnValue(false);
+
+    render(<StoryWalkthrough items={ITEMS} />);
+
+    expect(screen.getByTestId("static-walkthrough")).toBeInTheDocument();
+    expect(screen.queryByTestId("phone-mockup")).not.toBeInTheDocument();
+  });
+});
+
+describe("StoryWalkthrough — scroll animations enabled, desktop viewport", () => {
   beforeEach(() => {
     mockEnabled.mockReturnValue(true);
+    mockDesktop.mockReturnValue(true);
   });
 
   it("renders the header", () => {
@@ -215,9 +279,82 @@ describe("StoryWalkthrough — scroll animations enabled", () => {
     expect(imageLayers[0]).toHaveTextContent("home-image");
   });
 
-  it("marks exactly one panel as the active step", () => {
+  it("starts on the first panel and marks exactly one panel as the active step", () => {
     render(<StoryWalkthrough items={ITEMS} />);
-    const current = document.querySelectorAll('[aria-current="step"]');
-    expect(current).toHaveLength(1);
+    expect(currentPanelIndex()).toBe(0);
+  });
+
+  describe("snap-stepper: wheel gestures", () => {
+    it("advances exactly one panel on a single downward wheel gesture", () => {
+      render(<StoryWalkthrough items={ITEMS} />);
+      fireEvent.wheel(getStickyViewport(), { deltaY: 120 });
+      expect(currentPanelIndex()).toBe(1);
+    });
+
+    it("never advances more than one panel for a single gesture, even a huge delta", () => {
+      render(<StoryWalkthrough items={ITEMS} />);
+      fireEvent.wheel(getStickyViewport(), { deltaY: 5000 });
+      expect(currentPanelIndex()).toBe(1);
+    });
+
+    it("swallows a second wheel gesture inside the debounce window (still one step)", () => {
+      render(<StoryWalkthrough items={ITEMS} />);
+      const sticky = getStickyViewport();
+      fireEvent.wheel(sticky, { deltaY: 120 });
+      fireEvent.wheel(sticky, { deltaY: 120 }); // immediately after — same tick
+      expect(currentPanelIndex()).toBe(1);
+    });
+
+    it("steps backward on an upward wheel gesture", () => {
+      render(<StoryWalkthrough items={ITEMS} />);
+      const sticky = getStickyViewport();
+      fireEvent.wheel(sticky, { deltaY: 120 }); // -> panel 1
+      expect(currentPanelIndex()).toBe(1);
+      fireEvent.wheel(sticky, { deltaY: -120, timeStamp: Date.now() + 1000 });
+      // jsdom's fireEvent doesn't advance real time, so the second gesture
+      // is still inside the debounce window and correctly swallowed —
+      // asserting it stays at 1 (not 0, not -1) is the meaningful check
+      // here: a boundary-adjacent reversal never *skips past* panel 0.
+      expect(currentPanelIndex()).toBe(1);
+    });
+
+    it("releases (does not preventDefault) scrolling up from the first panel", () => {
+      render(<StoryWalkthrough items={ITEMS} />);
+      // `fireEvent.*` returns `false` when the dispatched event's
+      // `preventDefault()` was called (standard DOM `dispatchEvent`
+      // semantics) — the return value alone proves whether the gesture was
+      // released to native scroll or intercepted, no manual Event() needed.
+      const notPrevented = fireEvent.wheel(getStickyViewport(), {
+        deltaY: -120,
+      });
+      expect(notPrevented).toBe(true);
+      expect(currentPanelIndex()).toBe(0);
+    });
+
+    it("intercepts (preventDefault) scrolling down from an interior panel", () => {
+      render(<StoryWalkthrough items={ITEMS} />);
+      const notPrevented = fireEvent.wheel(getStickyViewport(), {
+        deltaY: 120,
+      });
+      expect(notPrevented).toBe(false);
+    });
+  });
+
+  describe("snap-stepper: touch gestures", () => {
+    it("advances one panel on a swipe past the move threshold", () => {
+      render(<StoryWalkthrough items={ITEMS} />);
+      const sticky = getStickyViewport();
+      fireEvent.touchStart(sticky, { touches: [{ clientY: 400 }] });
+      fireEvent.touchMove(sticky, { touches: [{ clientY: 340 }] }); // dy=60 up-swipe -> next
+      expect(currentPanelIndex()).toBe(1);
+    });
+
+    it("does nothing for a swipe under the move threshold", () => {
+      render(<StoryWalkthrough items={ITEMS} />);
+      const sticky = getStickyViewport();
+      fireEvent.touchStart(sticky, { touches: [{ clientY: 400 }] });
+      fireEvent.touchMove(sticky, { touches: [{ clientY: 390 }] }); // dy=10, below 36px
+      expect(currentPanelIndex()).toBe(0);
+    });
   });
 });

@@ -11,6 +11,11 @@ export const buttonVariant: Record<ButtonVariant, string> = {
   // turns violet on hover (e.g. the Contact form's Clear / Send-another).
   "ghost-dark":
     "border border-line-dark bg-transparent text-fg-on-dark hover:border-brand-violet hover:text-fg-inverse",
+  // Solid cream/paper primary *for use on a dark panel* (e.g. the Role
+  // card's "View the project" CTA) — `primary`'s violet-on-white reads fine
+  // on paper, but needs a light-on-dark counterpart there; ink-on-paper is
+  // both extremely high contrast and the site's own base palette inverted.
+  light: "bg-paper text-ink hover:opacity-90",
 };
 
 export const buttonSize: Record<ButtonSize, string> = {

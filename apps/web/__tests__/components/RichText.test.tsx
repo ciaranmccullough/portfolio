@@ -108,4 +108,28 @@ describe("RichText", () => {
     const item = screen.getByRole("listitem");
     expect(item).toHaveTextContent("First item");
   });
+
+  describe("statement variant", () => {
+    it("renders paragraphs as bare <p> lines instead of through the Text atom", () => {
+      render(<RichText document={document} variant="statement" />);
+
+      const paragraph = screen.getByText("Plain and", { exact: false });
+      expect(paragraph.tagName).toBe("P");
+    });
+
+    it("colors bold marks in brand-violet", () => {
+      render(<RichText document={document} variant="statement" />);
+
+      const bold = screen.getByText("bold");
+      expect(bold.tagName).toBe("STRONG");
+      expect(bold).toHaveClass("text-brand-violet");
+    });
+
+    it("does not color bold marks for the default body variant", () => {
+      render(<RichText document={document} />);
+
+      const bold = screen.getByText("bold");
+      expect(bold).not.toHaveClass("text-brand-violet");
+    });
+  });
 });

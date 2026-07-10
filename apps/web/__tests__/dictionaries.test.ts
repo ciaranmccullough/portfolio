@@ -51,6 +51,9 @@ describe("getDictionary", () => {
     );
     expect(dict.contact.submitLabel).toBe("Send enquiry");
     expect(dict.hero.resumeLabel).toBe("Résumé");
+    expect(dict.nav.skipToContent).toBe("Skip to content");
+    expect(dict.story.role.viewProjectCta).toBe("View the project ↗");
+    expect(dict.story.role.backToWorkCta).toBe("← Back to all work");
   });
 
   it("returns structured collections (nav links, toolbox categories) intact", async () => {

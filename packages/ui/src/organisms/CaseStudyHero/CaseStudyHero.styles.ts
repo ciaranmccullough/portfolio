@@ -7,22 +7,28 @@ export const caseStudyHeroClass =
 export const caseStudyHeroBackgroundClass =
   "pointer-events-none absolute inset-0 -z-10 overflow-hidden";
 
-/* Fades the image out toward the left edge — a simplified, single-gradient
-   stand-in for the source design's double mask-composite trick (see
-   design-spec section A). A genuine one-off with no equivalent token. */
+/* Double mask-image (mask-composite: intersect) reproduces the design doc's
+   masked top-right band — visible roughly x:44-90%, y:0-52% from the top,
+   fading to nothing at the left/right edges and below the midline, so the
+   image bleeds in from the top-right instead of a flat full-bleed fade.
+   Genuine one-offs with no equivalent token (see design-spec section A). */
 export const caseStudyHeroBackgroundMediaClass =
-  "absolute inset-0 opacity-50 [mask-image:linear-gradient(to_left,black_35%,transparent_80%)]";
+  "absolute inset-0 opacity-[.52] [mask-composite:intersect] [mask-image:linear-gradient(to_right,transparent_0%,#000_44%,#000_90%,transparent_100%),linear-gradient(to_top,transparent_0%,#000_48%)]";
 
-/* Two soft wash layers stacked on top of the (already-masked) image: a
-   left-to-right cream fade and a bottom fade to solid paper, so the image
-   reads as bleeding in from the top-right and receding to nothing —
-   approximates the source's three-stop gradient overlay with plain
-   token-based Tailwind gradients instead of literal one-off rgba stops. */
+/* Flat cream wash held over the whole masked band — the source's first
+   overlay stop (a uniform tint, not a gradient). */
+export const caseStudyHeroWashFlatClass = "absolute inset-0 bg-paper/34";
+
+/* Horizontal cream fade: near-opaque at the left edge of the visible band,
+   fading to transparent by 62% across — softens the mask's left edge on top
+   of the hard cutoff above. */
 export const caseStudyHeroWashLeftClass =
-  "absolute inset-0 bg-gradient-to-r from-paper via-paper/35 to-transparent";
+  "absolute inset-0 bg-gradient-to-r from-paper from-0% via-paper/45 via-36% to-transparent to-62%";
 
+/* Bottom fade to solid paper — stays fully transparent until just past the
+   midline, then resolves to solid paper by the foot of the hero. */
 export const caseStudyHeroWashBottomClass =
-  "absolute inset-0 bg-gradient-to-b from-transparent to-paper";
+  "absolute inset-0 bg-gradient-to-b from-transparent from-54% to-paper";
 
 export const caseStudyHeroContentClass =
   "relative mx-auto w-full max-w-7xl px-6 py-5 sm:px-10 lg:px-14";
@@ -31,7 +37,13 @@ export const caseStudyHeroEyebrowClass = "mb-4";
 
 export const caseStudyHeroTitleClass = "mt-4";
 
-export const caseStudyHeroDescriptionClass = "mt-5 max-w-[44ch]";
+/* Standfirst: fluid statement-adjacent scale (measured off the design doc —
+   see design-spec section A), bigger than the `body` Text variant tops out
+   at, so this is rendered as a plain `<p>` with its own type classes rather
+   than through the Text atom (avoids stacking a conflicting `text-lg` class
+   the atom's `body` variant would otherwise apply). */
+export const caseStudyHeroDescriptionClass =
+  "mt-5 max-w-[44ch] font-body text-[clamp(18px,2.2vw,24px)] leading-[1.45] text-fg-muted";
 
 /* `m-0` cancels the <dl>'s default block margin so the row's spacing is
    controlled entirely by `mt-9`, matching every other section's rhythm. */
@@ -40,13 +52,15 @@ export const caseStudyHeroMetaClass =
 
 export const caseStudyHeroMetaItemClass = "flex flex-col gap-1";
 
-export const caseStudyHeroMetaLabelClass = "text-[11px] text-fg-faint";
+/* `fg-faint` (#9a9486 on paper) measures 2.68:1 — fails WCAG AA's 4.5:1 body
+   text minimum (PRODUCT.md's AA pledge). `fg-soft` (#6a6776) clears it. */
+export const caseStudyHeroMetaLabelClass = "text-[11px] text-fg-soft";
 
 /* `m-0` cancels the <dd>'s default inline-start margin. */
 export const caseStudyHeroMetaValueClass = "m-0";
 
 export const caseStudyHeroScrollCueClass =
-  "mt-12 flex items-center gap-2 font-mono text-xs font-bold tracking-wide text-fg-faint";
+  "mt-12 flex items-center gap-2 font-mono text-xs font-bold tracking-wide text-fg-soft";
 
 /* Reuses the existing floaty token (rather than a new bespoke keyframe) for
    the cue's gentle bob — see design-spec E's own note that this is a strong

@@ -39,3 +39,18 @@ html {
     scroll-behavior: auto;
   }
 }
+
+/* Brand-consistent focus ring for every interactive element site-wide,
+   replacing each browser's own default (which varies and doesn't read as
+   this design system's own). Reuses the same violet + ring/offset shape
+   Switch's own `peer-focus-visible` ring already established, but as an
+   `outline` (not a `box-shadow` ring) so it works uniformly on any surface
+   colour — light or dark — without needing a matching ring-offset colour
+   per component, and isn't clipped by an `overflow:hidden` ancestor (e.g. a
+   pill button) the way a box-shadow ring can be. `:focus-visible` (not
+   `:focus`) so it only ever shows for keyboard/programmatic focus, never a
+   mouse click. */
+:focus-visible {
+  outline: 2.5px solid var(--color-brand-violet);
+  outline-offset: 2px;
+}

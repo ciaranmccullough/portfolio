@@ -1,6 +1,13 @@
 import type { PrincipleCardTone } from "../../molecules";
 
-export const principlesClass = "mx-auto max-w-7xl px-6 py-16 sm:px-10 lg:px-14";
+/* Fluid rhythm measured off the design doc (clamp(60px,12vw,150px) top and
+   bottom) — approximated on the Tailwind breakpoint scale since this section
+   grows noticeably more generous at desktop widths than a single fixed
+   `py-16` allows. Keep in sync by hand with the app's `PrinciplesReveal`
+   (its own copy — see that file's own comment on why it can't reuse this
+   one directly). */
+export const principlesClass =
+  "mx-auto max-w-7xl px-6 py-16 sm:px-10 sm:py-24 lg:px-14 lg:py-32 xl:py-36";
 
 export const principlesHeaderClass = "mb-9";
 

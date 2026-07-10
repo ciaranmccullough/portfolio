@@ -15,6 +15,7 @@ import {
   caseStudyHeroScrollCueClass,
   caseStudyHeroTitleClass,
   caseStudyHeroWashBottomClass,
+  caseStudyHeroWashFlatClass,
   caseStudyHeroWashLeftClass,
 } from "./CaseStudyHero.styles";
 import type { CaseStudyHeroProps } from "./CaseStudyHero.types";
@@ -43,6 +44,7 @@ export function CaseStudyHero({
           <div className={caseStudyHeroBackgroundMediaClass}>
             {backgroundImage}
           </div>
+          <div className={caseStudyHeroWashFlatClass} />
           <div className={caseStudyHeroWashLeftClass} />
           <div className={caseStudyHeroWashBottomClass} />
         </div>
@@ -53,14 +55,12 @@ export function CaseStudyHero({
           <Eyebrow className={caseStudyHeroEyebrowClass}>{eyebrow}</Eyebrow>
         ) : null}
 
-        <Text variant="display" className={caseStudyHeroTitleClass}>
+        <Text variant="display-xl" className={caseStudyHeroTitleClass}>
           {title}
         </Text>
 
         {description ? (
-          <Text variant="body" className={caseStudyHeroDescriptionClass}>
-            {description}
-          </Text>
+          <p className={caseStudyHeroDescriptionClass}>{description}</p>
         ) : null}
 
         {meta && meta.length > 0 ? (

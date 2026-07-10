@@ -2,7 +2,14 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { Link } from "./Link";
-import { linkBase, linkVariant } from "./Link.styles";
+import {
+  linkButtonBase,
+  linkButtonPillClass,
+  linkButtonSize,
+  linkButtonVariant,
+  linkVariant,
+  linkBase,
+} from "./Link.styles";
 import type { LinkVariant } from "./Link.types";
 
 describe("Link", () => {
@@ -92,6 +99,53 @@ describe("Link", () => {
       expect(link).toHaveClass("another-one");
       expect(link).toHaveClass(...linkBase.split(" "));
       expect(link).toHaveClass(...linkVariant.nav.split(" "));
+    });
+  });
+
+  describe("buttonVariant (button-styled pill)", () => {
+    it("renders Button's variant/size classes plus a fully-rounded pill when buttonVariant is set", () => {
+      render(
+        <Link href="/x" buttonVariant="primary" buttonSize="lg">
+          Pill CTA
+        </Link>,
+      );
+
+      const link = screen.getByRole("link", { name: "Pill CTA" });
+      expect(link).toHaveClass(...linkButtonBase.split(" "));
+      expect(link).toHaveClass(...linkButtonVariant.primary.split(" "));
+      expect(link).toHaveClass(...linkButtonSize.lg.split(" "));
+      expect(link).toHaveClass(linkButtonPillClass);
+    });
+
+    it("defaults buttonSize to 'md' when only buttonVariant is given", () => {
+      render(
+        <Link href="/x" buttonVariant="ghost-dark">
+          Default size pill
+        </Link>,
+      );
+
+      const link = screen.getByRole("link", { name: "Default size pill" });
+      expect(link).toHaveClass(...linkButtonSize.md.split(" "));
+    });
+
+    it("ignores `variant`'s text-link tokens once buttonVariant is set", () => {
+      render(
+        <Link href="/x" variant="social" buttonVariant="primary">
+          Overridden
+        </Link>,
+      );
+
+      const link = screen.getByRole("link", { name: "Overridden" });
+      expect(link).not.toHaveClass(...linkVariant.social.split(" "));
+      expect(link).toHaveClass(...linkButtonVariant.primary.split(" "));
+    });
+
+    it("does not affect Link's default rendering when buttonVariant is omitted", () => {
+      render(<Link href="/x">Plain link</Link>);
+
+      const link = screen.getByRole("link", { name: "Plain link" });
+      expect(link).toHaveClass(...linkVariant.nav.split(" "));
+      expect(link).not.toHaveClass(linkButtonPillClass);
     });
   });
 

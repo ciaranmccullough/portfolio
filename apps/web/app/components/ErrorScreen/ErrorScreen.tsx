@@ -1,5 +1,7 @@
 import { Eyebrow, Link, Text } from "@portfolio/ui";
 
+import { MAIN_CONTENT_ID } from "@/lib/mainContentId";
+
 import {
   errorScreenActionClass,
   errorScreenClass,
@@ -21,7 +23,7 @@ export function ErrorScreen({
   retryHref = "/",
 }: ErrorScreenProps) {
   return (
-    <main className={errorScreenClass}>
+    <main id={MAIN_CONTENT_ID} className={errorScreenClass}>
       {eyebrow ? <Eyebrow tone="orange">{eyebrow}</Eyebrow> : null}
       <Text variant="display" className={errorScreenTitleClass}>
         {title}

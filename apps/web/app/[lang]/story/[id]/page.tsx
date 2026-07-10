@@ -14,9 +14,10 @@ import { ScrollReveal } from "../../../components/ScrollReveal/ScrollReveal";
 import { SiteFooter } from "../../../components/SiteFooter/SiteFooter";
 import { StoryWalkthrough } from "../../../components/StoryWalkthrough/StoryWalkthrough";
 import { getTranslations } from "../../dictionaries";
-import { getStory, STORY_FETCH_ERROR } from "@/lib/contentful";
+import { getProjects, getStory, STORY_FETCH_ERROR } from "@/lib/contentful";
 import { buildFooterLinks } from "@/lib/footerLinks";
 import { localePath } from "@/lib/localePath";
+import { MAIN_CONTENT_ID } from "@/lib/mainContentId";
 
 /**
  * Dedupe the Story fetch across `generateMetadata` and the page body — both
@@ -60,7 +61,10 @@ export default async function StoryPage({
   const { lang, id } = await params;
   const dict = await getTranslations(params);
   const homeHref = localePath(lang, "/");
-  const story = await getStoryForRequest(id);
+  const [story, projects] = await Promise.all([
+    getStoryForRequest(id),
+    getProjects(),
+  ]);
 
   if (story === null) return notFound();
 
@@ -76,6 +80,19 @@ export default async function StoryPage({
     );
   }
 
+  // Composes the eyebrow with the matching Home "projects" card's title (e.g.
+  // "// Case study — EA Sports App") when one exists for this story id — see
+  // PRODUCT.md design-doc fidelity: the mock's eyebrow reads "// CASE STUDY —
+  // EA SPORTS". `projects` has no native Contentful reference to `story`, only
+  // the shared `id` string, and `getProjects` fails soft to `null`, so a
+  // missing/unmatched project just falls back to the eyebrow exactly as
+  // before. A dedicated CMS field on the story content type (rather than this
+  // cross-lookup) would be the cleaner long-term source.
+  const project = projects?.find((item) => item.id === id);
+  const heroEyebrow = project
+    ? `${dict.story.hero.eyebrow} — ${project.title}`
+    : dict.story.hero.eyebrow;
+
   return (
     <>
       <ScrollProgress label={dict.story.progressLabel} />
@@ -87,9 +104,9 @@ export default async function StoryPage({
         backHref={`${homeHref}#work`}
       />
 
-      <main className="relative z-10 min-h-screen">
+      <main id={MAIN_CONTENT_ID} className="relative z-10 min-h-screen">
         <HeroParallax
-          eyebrow={dict.story.hero.eyebrow}
+          eyebrow={heroEyebrow}
           title={story.title}
           description={story.description}
           backgroundImage={
@@ -100,7 +117,7 @@ export default async function StoryPage({
                 fill
                 sizes="100vw"
                 priority
-                className="object-cover"
+                className="object-cover object-[center_24%]"
               />
             ) : undefined
           }
@@ -115,7 +132,7 @@ export default async function StoryPage({
         <ScrollReveal>
           <Brief
             eyebrow={dict.story.brief.eyebrow}
-            body={<RichText document={story.brief} />}
+            body={<RichText document={story.brief} variant="statement" />}
           />
         </ScrollReveal>
 
@@ -169,10 +186,31 @@ export default async function StoryPage({
             title={story.titleRole}
             description={story.descriptionRole}
           >
-            <Link as={NextLink} href={`${homeHref}#contact`} variant="primary">
-              {dict.nav.cta.label}
-            </Link>
-            <Link as={NextLink} href={`${homeHref}#work`} variant="social">
+            {/* Primary CTA reuses the matching Home "projects" card's real
+                href (looked up above for the hero eyebrow suffix) — the
+                project's actual live/external destination, not an in-app
+                anchor. Omitted entirely when that project has no href (a
+                genuinely missing/blank CMS field), rather than rendering a
+                dead "View the project" button — see `projectsMapper`'s
+                `href: project.link ?? ""` fallback. External-link semantics
+                match how `WorkGrid` treats a project's own external href. */}
+            {project?.href ? (
+              <Link
+                href={project.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                buttonVariant="light"
+                buttonSize="lg"
+              >
+                {dict.story.role.viewProjectCta}
+              </Link>
+            ) : null}
+            <Link
+              as={NextLink}
+              href={`${homeHref}#work`}
+              buttonVariant="ghost-dark"
+              buttonSize="lg"
+            >
               {dict.story.role.backToWorkCta}
             </Link>
           </Role>

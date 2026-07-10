@@ -4,9 +4,17 @@
 export const scrimClass = "fixed inset-0 z-[80]";
 
 /* Fixed anchor pinning the card to the foot of the viewport: full-width with
-   gutters on mobile, hugging the bottom-left from `sm` up. */
+   gutters on mobile, hugging the bottom-*right* from `sm` up. Bottom-right
+   (not -left): every page's primary reading content — the home hero copy,
+   the story hero's H1/standfirst/ROLE-PLATFORM-YEAR meta row — starts flush
+   against the left content edge, so a bottom-left-anchored banner sits
+   directly on top of it on any viewport short enough for both to occupy the
+   same vertical band (e.g. 1280×800 on the story page). The right edge has
+   no competing readable copy, only decorative hero imagery, so anchoring
+   there is a containment fix with zero effect on the banner's own content,
+   copy or behaviour. */
 export const anchorClass =
-  "fixed inset-x-4 bottom-4 z-[90] flex justify-center sm:inset-x-6 sm:bottom-6 sm:justify-start";
+  "fixed inset-x-4 bottom-4 z-[90] flex justify-center sm:inset-x-6 sm:bottom-6 sm:justify-end";
 
 export const cardBase =
   "w-full overflow-hidden rounded-[24px] border border-ink bg-card shadow-cookie motion-safe:animate-cookie-rise focus:outline-none";

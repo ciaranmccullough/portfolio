@@ -14,3 +14,16 @@ export const linkVariant: Record<LinkVariant, string> = {
   social:
     "border-b border-line-dark pb-0.5 text-fg-on-dark no-underline hover:border-brand-violet hover:text-fg-inverse",
 };
+
+// Re-exported (not redefined) from Button — `buttonVariant`/`buttonSize`
+// aren't part of the public barrel (styles are package-internal), so this is
+// Link's only way to reuse Button's exact visual grammar for its
+// `buttonVariant`/`buttonSize` pill mode without duplicating any class
+// string. Always paired with `buttonPillClass`, never Button's own per-size
+// radius — see Link.types.ts.
+export {
+  buttonBase as linkButtonBase,
+  buttonPillClass as linkButtonPillClass,
+  buttonSize as linkButtonSize,
+  buttonVariant as linkButtonVariant,
+} from "../Button/Button.styles";

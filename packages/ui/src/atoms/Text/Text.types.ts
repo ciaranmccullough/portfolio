@@ -1,6 +1,13 @@
 import type { ComponentPropsWithoutRef } from "react";
 
-export type TextVariant = "display" | "h1" | "h2" | "h3" | "body" | "small";
+export type TextVariant =
+  | "display"
+  | "display-xl"
+  | "h1"
+  | "h2"
+  | "h3"
+  | "body"
+  | "small";
 
 export type TextElement = "h1" | "h2" | "h3" | "p" | "span";
 

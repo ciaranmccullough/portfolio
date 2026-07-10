@@ -4,7 +4,15 @@ import { Text } from "./Text";
 import { textVariant, textVariantTag } from "./Text.styles";
 import type { TextVariant } from "./Text.types";
 
-const variants: TextVariant[] = ["display", "h1", "h2", "h3", "body", "small"];
+const variants: TextVariant[] = [
+  "display",
+  "display-xl",
+  "h1",
+  "h2",
+  "h3",
+  "body",
+  "small",
+];
 
 describe("Text", () => {
   it("defaults to the body variant, rendering a <p> with body tokens", () => {

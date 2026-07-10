@@ -24,8 +24,19 @@ export const storyWalkthroughTallClass = "relative";
 export const storyWalkthroughStickyClass =
   "sticky top-0 flex h-screen flex-col justify-center overflow-hidden";
 
+/* `items-center` is load-bearing (design-spec: the mock's phone wrapper is
+   `justify-self:center` inside a flex column that's itself vertically
+   centred in the pinned viewport, and the copy panel sits in a box the
+   grid's own `align-items:center` centres against it). Without it the grid
+   defaults to `stretch`: both columns stretch to the row's full height (set
+   by whichever of phone/panels is taller for the active item), and each
+   column's own intrinsically-sized content then sits top-aligned inside
+   that stretched cell instead of centred — the copy reads short against a
+   tall empty gutter, and the phone's height no longer matches its own
+   natural aspect ratio. Centering both columns as blocks makes their
+   vertical *centres* coincide regardless of which one is taller. */
 export const storyWalkthroughGridClass =
-  "grid grid-cols-1 gap-10 md:grid-cols-[minmax(280px,0.85fr)_1fr] md:gap-16";
+  "grid grid-cols-1 items-center gap-10 md:grid-cols-[minmax(280px,0.85fr)_1fr] md:gap-16";
 
 /* Height-aware width caps: the pinned viewport is exactly `h-screen` with
    `overflow-hidden`, and at PhoneMockup's natural 320px width the bezel +
@@ -33,9 +44,17 @@ export const storyWalkthroughGridClass =
    windows) that clips the progress pips/label straddling the bottom edge.
    Shrinking the phone on short viewports keeps the whole stack inside the
    pin. (No `max-vh` variant exists in Tailwind; arbitrary media queries are
-   the idiomatic escape hatch.) */
+   the idiomatic escape hatch.)
+
+   `mx-auto` at every breakpoint (not just below `md`) matches the mock's
+   `justify-self:center`: the phone column's grid track
+   (`minmax(280px,.85fr)`) is often wider than the phone itself on large
+   viewports, and the progress pips/label live *inside* `PhoneMockup` at the
+   phone's own width — so keeping the whole column centred is what keeps the
+   pips directly under the phone instead of hugging the track's left edge
+   with a gutter of empty space (and the pips) trailing off to one side. */
 export const storyWalkthroughPhoneColClass =
-  "mx-auto w-full max-w-[320px] [@media(max-height:900px)]:max-w-[280px] [@media(max-height:820px)]:max-w-[240px] md:mx-0";
+  "mx-auto w-full max-w-[320px] [@media(max-height:900px)]:max-w-[280px] [@media(max-height:820px)]:max-w-[240px]";
 
 /* All panels share one grid cell ("grid-stack": every child placed at
    row 1/column 1) so they overlap for the crossfade *and* the container

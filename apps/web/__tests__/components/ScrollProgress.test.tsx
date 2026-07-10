@@ -65,7 +65,8 @@ beforeEach(() => {
 });
 
 describe("ScrollProgress", () => {
-  it("renders the accessible label on the progress bar", () => {
+  it("renders the accessible label on the progress bar when enabled", () => {
+    mockEnabled.mockReturnValue(true);
     render(<ScrollProgress label="Reading progress" />);
     expect(screen.getByTestId("progress-bar")).toHaveAttribute(
       "aria-label",
@@ -73,14 +74,13 @@ describe("ScrollProgress", () => {
     );
   });
 
-  it("renders at 0% when scroll animations are disabled (reduced motion / not yet mounted)", () => {
+  it("renders nothing when scroll animations are disabled (reduced motion / not yet mounted)", () => {
     mockEnabled.mockReturnValue(false);
     motionState.value = 0.7; // even if the page happens to already be scrolled
     render(<ScrollProgress label="Reading progress" />);
-    expect(screen.getByTestId("progress-bar")).toHaveAttribute(
-      "data-progress",
-      "0",
-    );
+    // Not frozen at 0% — genuinely absent, so it can never misreport
+    // progress while a reduced-motion user scrolls (see ScrollProgress.tsx).
+    expect(screen.queryByTestId("progress-bar")).not.toBeInTheDocument();
   });
 
   it("syncs to the current scroll position as soon as animations are enabled", () => {
@@ -105,15 +105,26 @@ describe("ScrollProgress", () => {
     );
   });
 
-  it("ignores scroll change events while disabled", () => {
+  it("stays absent across scroll change events while disabled", () => {
     mockEnabled.mockReturnValue(false);
     render(<ScrollProgress label="Reading progress" />);
 
     scrollTo(0.9);
 
+    expect(screen.queryByTestId("progress-bar")).not.toBeInTheDocument();
+  });
+
+  it("mounts the bar once animations turn on after starting disabled", () => {
+    mockEnabled.mockReturnValue(false);
+    const { rerender } = render(<ScrollProgress label="Reading progress" />);
+    expect(screen.queryByTestId("progress-bar")).not.toBeInTheDocument();
+
+    mockEnabled.mockReturnValue(true);
+    motionState.value = 0.5;
+    rerender(<ScrollProgress label="Reading progress" />);
     expect(screen.getByTestId("progress-bar")).toHaveAttribute(
       "data-progress",
-      "0",
+      "50",
     );
   });
 });

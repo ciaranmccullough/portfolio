@@ -8,6 +8,7 @@ import {
   reflectionHeaderClass,
   reflectionItemClass,
   reflectionTitleAccentClass,
+  reflectionTitleClass,
 } from "./Reflection.styles";
 import type { ReflectionProps } from "./Reflection.types";
 
@@ -40,17 +41,16 @@ export function Reflection({
       <ul className={reflectionGridClass}>
         {reflections.map((item, index) => (
           <li key={index} className={reflectionItemClass}>
-            <Text
-              as="h3"
-              variant="h3"
-              className={cn(item.accent && reflectionTitleAccentClass)}
+            <h3
+              className={cn(
+                reflectionTitleClass,
+                item.accent && reflectionTitleAccentClass,
+              )}
             >
               {item.title}
-            </Text>
+            </h3>
             {item.description ? (
-              <Text variant="body" className={reflectionDescriptionClass}>
-                {item.description}
-              </Text>
+              <p className={reflectionDescriptionClass}>{item.description}</p>
             ) : null}
           </li>
         ))}

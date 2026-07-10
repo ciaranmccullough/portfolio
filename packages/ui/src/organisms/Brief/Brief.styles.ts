@@ -1,5 +1,9 @@
+/* Asymmetric top/bottom rhythm, measured off the design doc: top tops out at
+   64px (smaller than this section used to render at desktop) while bottom
+   keeps growing to ~120px — the statement needs comparatively little air
+   above it (right under the hero) but a generous gap before Principles. */
 export const briefClass =
-  "mx-auto max-w-7xl px-6 py-10 sm:px-10 sm:py-14 lg:px-14 lg:py-20";
+  "mx-auto max-w-7xl px-6 pt-8 pb-14 sm:px-10 sm:pt-10 sm:pb-20 lg:px-14 lg:pt-16 lg:pb-28 xl:pb-32";
 
 export const briefEyebrowClass = "mb-6";
 

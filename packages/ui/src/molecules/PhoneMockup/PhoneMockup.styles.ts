@@ -35,4 +35,6 @@ export const phoneMockupProgressLabelRowClass =
 
 export const phoneMockupProgressLabelClass = "truncate uppercase tracking-wide";
 
-export const phoneMockupProgressCounterClass = "shrink-0 text-fg-faint";
+/* `fg-faint` (#9a9486 on paper) measures 2.68:1 — fails WCAG AA's 4.5:1 body
+   text minimum (PRODUCT.md's AA pledge). `fg-soft` (#6a6776) clears it. */
+export const phoneMockupProgressCounterClass = "shrink-0 text-fg-soft";

@@ -9,7 +9,7 @@
    section shell instead and applies each card's motion-driven style directly
    to PrincipleCard's own native `style` prop. */
 export const principlesRevealSectionClass =
-  "mx-auto max-w-7xl px-6 py-16 sm:px-10 lg:px-14";
+  "mx-auto max-w-7xl px-6 py-16 sm:px-10 sm:py-24 lg:px-14 lg:py-32 xl:py-36";
 
 export const principlesRevealHeaderClass = "mb-9";
 

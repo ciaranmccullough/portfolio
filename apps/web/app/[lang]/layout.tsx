@@ -12,7 +12,9 @@ import { SITE_NAME, SITE_URL } from "@/site-config";
 import { Analytics } from "../components/Analytics/Analytics";
 import { CookieConsent } from "../components/CookieConsent/CookieConsent";
 import { CookieConsentProvider } from "../components/CookieConsentProvider/CookieConsentProvider";
+import { SkipLink } from "../components/SkipLink/SkipLink";
 import { i18n } from "../../i18n-config";
+import { MAIN_CONTENT_ID } from "@/lib/mainContentId";
 import { getTranslations } from "./dictionaries";
 import { localePath } from "@/lib/localePath";
 
@@ -79,10 +81,11 @@ export default async function RootLayout({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const { cookies } = await getTranslations(params);
+  const { cookies, nav } = await getTranslations(params);
   return (
     <html lang={lang} className={fontVariables}>
       <body className="bg-paper">
+        <SkipLink label={nav.skipToContent} targetId={MAIN_CONTENT_ID} />
         <div className="page-texture" aria-hidden="true" />
         <CookieConsentProvider>
           {children}
