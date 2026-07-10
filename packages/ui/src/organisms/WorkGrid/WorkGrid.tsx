@@ -62,8 +62,9 @@ export function WorkGrid({
                   {project.href ? (
                     <a
                       href={project.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      {...(project.internal
+                        ? {}
+                        : { target: "_blank", rel: "noopener noreferrer" })}
                       className={workCardLinkClass}
                     >
                       {project.title}
@@ -82,7 +83,7 @@ export function WorkGrid({
                     {project.tags?.map((tag) => (
                       <Tag key={tag}>{tag}</Tag>
                     ))}
-                    {project.href ? (
+                    {project.href && !project.internal ? (
                       <li aria-hidden="true" className={workCardArrowClass}>
                         <ArrowUpRightIcon className={workCardArrowIconClass} />
                       </li>

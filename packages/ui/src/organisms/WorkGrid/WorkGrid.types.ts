@@ -7,8 +7,18 @@ export interface WorkProject {
   tags?: string[];
   /** Optional cover media slot (e.g. a `next/image`), shown flush at the top. */
   media?: ReactNode;
-  /** Optional external URL; when set the title links out and a ↗ is shown. */
+  /** Optional URL; when set the title links out and a ↗ is shown. */
   href?: string;
+  /**
+   * Marks `href` as an in-app route rather than an external URL: the link
+   * renders without `target="_blank"`/`rel="noopener noreferrer"` and omits
+   * the external-link ↗ arrow (which specifically signals "opens in a new
+   * tab"). WorkGrid stays agnostic to *how* the route is built — the app
+   * computes `href` (e.g. via `localePath`) either way; this always renders
+   * a plain `<a>`. Defaults to `false`, preserving today's always-external
+   * behaviour for every existing call site.
+   */
+  internal?: boolean;
 }
 
 /** Props for the {@link WorkGrid} organism. Renders a `<section>`. */

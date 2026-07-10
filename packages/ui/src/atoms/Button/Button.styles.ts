@@ -14,7 +14,22 @@ export const buttonVariant: Record<ButtonVariant, string> = {
 };
 
 export const buttonSize: Record<ButtonSize, string> = {
-  sm: "rounded-md px-3 py-2 text-xs",
-  md: "rounded-lg px-4.5 py-3 text-md",
-  lg: "rounded-xl px-6 py-3.5 text-lg",
+  sm: "px-3 py-2 text-xs",
+  md: "px-4.5 py-3 text-md",
+  lg: "px-6 py-3.5 text-lg",
 };
+
+// Radius is kept separate from `buttonSize` (rather than bundled in, as
+// CLAUDE.md's reference snippet does) so `pill` can swap it out for
+// `buttonPillClass` without ever having two radius utilities on the element
+// at once — Tailwind's cascade order between two same-property utilities
+// isn't controlled by class-list order, so avoiding the overlap entirely is
+// the robust choice.
+export const buttonRadius: Record<ButtonSize, string> = {
+  sm: "rounded-md",
+  md: "rounded-lg",
+  lg: "rounded-xl",
+};
+
+/** Fully-rounded pill radius, used instead of `buttonRadius[size]` when `pill` is set. */
+export const buttonPillClass = "rounded-full";

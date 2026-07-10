@@ -2,7 +2,13 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { Button } from "./Button";
-import { buttonBase, buttonSize, buttonVariant } from "./Button.styles";
+import {
+  buttonBase,
+  buttonPillClass,
+  buttonRadius,
+  buttonSize,
+  buttonVariant,
+} from "./Button.styles";
 import type { ButtonSize, ButtonVariant } from "./Button.types";
 
 describe("Button", () => {
@@ -130,6 +136,48 @@ describe("Button", () => {
       render(<Button onClick={onClick}>Press</Button>);
       await user.click(screen.getByRole("button", { name: "Press" }));
       expect(onClick).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("pill prop", () => {
+    it("defaults to the size's own radius (not a pill) when omitted", () => {
+      render(<Button size="md">Default radius</Button>);
+      const button = screen.getByRole("button");
+      expect(button).toHaveClass(...buttonRadius.md.split(" "));
+      expect(button).not.toHaveClass(buttonPillClass);
+    });
+
+    it("swaps the size radius for a fully-rounded pill when pill is set", () => {
+      render(
+        <Button size="lg" pill>
+          Pill
+        </Button>,
+      );
+      const button = screen.getByRole("button");
+      expect(button).toHaveClass(buttonPillClass);
+      // The size's own radius token is not also applied alongside the pill.
+      expect(button).not.toHaveClass(buttonRadius.lg);
+    });
+
+    it("keeps the size's padding/text tokens unaffected by pill", () => {
+      render(
+        <Button size="lg" pill>
+          Pill
+        </Button>,
+      );
+      const button = screen.getByRole("button");
+      expect(button).toHaveClass(...buttonSize.lg.split(" "));
+    });
+
+    it("composes with variant so pill works on any visual style", () => {
+      render(
+        <Button variant="dark" pill>
+          Dark pill
+        </Button>,
+      );
+      const button = screen.getByRole("button");
+      expect(button).toHaveClass(buttonPillClass);
+      expect(button).toHaveClass(...buttonVariant.dark.split(" "));
     });
   });
 

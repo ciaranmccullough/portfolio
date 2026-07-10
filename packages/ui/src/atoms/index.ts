@@ -3,6 +3,7 @@ export * from "./Eyebrow";
 export * from "./Icon";
 export * from "./Input";
 export * from "./Link";
+export * from "./ScrollProgressBar";
 export * from "./SkillPill";
 export * from "./Switch";
 export * from "./Tag";

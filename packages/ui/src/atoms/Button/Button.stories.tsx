@@ -16,3 +16,6 @@ export const Primary: Story = { args: { variant: "primary" } };
 export const Dark: Story = { args: { variant: "dark", children: "Dark" } };
 export const Ghost: Story = { args: { variant: "ghost", children: "Ghost" } };
 export const Large: Story = { args: { size: "lg", children: "Large" } };
+export const Pill: Story = {
+  args: { pill: true, size: "lg", children: "View the project ↗" },
+};

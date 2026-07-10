@@ -235,6 +235,53 @@ describe("WorkGrid", () => {
     expect(screen.getByText("A")).toBeInTheDocument();
   });
 
+  it("renders an internal link without target/rel and without the ↗ arrow when internal is set", () => {
+    const { container } = render(
+      <WorkGrid
+        projects={[
+          {
+            title: "Case study",
+            href: "/story/ea-sports-app",
+            tags: ["Android"],
+            internal: true,
+          },
+        ]}
+      />,
+    );
+
+    const link = screen.getByRole("link", { name: "Case study" });
+    expect(link).toHaveAttribute("href", "/story/ea-sports-app");
+    expect(link).not.toHaveAttribute("target");
+    expect(link).not.toHaveAttribute("rel");
+
+    // No external-link arrow for an internal route.
+    expect(container.querySelector('li[aria-hidden="true"]')).toBeNull();
+  });
+
+  it("still opens as external (new tab, safe rel, ↗ arrow) when internal is omitted or false", () => {
+    const { container } = render(
+      <WorkGrid
+        projects={[
+          { title: "External one", href: "https://example.com", tags: ["Go"] },
+          {
+            title: "External two",
+            href: "https://example.com/2",
+            tags: ["Go"],
+            internal: false,
+          },
+        ]}
+      />,
+    );
+
+    screen.getAllByRole("link").forEach((link) => {
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    });
+    expect(container.querySelectorAll('li[aria-hidden="true"]')).toHaveLength(
+      2,
+    );
+  });
+
   it("renders an empty grid (no card items) when projects is empty", () => {
     render(<WorkGrid title="Nothing yet" projects={[]} />);
 

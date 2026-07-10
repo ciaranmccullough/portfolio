@@ -40,3 +40,26 @@ export const Default: Story = {
     ],
   },
 };
+
+/** An `internal` card links in-app (no new tab, no ↗ arrow) — e.g. a case-study route. */
+export const WithInternalLink: Story = {
+  args: {
+    eyebrow: "01 — Selected work",
+    title: "Things I've shipped",
+    projects: [
+      {
+        title: "EA Sports App",
+        description: "Bringing fans closer to sports.",
+        tags: ["Android", "Jetpack Compose"],
+        href: "/story/ea-sports-app",
+        internal: true,
+      },
+      {
+        title: "Personal site",
+        description: "This portfolio, open source on GitHub.",
+        tags: ["TypeScript", "React"],
+        href: "https://github.com/ciaran",
+      },
+    ],
+  },
+};
