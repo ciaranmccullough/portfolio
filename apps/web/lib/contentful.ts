@@ -5,6 +5,7 @@ import { mapContact } from "@/mappers/contactMapper";
 import { mapHero } from "@/mappers/heroMapper";
 import { mapOpenSource } from "@/mappers/openSourceMapper";
 import { mapProjects } from "@/mappers/projectsMapper";
+import { mapStory } from "@/mappers/storyMapper";
 import {
   PRIVACY_CONTENT_TYPES,
   TERMS_CONTENT_TYPES,
@@ -14,6 +15,7 @@ import {
   fetchLegalDocument,
   fetchOpenSource,
   fetchProjects,
+  fetchStoryEntry,
 } from "@/services/contentful/contentful";
 import type { About } from "@/types/about";
 import type { Contact } from "@/types/contact";
@@ -21,6 +23,7 @@ import type { Hero } from "@/types/hero";
 import type { LegalDocument } from "@/types/legal";
 import type { Project } from "@/types/project";
 import type { Repo } from "@/types/openSource";
+import type { Story } from "@/types/story";
 
 /**
  * Seconds Next serves cached content before regenerating it in the background
@@ -169,5 +172,65 @@ export async function getTermsAndConditions(): Promise<LegalDocument | null> {
     return await getTermsAndConditionsCached();
   } catch {
     return null;
+  }
+}
+
+/**
+ * Cached accessor for one story entry, keyed by id — unlike the singleton
+ * sections above (one shared cache entry each), every story needs its own.
+ * `withCache` is invoked fresh per call so `id` can sit directly in
+ * `keyParts`: Next's `unstable_cache` derives its lookup key from that array's
+ * *content* (plus the wrapped function's source text and call arguments), not
+ * from the wrapping closure's identity, so this reuses the cache correctly
+ * across calls/requests despite not being a single module-level `const` like
+ * the accessors above.
+ */
+function getStoryCached(id: string): Promise<Story | null> {
+  return withCache(async () => {
+    const raw = await fetchStoryEntry(id);
+    return raw ? mapStory(raw) : null;
+  }, ["contentful-story-v1", id])();
+}
+
+/**
+ * Sentinel returned by {@link getStory} when the underlying fetch/API call
+ * failed (network error, Contentful outage, unexpected shape, etc.) — as
+ * opposed to `null`, which means Contentful simply has no story published for
+ * that id. Every other accessor in this module collapses "missing" and
+ * "failed" into a single `null` (the page always renders the `ErrorScreen`);
+ * a story page needs the two states told apart so it can 404 on a genuine
+ * not-found and reserve the `ErrorScreen` for real failures.
+ */
+export const STORY_FETCH_ERROR = "story-fetch-error" as const;
+
+/**
+ * Server-side data access for one Story (case study): fetch (service) → map
+ * (mapper), cached as ISR per id. Unlike every other accessor in this module,
+ * `null` here means specifically "no story exists for this id" — the intended
+ * page usage is `notFound()` on `null` and the `ErrorScreen` on
+ * {@link STORY_FETCH_ERROR}:
+ *
+ * ```ts
+ * const result = await getStory(id);
+ * if (result === null) return notFound();
+ * if (result === STORY_FETCH_ERROR) return <ErrorScreen ... />;
+ * const story = result; // Story
+ * ```
+ *
+ * Note: like every other accessor here, missing Contentful credentials also
+ * resolve to `null` (via `fetchStoryEntry`'s `hasContentfulCredentials`
+ * guard) rather than {@link STORY_FETCH_ERROR} — an unconfigured deployment
+ * therefore reads as "not found" for this accessor specifically, not as an
+ * error. That mirrors every sibling fetch function's guard exactly; the
+ * distinction this design adds is only between "zero matching entries" and a
+ * "thrown request failure".
+ */
+export async function getStory(
+  id: string,
+): Promise<Story | null | typeof STORY_FETCH_ERROR> {
+  try {
+    return await getStoryCached(id);
+  } catch {
+    return STORY_FETCH_ERROR;
   }
 }

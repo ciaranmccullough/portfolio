@@ -111,9 +111,13 @@ type ContactSkeleton = EntrySkeletonType<
 
 /**
  * One project inside the "projects" entry's freeform `projects` Object array.
- * `link` is the outbound URL and `tabs` holds the tech tags (the CMS field name).
+ * `link` is the outbound URL and `tabs` holds the tech tags (the CMS field
+ * name). `id` is the slug that links this card to its `/story/:id` case study
+ * (queried via `fetchStoryEntry`'s `fields.id` filter) — optional because it
+ * predates the "story" content type, so not every project item carries one yet.
  */
 export interface RawProject {
+  id?: string;
   title: string;
   description?: string;
   imageUrl?: string;
@@ -143,6 +147,82 @@ export interface RawRepo {
 type OpenSourceSkeleton = EntrySkeletonType<
   { openSource: EntryFieldTypes.Object },
   "openSource"
+>;
+
+/**
+ * One item inside a Story entry's freeform `principles`/`reflections` arrays —
+ * both fields share this `{ title, description }` shape on the wire. Freeform
+ * `Object` fields carry no schema enforcement, so this raw type is optimistic;
+ * `mappers/storyMapper.ts` validates each item defensively before trusting it
+ * rather than casting blindly (an earlier CMS revision of the `ea-sports-app`
+ * entry shipped one item's body under a misspelled `descrition` key).
+ */
+export interface RawStorySection {
+  title: string;
+  description: string;
+}
+
+/**
+ * One item inside a Story entry's freeform `walkthroughs` array. `image` is a
+ * plain CDN URL string baked in at write time (not a Contentful Asset Link —
+ * there is nothing for `include` to resolve here), typically with a `?h=250`
+ * transform already applied; it has also shipped as `""` from the CMS.
+ */
+export interface RawStoryWalkthrough {
+  image: string;
+  title: string;
+  subtitle: string;
+  description: string;
+}
+
+/**
+ * Raw "story" entry fields, exactly as the Delivery API returns them once the
+ * SDK has resolved the linked `backgroundImage` asset via `include`.
+ * `backgroundImageUrl` is that resolved asset's file URL (protocol-relative) —
+ * absent both when the entry has no image set and when the linked asset is
+ * unpublished (an unresolvable Link comes back as a bare `{ sys: Link }` with
+ * no `fields`, same failure mode `fetchAboutEntry` already handles for the
+ * portrait).
+ */
+export interface RawStoryFields {
+  id: string;
+  title: string;
+  description: string;
+  role: string;
+  platform: string;
+  year: string;
+  brief: Document;
+  titlePrinciples: string;
+  principles: RawStorySection[];
+  titleWalkthrough: string;
+  walkthroughs: RawStoryWalkthrough[];
+  titleReflection: string;
+  reflections: RawStorySection[];
+  titleRole: string;
+  descriptionRole: string;
+  backgroundImageUrl?: string;
+}
+
+type StorySkeleton = EntrySkeletonType<
+  {
+    id: EntryFieldTypes.Symbol;
+    title: EntryFieldTypes.Symbol;
+    description: EntryFieldTypes.Symbol;
+    role: EntryFieldTypes.Symbol;
+    platform: EntryFieldTypes.Symbol;
+    year: EntryFieldTypes.Symbol;
+    brief: EntryFieldTypes.RichText;
+    titlePrinciples: EntryFieldTypes.Symbol;
+    principles: EntryFieldTypes.Object;
+    titleWalkthrough: EntryFieldTypes.Symbol;
+    walkthroughs: EntryFieldTypes.Object;
+    titleReflection: EntryFieldTypes.Symbol;
+    reflections: EntryFieldTypes.Object;
+    titleRole: EntryFieldTypes.Symbol;
+    descriptionRole: EntryFieldTypes.Symbol;
+    backgroundImage: EntryFieldTypes.AssetLink;
+  },
+  "story"
 >;
 
 // --- Service --------------------------------------------------------------
@@ -243,6 +323,56 @@ export async function fetchOpenSource(): Promise<RawRepo[] | null> {
   const fields = res.items[0]?.fields;
   if (!fields) return null;
   return (fields.openSource as unknown as RawRepo[] | undefined) ?? [];
+}
+
+/**
+ * Fetch the raw "story" entry fields for one story, looked up by its `id`
+ * slug field (the `/story/:id` route param — distinct from Contentful's own
+ * `sys.id`). Returns `null` when credentials are absent or no entry matches
+ * that id; throws on a failed request so the caller (lib/) decides how to
+ * recover.
+ */
+export async function fetchStoryEntry(
+  id: string,
+): Promise<RawStoryFields | null> {
+  if (!hasContentfulCredentials) return null;
+  const res = await contentfulClient.getEntries<StorySkeleton>({
+    content_type: "story",
+    "fields.id": id,
+    limit: 1,
+    include: 2,
+  });
+  const fields = res.items[0]?.fields;
+  if (!fields) return null;
+  // The SDK inlines the linked asset into the field when `include` resolves
+  // it; an unpublished/missing asset stays a bare { sys: Link } with no
+  // `fields`, so the optional chain below naturally yields `undefined` rather
+  // than throwing.
+  const backgroundImage = fields.backgroundImage as unknown as
+    | { fields?: { file?: { url?: string } } }
+    | undefined;
+  return {
+    id: fields.id as string,
+    title: fields.title as string,
+    description: fields.description as string,
+    role: fields.role as string,
+    platform: fields.platform as string,
+    year: fields.year as string,
+    brief: fields.brief as unknown as Document,
+    titlePrinciples: fields.titlePrinciples as string,
+    principles:
+      (fields.principles as unknown as RawStorySection[] | undefined) ?? [],
+    titleWalkthrough: fields.titleWalkthrough as string,
+    walkthroughs:
+      (fields.walkthroughs as unknown as RawStoryWalkthrough[] | undefined) ??
+      [],
+    titleReflection: fields.titleReflection as string,
+    reflections:
+      (fields.reflections as unknown as RawStorySection[] | undefined) ?? [],
+    titleRole: fields.titleRole as string,
+    descriptionRole: fields.descriptionRole as string,
+    backgroundImageUrl: backgroundImage?.fields?.file?.url,
+  };
 }
 
 /**

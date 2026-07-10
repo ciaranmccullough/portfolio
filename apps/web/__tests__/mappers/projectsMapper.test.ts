@@ -6,6 +6,7 @@ describe("mapProjects", () => {
   it("maps a fully-populated raw project, renaming link->href and tabs->tags", () => {
     const raw: RawProject[] = [
       {
+        id: "ea-sports-app",
         title: "Design System",
         description: "A component library",
         imageUrl: "https://images.ctfassets.net/abc/logo.png",
@@ -17,6 +18,7 @@ describe("mapProjects", () => {
     const [project] = mapProjects(raw);
 
     expect(project).toEqual<Project>({
+      id: "ea-sports-app",
       title: "Design System",
       description: "A component library",
       href: "https://example.com/design-system",
@@ -155,11 +157,35 @@ describe("mapProjects", () => {
   it("applies all defaults at once for a raw project with only a title", () => {
     const [project] = mapProjects([{ title: "Minimal" }]);
     expect(project).toEqual<Project>({
+      id: undefined,
       title: "Minimal",
       description: "",
       href: "",
       tags: [],
       imageUrl: "",
+    });
+  });
+
+  describe("id passthrough", () => {
+    it("passes the id through when present", () => {
+      const [project] = mapProjects([
+        { id: "ea-sports-app", title: "EA Sports App" },
+      ]);
+      expect(project.id).toBe("ea-sports-app");
+    });
+
+    it("leaves id undefined when absent (CMS items that predate the field)", () => {
+      const [project] = mapProjects([{ title: "No id" }]);
+      expect(project.id).toBeUndefined();
+    });
+
+    it("maps each item's id independently in a multi-item array", () => {
+      const projects = mapProjects([
+        { id: "one", title: "One" },
+        { title: "Two" },
+        { id: "three", title: "Three" },
+      ]);
+      expect(projects.map((p) => p.id)).toEqual(["one", undefined, "three"]);
     });
   });
 });

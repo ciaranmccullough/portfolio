@@ -15,11 +15,13 @@
 import type { Document } from "@contentful/rich-text-types";
 
 import {
+  STORY_FETCH_ERROR,
   getAbout,
   getContact,
   getHero,
   getPrivacyPolicy,
   getProjects,
+  getStory,
   getTermsAndConditions,
 } from "@/lib/contentful";
 import type {
@@ -27,6 +29,7 @@ import type {
   RawContactFields,
   RawHeroFields,
   RawProject,
+  RawStoryFields,
 } from "@/services/contentful/contentful";
 import {
   fetchAboutEntry,
@@ -34,6 +37,7 @@ import {
   fetchHeroEntry,
   fetchLegalDocument,
   fetchProjects,
+  fetchStoryEntry,
 } from "@/services/contentful/contentful";
 
 jest.mock("@/services/contentful/contentful", () => ({
@@ -41,6 +45,7 @@ jest.mock("@/services/contentful/contentful", () => ({
   fetchAboutEntry: jest.fn(),
   fetchContactEntry: jest.fn(),
   fetchProjects: jest.fn(),
+  fetchStoryEntry: jest.fn(),
   fetchLegalDocument: jest.fn(),
   PRIVACY_CONTENT_TYPES: ["privacyPolicy"],
   TERMS_CONTENT_TYPES: ["termsAndConditions", "terms"],
@@ -56,6 +61,7 @@ const mockFetchHeroEntry = jest.mocked(fetchHeroEntry);
 const mockFetchAboutEntry = jest.mocked(fetchAboutEntry);
 const mockFetchContactEntry = jest.mocked(fetchContactEntry);
 const mockFetchProjects = jest.mocked(fetchProjects);
+const mockFetchStoryEntry = jest.mocked(fetchStoryEntry);
 const mockFetchLegalDocument = jest.mocked(fetchLegalDocument);
 
 /** A minimal, valid Rich Text document (one paragraph). */
@@ -257,6 +263,111 @@ describe("getProjects()", () => {
     mockFetchProjects.mockRejectedValue(new Error("boom"));
 
     await expect(getProjects()).resolves.toBeNull();
+  });
+});
+
+describe("getStory()", () => {
+  const raw: RawStoryFields = {
+    id: "ea-sports-app",
+    title: "Bringing Fans Closer to Sports",
+    description: "The EA SPORTS App offers news, highlights, stats & scores.",
+    role: "Software Engineer",
+    platform: "Android | Jetpack Compose",
+    year: "2024 - Now",
+    brief: sampleDocument,
+    titlePrinciples: "Three ideas that held it together",
+    principles: [
+      {
+        title: "Instant, even on launch",
+        description: "Performance came first.",
+      },
+    ],
+    titleWalkthrough: "Five surfaces, one story",
+    walkthroughs: [
+      {
+        image: "https://images.ctfassets.net/abc/onboarding.webp?h=250",
+        title: "Onboarding",
+        subtitle: "Personalised content",
+        description: "Client-side logic that generates personalised content.",
+      },
+    ],
+    titleReflection: "What it taught me",
+    reflections: [
+      {
+        title: "Perceived speed is a feature",
+        description: "Optimistic updates help.",
+      },
+    ],
+    titleRole: "What I owned across the app",
+    descriptionRole:
+      "As a Software Engineer on the app, I shipped the onboarding flow.",
+    // protocol-relative — mapper prefixes https:, no resize transform appended.
+    backgroundImageUrl: "//images.ctfassets.net/abc/easa.webp",
+  };
+
+  it("maps a resolved raw entry into the Story entity and passes the id through to fetchStoryEntry", async () => {
+    mockFetchStoryEntry.mockResolvedValue(raw);
+
+    const result = await getStory("ea-sports-app");
+
+    // mapStory: walkthrough image loses its ?h=250 and gains the crisp-render
+    // transform; backgroundImageUrl only gains the https: scheme.
+    expect(result).toEqual({
+      id: "ea-sports-app",
+      title: "Bringing Fans Closer to Sports",
+      description: "The EA SPORTS App offers news, highlights, stats & scores.",
+      role: "Software Engineer",
+      platform: "Android | Jetpack Compose",
+      year: "2024 - Now",
+      brief: sampleDocument,
+      titlePrinciples: "Three ideas that held it together",
+      principles: [
+        {
+          title: "Instant, even on launch",
+          description: "Performance came first.",
+        },
+      ],
+      titleWalkthrough: "Five surfaces, one story",
+      walkthroughs: [
+        {
+          image:
+            "https://images.ctfassets.net/abc/onboarding.webp?w=1200&q=80&fm=webp",
+          title: "Onboarding",
+          subtitle: "Personalised content",
+          description: "Client-side logic that generates personalised content.",
+        },
+      ],
+      titleReflection: "What it taught me",
+      reflections: [
+        {
+          title: "Perceived speed is a feature",
+          description: "Optimistic updates help.",
+        },
+      ],
+      titleRole: "What I owned across the app",
+      descriptionRole:
+        "As a Software Engineer on the app, I shipped the onboarding flow.",
+      backgroundImageUrl: "https://images.ctfassets.net/abc/easa.webp",
+    });
+    expect(mockFetchStoryEntry).toHaveBeenCalledWith("ea-sports-app");
+    expect(mockFetchStoryEntry).toHaveBeenCalledTimes(1);
+  });
+
+  it("returns null (not STORY_FETCH_ERROR) when no entry matches the id", async () => {
+    mockFetchStoryEntry.mockResolvedValue(null);
+
+    await expect(getStory("no-such-story")).resolves.toBeNull();
+  });
+
+  it("returns STORY_FETCH_ERROR (never null, never throws) when the fetch rejects", async () => {
+    mockFetchStoryEntry.mockRejectedValue(new Error("network down"));
+
+    await expect(getStory("ea-sports-app")).resolves.toBe(STORY_FETCH_ERROR);
+  });
+
+  it("keeps null and STORY_FETCH_ERROR distinguishable from each other", () => {
+    expect(STORY_FETCH_ERROR).not.toBeNull();
+    expect(typeof STORY_FETCH_ERROR).toBe("string");
   });
 });
 
