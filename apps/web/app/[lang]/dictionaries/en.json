@@ -141,6 +141,7 @@
   },
   "story": {
     "backLabel": "Back to work",
+    "progressLabel": "Reading progress",
     "hero": {
       "eyebrow": "// Case study",
       "roleLabel": "ROLE",

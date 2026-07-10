@@ -1,13 +1,4 @@
-import {
-  Brief,
-  CaseStudyHero,
-  Link,
-  Principles,
-  Reflection,
-  Role,
-  StoryHeader,
-  Walkthrough,
-} from "@portfolio/ui";
+import { Brief, Link, Reflection, Role, StoryHeader } from "@portfolio/ui";
 import type { Metadata } from "next";
 import Image from "next/image";
 import NextLink from "next/link";
@@ -15,8 +6,13 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 
 import { ErrorScreen } from "../../../components/ErrorScreen/ErrorScreen";
+import { HeroParallax } from "../../../components/HeroParallax/HeroParallax";
+import { PrinciplesReveal } from "../../../components/PrinciplesReveal/PrinciplesReveal";
 import { RichText } from "../../../components/RichText/RichText";
+import { ScrollProgress } from "../../../components/ScrollProgress/ScrollProgress";
+import { ScrollReveal } from "../../../components/ScrollReveal/ScrollReveal";
 import { SiteFooter } from "../../../components/SiteFooter/SiteFooter";
+import { StoryWalkthrough } from "../../../components/StoryWalkthrough/StoryWalkthrough";
 import { getTranslations } from "../../dictionaries";
 import { getStory, STORY_FETCH_ERROR } from "@/lib/contentful";
 import { buildFooterLinks } from "@/lib/footerLinks";
@@ -82,6 +78,8 @@ export default async function StoryPage({
 
   return (
     <>
+      <ScrollProgress label={dict.story.progressLabel} />
+
       <StoryHeader
         brand={dict.nav.brand}
         brandHref={homeHref}
@@ -90,7 +88,7 @@ export default async function StoryPage({
       />
 
       <main className="relative z-10 min-h-screen">
-        <CaseStudyHero
+        <HeroParallax
           eyebrow={dict.story.hero.eyebrow}
           title={story.title}
           description={story.description}
@@ -114,13 +112,15 @@ export default async function StoryPage({
           scrollCueLabel={dict.story.hero.scrollCueLabel}
         />
 
-        <Brief
-          eyebrow={dict.story.brief.eyebrow}
-          body={<RichText document={story.brief} />}
-        />
+        <ScrollReveal>
+          <Brief
+            eyebrow={dict.story.brief.eyebrow}
+            body={<RichText document={story.brief} />}
+          />
+        </ScrollReveal>
 
         {story.principles.length ? (
-          <Principles
+          <PrinciplesReveal
             eyebrow={dict.story.principles.eyebrow}
             title={story.titlePrinciples}
             principles={story.principles}
@@ -128,7 +128,7 @@ export default async function StoryPage({
         ) : null}
 
         {story.walkthroughs.length ? (
-          <Walkthrough
+          <StoryWalkthrough
             eyebrow={dict.story.walkthrough.eyebrow}
             title={story.titleWalkthrough}
             items={story.walkthroughs.map((walkthrough) => ({
@@ -154,25 +154,29 @@ export default async function StoryPage({
         ) : null}
 
         {story.reflections.length ? (
-          <Reflection
-            eyebrow={dict.story.reflection.eyebrow}
-            title={story.titleReflection}
-            reflections={story.reflections}
-          />
+          <ScrollReveal>
+            <Reflection
+              eyebrow={dict.story.reflection.eyebrow}
+              title={story.titleReflection}
+              reflections={story.reflections}
+            />
+          </ScrollReveal>
         ) : null}
 
-        <Role
-          eyebrow={dict.story.role.eyebrow}
-          title={story.titleRole}
-          description={story.descriptionRole}
-        >
-          <Link as={NextLink} href={`${homeHref}#contact`} variant="primary">
-            {dict.nav.cta.label}
-          </Link>
-          <Link as={NextLink} href={`${homeHref}#work`} variant="social">
-            {dict.story.role.backToWorkCta}
-          </Link>
-        </Role>
+        <ScrollReveal variant="scale">
+          <Role
+            eyebrow={dict.story.role.eyebrow}
+            title={story.titleRole}
+            description={story.descriptionRole}
+          >
+            <Link as={NextLink} href={`${homeHref}#contact`} variant="primary">
+              {dict.nav.cta.label}
+            </Link>
+            <Link as={NextLink} href={`${homeHref}#work`} variant="social">
+              {dict.story.role.backToWorkCta}
+            </Link>
+          </Role>
+        </ScrollReveal>
       </main>
 
       <SiteFooter
