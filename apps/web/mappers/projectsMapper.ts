@@ -21,7 +21,9 @@ function toProjectImageUrl(url: string | undefined): string {
  * Map the raw Contentful "projects" array (DTO) to {@link Project} entities. The
  * CMS field names differ from the UI's: `link` → `href`, `tabs` → `tags`. `id`
  * passes through unchanged (undefined when the CMS item predates it) — the
- * slug used to link a card to its `/story/:id` case study.
+ * slug used to link a card to its `/story/:id` case study. `isStoryProject`
+ * defaults to `false` for CMS items that predate the field, so a missing/null
+ * value never accidentally links out to a non-existent case study.
  */
 export function mapProjects(raw: RawProject[]): Project[] {
   return raw.map((project) => ({
@@ -31,5 +33,6 @@ export function mapProjects(raw: RawProject[]): Project[] {
     href: project.link ?? "",
     tags: project.tabs ?? [],
     imageUrl: toProjectImageUrl(project.imageUrl),
+    isStoryProject: project.isStoryProject ?? false,
   }));
 }

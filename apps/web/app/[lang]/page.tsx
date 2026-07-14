@@ -146,14 +146,16 @@ export default async function HomePage({
           projects={(projects ?? []).map((project) => ({
             title: project.title,
             description: project.description,
-            // A project with a CMS `id` has a matching `/story/:id` case
-            // study — link the card in-app instead of out to its external
-            // `href`. Projects without one (predating the "story" content
-            // type) keep today's external-link behaviour untouched.
-            href: project.id
-              ? localePath(lang, `/story/${project.id}`)
-              : project.href,
-            internal: Boolean(project.id),
+            // Only a project the CMS has explicitly flagged `isStoryProject`
+            // (and that has a matching `id` to build the slug from) links
+            // in-app to its `/story/:id` case study. Everything else —
+            // including CMS items that predate the field, where it defaults
+            // to `false` — links straight out to its own external `href`.
+            href:
+              project.isStoryProject && project.id
+                ? localePath(lang, `/story/${project.id}`)
+                : project.href,
+            internal: project.isStoryProject && Boolean(project.id),
             tags: project.tags,
             media: project.imageUrl ? (
               <Image

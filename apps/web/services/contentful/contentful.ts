@@ -123,6 +123,13 @@ export interface RawProject {
   imageUrl?: string;
   link?: string;
   tabs?: string[];
+  /**
+   * Whether this project has a matching `/story/:id` case study. Optional
+   * because it's a new CMS field — items published before it don't carry it
+   * yet, and the mapper defaults an absent value to `false` (link straight
+   * out to `link` instead).
+   */
+  isStoryProject?: boolean;
 }
 
 type ProjectsSkeleton = EntrySkeletonType<

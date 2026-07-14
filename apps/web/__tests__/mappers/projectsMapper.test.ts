@@ -12,6 +12,7 @@ describe("mapProjects", () => {
         imageUrl: "https://images.ctfassets.net/abc/logo.png",
         link: "https://example.com/design-system",
         tabs: ["React", "TypeScript", "Storybook"],
+        isStoryProject: true,
       },
     ];
 
@@ -24,6 +25,7 @@ describe("mapProjects", () => {
       href: "https://example.com/design-system",
       tags: ["React", "TypeScript", "Storybook"],
       imageUrl: "https://images.ctfassets.net/abc/logo.png?w=1200&q=80&fm=webp",
+      isStoryProject: true,
     });
   });
 
@@ -163,6 +165,7 @@ describe("mapProjects", () => {
       href: "",
       tags: [],
       imageUrl: "",
+      isStoryProject: false,
     });
   });
 
@@ -186,6 +189,50 @@ describe("mapProjects", () => {
         { id: "three", title: "Three" },
       ]);
       expect(projects.map((p) => p.id)).toEqual(["one", undefined, "three"]);
+    });
+  });
+
+  describe("isStoryProject defaulting", () => {
+    it("defaults to false when absent (CMS items that predate the field)", () => {
+      const [project] = mapProjects([{ title: "No isStoryProject" }]);
+      expect(project.isStoryProject).toBe(false);
+    });
+
+    it("defaults to false when explicitly null", () => {
+      const [project] = mapProjects([
+        {
+          title: "Null isStoryProject",
+          isStoryProject: null as unknown as boolean | undefined,
+        },
+      ]);
+      expect(project.isStoryProject).toBe(false);
+    });
+
+    it("preserves an explicit true", () => {
+      const [project] = mapProjects([
+        { title: "Story project", isStoryProject: true },
+      ]);
+      expect(project.isStoryProject).toBe(true);
+    });
+
+    it("preserves an explicit false", () => {
+      const [project] = mapProjects([
+        { title: "Not a story project", isStoryProject: false },
+      ]);
+      expect(project.isStoryProject).toBe(false);
+    });
+
+    it("maps each item's isStoryProject independently in a multi-item array", () => {
+      const projects = mapProjects([
+        { title: "One", isStoryProject: true },
+        { title: "Two" },
+        { title: "Three", isStoryProject: false },
+      ]);
+      expect(projects.map((p) => p.isStoryProject)).toEqual([
+        true,
+        false,
+        false,
+      ]);
     });
   });
 });

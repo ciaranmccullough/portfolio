@@ -7,4 +7,6 @@ export interface Project {
   href: string;
   tags: string[];
   imageUrl: string;
+  /** Whether this project has a `/story/:id` case study to link to instead of `href`. Defaults to `false` (mapper-normalised — never absent here). */
+  isStoryProject: boolean;
 }
