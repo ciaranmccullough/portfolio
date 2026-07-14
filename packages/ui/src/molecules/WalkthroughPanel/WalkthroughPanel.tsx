@@ -5,6 +5,7 @@ import {
   walkthroughPanelCalloutClass,
   walkthroughPanelCalloutLabelClass,
   walkthroughPanelClass,
+  walkthroughPanelCompactHiddenClass,
   walkthroughPanelDescriptionClass,
   walkthroughPanelEyebrowClass,
   walkthroughPanelExtraClass,
@@ -26,6 +27,7 @@ export function WalkthroughPanel({
   title,
   description,
   callout,
+  compact = false,
   className,
   children,
   ...props
@@ -33,12 +35,25 @@ export function WalkthroughPanel({
   return (
     <article className={cn(walkthroughPanelClass, className)} {...props}>
       {index ? (
-        <span aria-hidden="true" className={walkthroughPanelIndexClass}>
+        <span
+          aria-hidden="true"
+          className={cn(
+            walkthroughPanelIndexClass,
+            compact && walkthroughPanelCompactHiddenClass,
+          )}
+        >
           {index}
         </span>
       ) : null}
       {eyebrow ? (
-        <Eyebrow className={walkthroughPanelEyebrowClass}>{eyebrow}</Eyebrow>
+        <Eyebrow
+          className={cn(
+            walkthroughPanelEyebrowClass,
+            compact && walkthroughPanelCompactHiddenClass,
+          )}
+        >
+          {eyebrow}
+        </Eyebrow>
       ) : null}
       {/* `variant="h1"` (not the semantic-sounding "h2") is deliberate: it's
           the type-scale tier that measures correctly against the design

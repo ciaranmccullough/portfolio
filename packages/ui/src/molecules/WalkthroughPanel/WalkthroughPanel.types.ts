@@ -28,4 +28,15 @@ export interface WalkthroughPanelProps extends Omit<
   description?: ReactNode;
   /** Optional labelled callout below the body (e.g. label "THE CALL —", body "Cached favourites on-device…"). */
   callout?: WalkthroughPanelCallout;
+  /**
+   * Hide the index numeral and eyebrow below Tailwind's `md` breakpoint
+   * (CSS-only, via `max-md:hidden` — they stay in the DOM, just not laid
+   * out/painted there). For a consumer that shows the same "which step,
+   * what's it called" information elsewhere at narrow widths too (e.g. a
+   * synced phone-mockup progress row), repeating it here again is pure
+   * noise, and on a short mobile viewport the numeral alone is tall enough
+   * to push real content off the bottom of a pinned/clipped container.
+   * Desktop/tablet keep both, matching the design mock.
+   */
+  compact?: boolean;
 }

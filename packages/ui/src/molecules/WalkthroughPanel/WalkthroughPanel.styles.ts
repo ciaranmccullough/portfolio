@@ -42,3 +42,7 @@ export const walkthroughPanelCalloutLabelClass =
 export const walkthroughPanelCalloutBodyClass = "text-fg-soft";
 
 export const walkthroughPanelExtraClass = "mt-[22px] max-w-[44ch]";
+
+/** See `WalkthroughPanelProps.compact` — applied to the index numeral and
+ *  eyebrow only, never to the title/description/callout. */
+export const walkthroughPanelCompactHiddenClass = "max-md:hidden";
