@@ -242,6 +242,7 @@ describe("getProjects()", () => {
         tags: ["Next.js", "TypeScript"],
         imageUrl:
           "https://images.ctfassets.net/portfolio.png?w=1200&q=80&fm=webp",
+        isStoryProject: false,
       },
     ]);
     expect(mockFetchProjects).toHaveBeenCalledTimes(1);
