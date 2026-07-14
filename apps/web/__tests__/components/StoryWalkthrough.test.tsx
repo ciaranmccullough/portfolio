@@ -111,16 +111,11 @@ jest.mock("@/hooks/useScrollAnimationsEnabled", () => ({
   useScrollAnimationsEnabled: jest.fn(),
 }));
 
-jest.mock("@/hooks/useIsDesktopViewport", () => ({
-  useIsDesktopViewport: jest.fn(),
-}));
-
 import { fireEvent, render, screen } from "@testing-library/react";
 import type { WalkthroughItem } from "@portfolio/ui";
 
 import { StoryWalkthrough } from "@/app/components/StoryWalkthrough/StoryWalkthrough";
 import { storyWalkthroughStickyClass } from "@/app/components/StoryWalkthrough/StoryWalkthrough.styles";
-import { useIsDesktopViewport } from "@/hooks/useIsDesktopViewport";
 import { useScrollAnimationsEnabled } from "@/hooks/useScrollAnimationsEnabled";
 
 /** The pinned viewport `StoryWalkthrough` attaches its native wheel/touch
@@ -135,9 +130,6 @@ function getStickyViewport(): HTMLElement {
 
 const mockEnabled = useScrollAnimationsEnabled as jest.MockedFunction<
   typeof useScrollAnimationsEnabled
->;
-const mockDesktop = useIsDesktopViewport as jest.MockedFunction<
-  typeof useIsDesktopViewport
 >;
 
 const ITEMS: WalkthroughItem[] = [
@@ -161,7 +153,6 @@ function currentPanelIndex(): number {
 }
 
 beforeEach(() => {
-  mockDesktop.mockReturnValue(true);
   // jsdom doesn't implement `window.scrollTo` — the stepper calls it
   // (harmlessly, per `syncScrollPosition`'s own doc comment: it's a no-op
   // page-scrollbar bookkeeping call, not something these structural/state
@@ -202,22 +193,9 @@ describe("StoryWalkthrough — reduced motion / not yet mounted", () => {
   });
 });
 
-describe("StoryWalkthrough — below the md breakpoint", () => {
-  it("renders the static organism even when scroll animations are enabled", () => {
-    mockEnabled.mockReturnValue(true);
-    mockDesktop.mockReturnValue(false);
-
-    render(<StoryWalkthrough items={ITEMS} />);
-
-    expect(screen.getByTestId("static-walkthrough")).toBeInTheDocument();
-    expect(screen.queryByTestId("phone-mockup")).not.toBeInTheDocument();
-  });
-});
-
-describe("StoryWalkthrough — scroll animations enabled, desktop viewport", () => {
+describe("StoryWalkthrough — scroll animations enabled", () => {
   beforeEach(() => {
     mockEnabled.mockReturnValue(true);
-    mockDesktop.mockReturnValue(true);
   });
 
   it("renders the header", () => {

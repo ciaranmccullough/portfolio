@@ -15,7 +15,6 @@ import {
 } from "motion/react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
-import { useIsDesktopViewport } from "@/hooks/useIsDesktopViewport";
 import { useScrollAnimationsEnabled } from "@/hooks/useScrollAnimationsEnabled";
 import {
   getPanelRestProgress,
@@ -79,21 +78,20 @@ const PANEL_SLIDE_PX = 24;
  * never leaves the reader resting between two, and releases the page to
  * scroll straight past at the first/last panel.
  *
- * Renders the plain `Walkthrough` organism, completely untouched, in three
- * cases — this is simultaneously the reduced-motion fallback, the no-JS/
- * pre-hydration output, and the small-viewport layout:
- * - before mount, or when the user prefers reduced motion
- *   (`useScrollAnimationsEnabled`);
- * - below Tailwind's `md` breakpoint (`useIsDesktopViewport`) — the pinned
- *   two-column layout has nowhere to put the copy panel at phone width, so
- *   mobile gets the organism's own natural-height stacked layout with a
- *   CSS-only sticky phone column instead.
+ * Renders the plain `Walkthrough` organism, completely untouched, as the
+ * reduced-motion fallback and the no-JS/pre-hydration output — before mount,
+ * or when the user prefers reduced motion (`useScrollAnimationsEnabled`).
  *
- * Once both are satisfied, renders a re-composed layout using `Walkthrough`'s
- * own exported pieces (`PhoneMockup` / `WalkthroughPanel`) inside a
+ * Once satisfied, renders a re-composed layout using `Walkthrough`'s own
+ * exported pieces (`PhoneMockup` / `WalkthroughPanel`) inside a
  * natively-scrollable tall block (`items.length * 100vh`) with a
  * `position: sticky` viewport pinned inside it — see `PinnedWalkthrough` for
- * the stepper mechanics.
+ * the stepper mechanics. This pinned, one-step-at-a-time treatment is the
+ * design at every viewport width, not just desktop: the design mock's own
+ * reference stepper collapses to a single centred column below its own
+ * narrow-viewport breakpoint (see `storyWalkthroughGridClass`) while keeping
+ * the same pinned/stepped mechanic — it never falls back to a flat,
+ * un-pinned list of every panel at once.
  */
 export function StoryWalkthrough({
   eyebrow,
@@ -103,9 +101,8 @@ export function StoryWalkthrough({
   ...props
 }: StoryWalkthroughProps) {
   const animationsEnabled = useScrollAnimationsEnabled();
-  const isDesktop = useIsDesktopViewport();
 
-  if (!animationsEnabled || !isDesktop) {
+  if (!animationsEnabled) {
     return (
       <Walkthrough
         eyebrow={eyebrow}
@@ -314,13 +311,57 @@ function PinnedWalkthrough({
       }
     }
 
+    // Keyboard: unlike wheel/touch, arrow keys aren't scoped to "pointer is
+    // over the node" — a keydown targets whatever has focus, which is
+    // typically `document.body` while reading a scrolling page. So this one
+    // listens on `window` and instead scopes itself with the same
+    // "is the tall region currently the one occupying the scroll position"
+    // check the idle-settle correction above already uses (`regionBounds`).
+    // Without this, a native ArrowDown only nudges the page a few px — far
+    // short of a full panel — which the settle-timer then snaps right back
+    // to the *same* panel, making the section feel stuck for keyboard users.
+    function handleKeyDown(event: KeyboardEvent) {
+      const direction: 1 | -1 | null =
+        event.key === "ArrowDown" || event.key === "PageDown"
+          ? 1
+          : event.key === "ArrowUp" || event.key === "PageUp"
+            ? -1
+            : null;
+      if (direction === null) return;
+
+      const target = event.target;
+      if (target instanceof HTMLElement) {
+        if (
+          target.isContentEditable ||
+          target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT"
+        ) {
+          return;
+        }
+      }
+
+      const bounds = regionBounds();
+      if (!bounds) return;
+      const currentY = window.scrollY;
+      if (currentY < bounds.top - 1 || currentY > bounds.bottom + 1) return;
+
+      if (isWalkthroughBoundary(activeIndexRef.current, direction, count)) {
+        return; // release — let the page scroll straight past the section
+      }
+      event.preventDefault();
+      attemptStep(direction);
+    }
+
     node.addEventListener("wheel", handleWheel, { passive: false });
     node.addEventListener("touchstart", handleTouchStart, { passive: true });
     node.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("keydown", handleKeyDown, { passive: false });
     return () => {
       node.removeEventListener("wheel", handleWheel);
       node.removeEventListener("touchstart", handleTouchStart);
       node.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("keydown", handleKeyDown);
     };
     // Re-subscribes only when `count` changes — the closures over
     // `scrollRef`/`activeIndexRef`/`lastStepAtRef` stay correct across
@@ -371,6 +412,18 @@ function PinnedWalkthrough({
             </div>
 
             <ol className={storyWalkthroughPanelsClass}>
+              {/* `compact` hides each panel's own numeral/eyebrow below
+                  `md` only — this phone's progress row (`steps`/`activeStep`
+                  above) stays synced to `activeIndex`, so at narrow widths
+                  it's already the single source of "which step, what's it
+                  called"; repeating both in the panel too showed the same
+                  position three ways (dots, counter, ghost numeral) and the
+                  same label twice, and on a short mobile viewport the
+                  numeral alone was tall enough to push the panel bottom off
+                  the pinned/clipped container. Desktop/tablet keep both,
+                  matching the design mock — there's room, and the phone
+                  column sits far enough away that the repetition reads as
+                  intentional rhythm rather than noise. */}
               {items.map((item, index) => (
                 <PanelLayer key={index} index={index} activeIndex={activeIndex}>
                   <WalkthroughPanel
@@ -379,6 +432,7 @@ function PinnedWalkthrough({
                     title={item.title}
                     description={item.description}
                     callout={item.callout}
+                    compact
                   >
                     {item.extra}
                   </WalkthroughPanel>
