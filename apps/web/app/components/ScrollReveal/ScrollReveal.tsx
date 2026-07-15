@@ -3,8 +3,12 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 
+import { useRevealWindowAlreadyOpen } from "@/hooks/useRevealWindowAlreadyOpen";
 import { useScrollAnimationsEnabled } from "@/hooks/useScrollAnimationsEnabled";
-import { getStaggeredRange } from "@/lib/scrollAnimation";
+import {
+  getStaggeredRange,
+  REVEAL_START_VIEWPORT_FRACTION,
+} from "@/lib/scrollAnimation";
 
 import type { ScrollRevealProps } from "./ScrollReveal.types";
 
@@ -77,8 +81,13 @@ function EnabledScrollReveal({
     // comfortably before a typical reading position, so nothing is still
     // mid-fade once the user is looking at it (reveals should complete
     // early in the section's entry, per the design spec).
-    offset: ["start 92%", "start 55%"],
+    offset: [`start ${REVEAL_START_VIEWPORT_FRACTION * 100}%`, "start 55%"],
   });
+  // A window that's already open at mount (tall viewport, restored scroll)
+  // renders fully revealed instead of frozen mid-fade — see the hook's doc.
+  // The motion.div stays mounted either way so `useScroll`'s target ref never
+  // detaches (Motion throws when the ref'd element disappears).
+  const alreadyOpen = useRevealWindowAlreadyOpen(ref);
   const inputRange = getStaggeredRange(staggerIndex, STAGGER_STEP);
 
   const opacity = useTransform(scrollYProgress, inputRange, [0, 1]);
@@ -94,7 +103,16 @@ function EnabledScrollReveal({
   );
 
   return (
-    <motion.div ref={ref} style={{ opacity, y, scale }}>
+    <motion.div
+      ref={ref}
+      // Static full-reveal values rather than dropping the styles: Motion
+      // writes MotionValues to the element imperatively, so a plain
+      // `undefined` here would leave the last scrubbed opacity/transform
+      // stuck on the DOM node.
+      style={
+        alreadyOpen ? { opacity: 1, y: 0, scale: 1 } : { opacity, y, scale }
+      }
+    >
       {children}
     </motion.div>
   );

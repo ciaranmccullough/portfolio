@@ -5,8 +5,13 @@ import type { PrincipleCardTone } from "@portfolio/ui";
 import { useMotionValueEvent, useScroll } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
+import { useRevealWindowAlreadyOpen } from "@/hooks/useRevealWindowAlreadyOpen";
 import { useScrollAnimationsEnabled } from "@/hooks/useScrollAnimationsEnabled";
-import { getStaggeredProgress, roundTo } from "@/lib/scrollAnimation";
+import {
+  getStaggeredProgress,
+  REVEAL_START_VIEWPORT_FRACTION,
+  roundTo,
+} from "@/lib/scrollAnimation";
 
 import {
   principlesRevealEyebrowClass,
@@ -53,8 +58,14 @@ export function PrinciplesReveal({
   const enabled = useScrollAnimationsEnabled();
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 92%", "start 45%"],
+    offset: [`start ${REVEAL_START_VIEWPORT_FRACTION * 100}%`, "start 45%"],
   });
+  // A reveal window that's already open at mount (tall viewport, restored
+  // scroll position) renders the cards fully revealed instead of frozen
+  // mid-fade — see the hook's doc. `scrubbing` gates every scroll-driven
+  // style below.
+  const alreadyOpen = useRevealWindowAlreadyOpen(ref);
+  const scrubbing = enabled && !alreadyOpen;
   const [cardProgress, setCardProgress] = useState<number[]>(() =>
     principles.map(() => 0),
   );
@@ -64,17 +75,17 @@ export function PrinciplesReveal({
   // already scrolled past this section would leave every card stuck at its
   // initial (hidden) progress until the user scrolls again.
   useEffect(() => {
-    if (!enabled) return;
+    if (!scrubbing) return;
     const latest = scrollYProgress.get();
     setCardProgress(
       principles.map((_, index) =>
         roundTo(getStaggeredProgress(latest, index, STAGGER_STEP), 2),
       ),
     );
-  }, [enabled, principles, scrollYProgress]);
+  }, [scrubbing, principles, scrollYProgress]);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    if (!enabled) return;
+    if (!scrubbing) return;
     setCardProgress((previous) => {
       let changed = false;
       const next = previous.map((value, index) => {
@@ -108,7 +119,7 @@ export function PrinciplesReveal({
 
       <ol ref={ref} className={principlesRevealGridClass}>
         {principles.map((principle, index) => {
-          const t = enabled ? (cardProgress[index] ?? 1) : 1;
+          const t = scrubbing ? (cardProgress[index] ?? 1) : 1;
           return (
             <PrincipleCard
               key={index}
@@ -117,7 +128,7 @@ export function PrinciplesReveal({
               description={principle.description}
               tone={TONE_CYCLE[index % TONE_CYCLE.length]}
               style={
-                enabled
+                scrubbing
                   ? {
                       opacity: t,
                       transform: `translateY(${RISE_DISTANCE_PX * (1 - t)}px)`,
