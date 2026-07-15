@@ -7,13 +7,18 @@ export const caseStudyHeroClass =
 export const caseStudyHeroBackgroundClass =
   "pointer-events-none absolute inset-0 -z-10 overflow-hidden";
 
-/* Double mask-image (mask-composite: intersect) reproduces the design doc's
-   masked top-right band — visible roughly x:44-90%, y:0-52% from the top,
-   fading to nothing at the left/right edges and below the midline, so the
-   image bleeds in from the top-right instead of a flat full-bleed fade.
+/* The media layer IS the design doc's masked top-right band (visible roughly
+   x:44-90%, y:0-52% of the hero — which at desktop size is a ~1024px-wide
+   16:9 area): anchored top-right, width-capped and aspect-locked, so the
+   image renders at roughly its natural scale. Sizing the layer `inset-0`
+   instead would cover-stretch the ~1K CMS asset across the whole hero
+   (2x+ upscale on wide screens — visibly soft/stretched) only to mask most
+   of it away again. The double mask-image (mask-composite: intersect) fades
+   the band to nothing at its left/right edges and below its midline, so the
+   image bleeds in from the top-right instead of ending in a hard edge.
    Genuine one-offs with no equivalent token (see design-spec section A). */
 export const caseStudyHeroBackgroundMediaClass =
-  "absolute inset-0 opacity-[.52] [mask-composite:intersect] [mask-image:linear-gradient(to_right,transparent_0%,#000_44%,#000_90%,transparent_100%),linear-gradient(to_top,transparent_0%,#000_48%)]";
+  "absolute top-0 right-0 aspect-video w-full max-w-5xl opacity-[.52] [mask-composite:intersect] [mask-image:linear-gradient(to_right,transparent_0%,#000_44%,#000_90%,transparent_100%),linear-gradient(to_top,transparent_0%,#000_48%)]";
 
 /* Flat cream wash held over the whole masked band — the source's first
    overlay stop (a uniform tint, not a gradient). */
