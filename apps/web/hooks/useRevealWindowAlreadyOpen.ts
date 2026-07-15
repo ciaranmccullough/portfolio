@@ -36,9 +36,24 @@ export function useRevealWindowAlreadyOpen(
     const node = ref.current;
     if (!node) return;
 
+    // Layout (offset-chain) position, NOT getBoundingClientRect: by the time
+    // this effect runs, the scrub has already applied its own initial
+    // translateY to the element, and a rect would include that transform —
+    // reading an element that sits just inside the window as "still below
+    // the line" while Motion's own transform-independent offset math has its
+    // reveal window fractionally open. `offsetTop` ignores transforms, so
+    // this measures the same geometry Motion scrubs against.
+    const layoutTop = () => {
+      let top = 0;
+      let el: HTMLElement | null = node;
+      while (el) {
+        top += el.offsetTop;
+        el = el.offsetParent as HTMLElement | null;
+      }
+      return top - window.scrollY;
+    };
     const isOpen = () =>
-      node.getBoundingClientRect().top <
-      window.innerHeight * REVEAL_START_VIEWPORT_FRACTION;
+      layoutTop() < window.innerHeight * REVEAL_START_VIEWPORT_FRACTION;
 
     if (isOpen()) {
       setAlreadyOpen(true);
