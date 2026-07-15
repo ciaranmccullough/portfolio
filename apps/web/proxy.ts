@@ -56,6 +56,9 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Skip Next internals and any path with a file extension (static assets).
-  matcher: ["/((?!_next|.*\\..*).*)"],
+  // Skip Next internals, the first-party Mixpanel ingestion proxy (`/mp/*`
+  // rewrites straight to api-eu.mixpanel.com in next.config.mjs — locale
+  // handling would 404 it via `/en/mp/…`), and any path with a file
+  // extension (static assets).
+  matcher: ["/((?!_next|mp/|.*\\..*).*)"],
 };

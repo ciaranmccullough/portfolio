@@ -67,11 +67,29 @@ export function initAnalytics(): void {
   if (initialised || !isEnabled()) return;
 
   mixpanel.init(MIXPANEL_TOKEN as string, {
-    // EU data residency: this project lives on eu.mixpanel.com, so events must
-    // go to the EU ingestion host. Without this the SDK defaults to the US host
-    // (api-js.mixpanel.com), which returns 200 but the data never reaches an
-    // EU project.
-    api_host: "https://api-eu.mixpanel.com",
+    // First-party ingestion proxy: `/mp/*` rewrites to the EU host
+    // (api-eu.mixpanel.com — this project lives on eu.mixpanel.com; the US
+    // default returns 200 but the data never arrives) in `next.config.mjs`.
+    // Hitting mixpanel.com directly makes Chrome flag the SDK's
+    // credentialed requests for third-party cookies (`mp_user`), failing
+    // Lighthouse's Best Practices audits; same-origin requests carry no
+    // third-party cookies at all. Absolute (not just "/mp") because the SDK
+    // also derives beacon/img URLs from this value.
+    api_host: `${window.location.origin}/mp`,
+    // The SDK's default routes end in "/" (`track/`, …), which Next's
+    // trailing-slash normalisation 308-redirects — one wasted round trip per
+    // event. Slash-less routes hit the rewrite (and Mixpanel's API) directly.
+    // This object *replaces* the SDK default wholesale; every key
+    // @types/mixpanel-browser knows is listed. The one it doesn't (the
+    // SDK-2.80 `settings` route) is dropped — it's only fetched when
+    // `remote_settings_mode` is enabled, and it isn't here.
+    api_routes: {
+      track: "track",
+      engage: "engage",
+      groups: "groups",
+      record: "record",
+      flags: "flags",
+    },
     // Consent gate: nothing is stored or sent until the user opts in.
     opt_out_tracking_by_default: true,
     // localStorage keeps the anonymous distinct-id without extra cookies —

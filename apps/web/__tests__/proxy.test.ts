@@ -6,7 +6,7 @@
  */
 import { NextRequest } from "next/server";
 
-import { proxy } from "@/proxy";
+import { config, proxy } from "@/proxy";
 
 // `@formatjs/intl-localematcher` ships ESM, and next/jest deliberately skips
 // transforming node_modules — so stub its `match` with an equivalent picker:
@@ -61,5 +61,26 @@ describe("proxy — unprefixed paths render the default locale in place", () => 
     const res = proxy(request("/", "fr-FR,fr;q=0.9"));
     const rewrite = res.headers.get("x-middleware-rewrite");
     expect(new URL(rewrite as string).pathname).toBe("/en");
+  });
+});
+
+describe("proxy — matcher scope", () => {
+  // Next's matcher entry is path-to-regexp syntax whose inner group here is a
+  // plain regex, so compiling the string directly mirrors what the runtime
+  // will (not) invoke the proxy for.
+  const matcher = new RegExp(`^${config.matcher[0]}$`);
+
+  it("skips the first-party Mixpanel ingestion proxy (/mp/*) so locale routing can't 404 it", () => {
+    expect(matcher.test("/mp/track")).toBe(false);
+    expect(matcher.test("/mp/engage")).toBe(false);
+  });
+
+  it("still runs for ordinary pages", () => {
+    expect(matcher.test("/")).toBe(true);
+    expect(matcher.test("/story/ea-sports-app")).toBe(true);
+  });
+
+  it("exempts only the /mp/ subtree, not other mp-prefixed paths", () => {
+    expect(matcher.test("/mpage")).toBe(true);
   });
 });
