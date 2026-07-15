@@ -9,11 +9,12 @@ import { REVEAL_START_VIEWPORT_FRACTION } from "@/lib/scrollAnimation";
 const START_LINE = window.innerHeight * REVEAL_START_VIEWPORT_FRACTION;
 
 /** Stub layout for the probe element — jsdom performs no real layout, so the
- *  element's `top` is injected via a `getBoundingClientRect` spy. */
+ *  element's layout position is injected via an `offsetTop` spy (the hook
+ *  reads the transform-independent offset chain, not a bounding rect; the
+ *  probe has no offsetParent in jsdom, so its own offsetTop is the whole
+ *  chain). */
 function mockElementTop(top: number) {
-  jest
-    .spyOn(HTMLElement.prototype, "getBoundingClientRect")
-    .mockReturnValue({ top } as DOMRect);
+  jest.spyOn(HTMLElement.prototype, "offsetTop", "get").mockReturnValue(top);
 }
 
 /** Renders the hook against a real element and records the value returned on
