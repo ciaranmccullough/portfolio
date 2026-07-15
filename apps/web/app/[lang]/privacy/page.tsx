@@ -18,8 +18,13 @@ export async function generateMetadata({
 }: {
   params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
+  const { lang } = await params;
   const { legal } = await getTranslations(params);
-  return { title: legal.privacy.title };
+  return {
+    title: legal.privacy.title,
+    // Own canonical, or the layout's homepage canonical is inherited.
+    alternates: { canonical: localePath(lang, "/privacy") },
+  };
 }
 
 export default async function PrivacyPage({

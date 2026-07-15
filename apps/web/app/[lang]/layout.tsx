@@ -53,6 +53,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
+  const { lang } = await params;
   const { title, description } = (await getTranslations(params)).metadata;
   return {
     metadataBase: new URL(SITE_URL),
@@ -60,7 +61,11 @@ export async function generateMetadata({
     description,
     applicationName: SITE_NAME,
     authors: [{ name: SITE_NAME, url: SITE_URL }],
-    alternates: { canonical: "/" },
+    // The home canonical. This is a layout-level default, so every route that
+    // isn't the homepage must declare its own `alternates.canonical` in its
+    // page `generateMetadata` — otherwise it inherits this one and tells
+    // crawlers it's a duplicate of the homepage (a Lighthouse SEO failure).
+    alternates: { canonical: localePath(lang, "/") },
     openGraph: {
       type: "website",
       url: SITE_URL,

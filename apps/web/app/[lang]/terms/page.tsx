@@ -18,8 +18,13 @@ export async function generateMetadata({
 }: {
   params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
+  const { lang } = await params;
   const { legal } = await getTranslations(params);
-  return { title: legal.terms.title };
+  return {
+    title: legal.terms.title,
+    // Own canonical, or the layout's homepage canonical is inherited.
+    alternates: { canonical: localePath(lang, "/terms") },
+  };
 }
 
 export default async function TermsPage({
