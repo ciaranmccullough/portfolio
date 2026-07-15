@@ -44,13 +44,20 @@ export async function generateMetadata({
 }: {
   params: Promise<StoryPageParams>;
 }): Promise<Metadata> {
-  const { id } = await params;
+  const { lang, id } = await params;
   const dict = await getTranslations(params);
   const story = await getStoryForRequest(id);
 
   if (story === null) return { title: dict.story.notFound.title };
   if (story === STORY_FETCH_ERROR) return { title: dict.error.title };
-  return { title: story.title, description: story.description };
+  return {
+    title: story.title,
+    description: story.description,
+    // Own canonical — without it the page inherits the layout's homepage
+    // canonical wholesale, telling crawlers this story is a duplicate of "/".
+    // Resolved against the layout's `metadataBase` to an absolute URL.
+    alternates: { canonical: localePath(lang, `/story/${id}`) },
+  };
 }
 
 export default async function StoryPage({
