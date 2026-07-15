@@ -62,14 +62,26 @@ jest.mock("@/hooks/useScrollAnimationsEnabled", () => ({
   useScrollAnimationsEnabled: jest.fn(),
 }));
 
+// jsdom lays every element out at rect 0, which the real hook would read as
+// "already inside the reveal window" and disable scrubbing across all of
+// these tests — mock it to a controllable value instead (geometry itself is
+// covered by useRevealWindowAlreadyOpen.test.tsx).
+jest.mock("@/hooks/useRevealWindowAlreadyOpen", () => ({
+  useRevealWindowAlreadyOpen: jest.fn(),
+}));
+
 import { render, screen } from "@testing-library/react";
 import type { Principle } from "@portfolio/ui";
 
 import { PrinciplesReveal } from "@/app/components/PrinciplesReveal/PrinciplesReveal";
+import { useRevealWindowAlreadyOpen } from "@/hooks/useRevealWindowAlreadyOpen";
 import { useScrollAnimationsEnabled } from "@/hooks/useScrollAnimationsEnabled";
 
 const mockEnabled = useScrollAnimationsEnabled as jest.MockedFunction<
   typeof useScrollAnimationsEnabled
+>;
+const mockAlreadyOpen = useRevealWindowAlreadyOpen as jest.MockedFunction<
+  typeof useRevealWindowAlreadyOpen
 >;
 
 const PRINCIPLES: Principle[] = [
@@ -82,6 +94,7 @@ beforeEach(() => {
   motionState.value = 0;
   motionState.cb = null;
   mockEnabled.mockReturnValue(false);
+  mockAlreadyOpen.mockReturnValue(false);
 });
 
 describe("PrinciplesReveal", () => {
@@ -144,5 +157,27 @@ describe("PrinciplesReveal", () => {
     const opacities = cards.map((c) => Number(c.getAttribute("data-opacity")));
     expect(opacities[0]).toBeGreaterThanOrEqual(opacities[1]);
     expect(opacities[1]).toBeGreaterThanOrEqual(opacities[2]);
+  });
+
+  it("renders every card fully revealed (no scrub style) when the reveal window is already open at mount", () => {
+    mockEnabled.mockReturnValue(true);
+    mockAlreadyOpen.mockReturnValue(true);
+    render(<PrinciplesReveal principles={PRINCIPLES} />);
+    for (const card of screen.getAllByTestId("principle-card")) {
+      // No mid-fade state: the card is never held at partial opacity —
+      // the WCAG-contrast failure mode this guard exists to prevent.
+      expect(card).toHaveAttribute("data-opacity", "none");
+      expect(card).toHaveAttribute("data-transform", "none");
+    }
+  });
+
+  it("ignores scroll updates while the reveal window was already open at mount", () => {
+    mockEnabled.mockReturnValue(true);
+    mockAlreadyOpen.mockReturnValue(true);
+    render(<PrinciplesReveal principles={PRINCIPLES} />);
+    motionState.cb?.(0.4);
+    for (const card of screen.getAllByTestId("principle-card")) {
+      expect(card).toHaveAttribute("data-opacity", "none");
+    }
   });
 });

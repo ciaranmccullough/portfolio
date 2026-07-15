@@ -7,6 +7,15 @@
  * logic lives and gets exercised, rather than in the components themselves.
  */
 
+/**
+ * Fraction of the viewport height at which a scroll-reveal's window opens —
+ * an element's top crossing this line from below starts its fade/rise scrub
+ * (the `useScroll` offset `` `start ${fraction * 100}%` ``). Shared with
+ * `useRevealWindowAlreadyOpen`'s mount-time "already past the line?" check
+ * so the scrub and the check can never disagree about where the window is.
+ */
+export const REVEAL_START_VIEWPORT_FRACTION = 0.92;
+
 /** Clamp `value` to the inclusive `[0, 1]` range. */
 export function clamp01(value: number): number {
   if (value < 0) return 0;
