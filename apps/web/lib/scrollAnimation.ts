@@ -137,6 +137,27 @@ export function isWalkthroughBoundary(
 }
 
 /**
+ * Whether `now` still falls inside the cooldown window of the last
+ * *accepted* step ({@link resolveWalkthroughStep}'s debounce). Used to hold
+ * the pin at a boundary panel: the gesture that steps onto the first/last
+ * panel keeps delivering events over its inertial tail, and releasing those
+ * to native scroll would carry the page straight past the section in the
+ * same motion the reader used to arrive — the pinned phone must stay in
+ * situ on the final step. While inside this window, boundary-direction
+ * events are still swallowed; only a second, deliberate gesture (after the
+ * cooldown) releases the page. This is the same clock and window as the
+ * stepper's own debounce, so "one gesture = exactly one panel" also means
+ * "one gesture never both lands on a boundary panel and leaves the section".
+ */
+export function isWithinStepCooldown(
+  lastStepAt: number,
+  now: number,
+  debounceMs = 700,
+): boolean {
+  return now - lastStepAt < debounceMs;
+}
+
+/**
  * The snap-stepper's core, dependency-free state transition: attempt to move
  * one step (`direction`: `1` next, `-1` previous) from `state`, honouring a
  * `debounceMs` cooldown since the last *accepted* step.

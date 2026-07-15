@@ -19,6 +19,7 @@ import { useScrollAnimationsEnabled } from "@/hooks/useScrollAnimationsEnabled";
 import {
   getPanelRestProgress,
   isWalkthroughBoundary,
+  isWithinStepCooldown,
   resolveNearestPanelIndex,
   resolveWalkthroughStep,
 } from "@/lib/scrollAnimation";
@@ -283,9 +284,30 @@ function PinnedWalkthrough({
     const node = stickyRef.current;
     if (!node) return;
 
+    /** Whether a `direction` gesture event should be released to native
+     *  scroll: only at a boundary panel AND once the cooldown of the step
+     *  that landed there has passed. The gesture that steps onto the last
+     *  (or first) panel keeps delivering events over its inertial tail —
+     *  releasing those immediately would carry the page past the section in
+     *  the same motion the reader used to arrive, instead of the pinned
+     *  phone staying in situ on the final step. Inside the cooldown the
+     *  event is swallowed like any other same-gesture repeat (and
+     *  `attemptStep` is a guaranteed no-op at a boundary); the reader's
+     *  *second*, deliberate gesture releases as before. */
+    function releasesToNativeScroll(direction: 1 | -1): boolean {
+      return (
+        isWalkthroughBoundary(activeIndexRef.current, direction, count) &&
+        !isWithinStepCooldown(
+          lastStepAtRef.current,
+          Date.now(),
+          STEP_DEBOUNCE_MS,
+        )
+      );
+    }
+
     function handleWheel(event: WheelEvent) {
       const direction: 1 | -1 = event.deltaY > 0 ? 1 : -1;
-      if (isWalkthroughBoundary(activeIndexRef.current, direction, count)) {
+      if (releasesToNativeScroll(direction)) {
         return; // release — let the page scroll straight past the section
       }
       event.preventDefault();
@@ -301,7 +323,7 @@ function PinnedWalkthrough({
       const currentY = event.touches[0]?.clientY ?? touchYRef.current;
       const dy = touchYRef.current - currentY; // >0 = swipe up = next
       const direction: 1 | -1 = dy > 0 ? 1 : -1;
-      if (isWalkthroughBoundary(activeIndexRef.current, direction, count)) {
+      if (releasesToNativeScroll(direction)) {
         return; // release — let the page scroll straight past the section
       }
       event.preventDefault();
@@ -346,7 +368,7 @@ function PinnedWalkthrough({
       const currentY = window.scrollY;
       if (currentY < bounds.top - 1 || currentY > bounds.bottom + 1) return;
 
-      if (isWalkthroughBoundary(activeIndexRef.current, direction, count)) {
+      if (releasesToNativeScroll(direction)) {
         return; // release — let the page scroll straight past the section
       }
       event.preventDefault();
