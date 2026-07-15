@@ -28,13 +28,16 @@ import { MAIN_CONTENT_ID } from "@/lib/mainContentId";
 const getStoryForRequest = cache(getStory);
 
 /**
- * Request a hero-appropriate rendition from Contentful's Images API. The
- * linked `backgroundImage` asset is a fixed 877×766 source (the CMS's
- * `easa.webp` upload) — capping `w` at that native width asks for exactly
- * what the asset can give, so `next/image` is never upscaling a soft source.
+ * Request a hero-appropriate rendition from Contentful's Images API: webp at
+ * tuned quality, at the asset's own native size. Deliberately no `w` cap — a
+ * previous hardcoded cap (877) went stale when the CMS asset changed (its
+ * native width is larger) and silently threw resolution away. Contentful
+ * never upscales past native and `next/image` never upscales at all, so
+ * "no cap" always means "everything the asset can give", even after future
+ * re-uploads.
  */
 function heroBackgroundImageUrl(url: string): string {
-  return `${url}?w=877&q=80&fm=webp`;
+  return `${url}?q=80&fm=webp`;
 }
 
 type StoryPageParams = { lang: string; id: string };
@@ -122,9 +125,13 @@ export default async function StoryPage({
                 src={heroBackgroundImageUrl(story.backgroundImageUrl)}
                 alt=""
                 fill
-                sizes="100vw"
+                // Mirrors the hero media band's real rendered width
+                // (full-width below its 1024px cap, capped above — see
+                // caseStudyHeroBackgroundMediaClass) so next/image serves
+                // band-sized renditions, not viewport-sized ones.
+                sizes="(min-width: 1024px) 1024px, 100vw"
                 priority
-                className="object-cover object-[center_24%]"
+                className="object-cover"
               />
             ) : undefined
           }
