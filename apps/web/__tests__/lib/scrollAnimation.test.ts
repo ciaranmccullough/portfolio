@@ -7,6 +7,7 @@ import {
   getStaggeredProgress,
   getStaggeredRange,
   isWalkthroughBoundary,
+  isWithinStepCooldown,
   resolveNearestPanelIndex,
   resolveWalkthroughStep,
   roundTo,
@@ -164,6 +165,28 @@ describe("isWalkthroughBoundary", () => {
   it("is not a boundary stepping forward from the first index or backward from the last", () => {
     expect(isWalkthroughBoundary(0, 1, COUNT)).toBe(false);
     expect(isWalkthroughBoundary(COUNT - 1, -1, COUNT)).toBe(false);
+  });
+});
+
+describe("isWithinStepCooldown", () => {
+  it("is inside the window right after an accepted step (same gesture's inertial tail)", () => {
+    expect(isWithinStepCooldown(1000, 1100, 700)).toBe(true);
+  });
+
+  it("leaves the window once the debounce has fully elapsed (a second, deliberate gesture)", () => {
+    expect(isWithinStepCooldown(1000, 1800, 700)).toBe(false);
+  });
+
+  it("is exclusive at exactly the debounce boundary, matching resolveWalkthroughStep", () => {
+    // resolveWalkthroughStep swallows while `now - lastStepAt < debounceMs`
+    // and accepts at exactly `debounceMs` elapsed — the cooldown must agree,
+    // so the same instant can't be both "still held" and "steppable".
+    expect(isWithinStepCooldown(1000, 1699, 700)).toBe(true);
+    expect(isWithinStepCooldown(1000, 1700, 700)).toBe(false);
+  });
+
+  it("is never inside the window before any step has been accepted", () => {
+    expect(isWithinStepCooldown(-Infinity, 0, 700)).toBe(false);
   });
 });
 

@@ -316,6 +316,66 @@ describe("StoryWalkthrough — scroll animations enabled", () => {
       });
       expect(notPrevented).toBe(false);
     });
+
+    it("holds the pin at the last panel through the same gesture's inertial tail, releasing only a second gesture", () => {
+      // The stepper reads Date.now() directly (not the event timestamp), so
+      // drive a controllable clock to step past the debounce window.
+      let now = 100_000;
+      const nowSpy = jest.spyOn(Date, "now").mockImplementation(() => now);
+      try {
+        render(<StoryWalkthrough items={ITEMS} />);
+        const sticky = getStickyViewport();
+
+        // Step to the last panel, one deliberate gesture at a time.
+        for (let step = 1; step < ITEMS.length; step++) {
+          now += 1000;
+          fireEvent.wheel(sticky, { deltaY: 120 });
+        }
+        expect(currentPanelIndex()).toBe(ITEMS.length - 1);
+
+        // The same gesture's inertial tail keeps delivering wheel events —
+        // still inside the cooldown, so the pin holds (preventDefault) and
+        // the phone stays in situ instead of scrolling straight past.
+        now += 100;
+        const heldNotPrevented = fireEvent.wheel(sticky, { deltaY: 120 });
+        expect(heldNotPrevented).toBe(false);
+        expect(currentPanelIndex()).toBe(ITEMS.length - 1);
+
+        // A second, deliberate gesture after the cooldown releases the page.
+        now += 1000;
+        const releasedNotPrevented = fireEvent.wheel(sticky, { deltaY: 120 });
+        expect(releasedNotPrevented).toBe(true);
+      } finally {
+        nowSpy.mockRestore();
+      }
+    });
+
+    it("holds the pin at the first panel too when a reversal gesture just landed there", () => {
+      let now = 100_000;
+      const nowSpy = jest.spyOn(Date, "now").mockImplementation(() => now);
+      try {
+        render(<StoryWalkthrough items={ITEMS} />);
+        const sticky = getStickyViewport();
+
+        now += 1000;
+        fireEvent.wheel(sticky, { deltaY: 120 }); // -> panel 1
+        now += 1000;
+        fireEvent.wheel(sticky, { deltaY: -120 }); // -> panel 0 (boundary)
+        expect(currentPanelIndex()).toBe(0);
+
+        // Inertial tail upward: held, not released.
+        now += 100;
+        const heldNotPrevented = fireEvent.wheel(sticky, { deltaY: -120 });
+        expect(heldNotPrevented).toBe(false);
+
+        // Second deliberate upward gesture: released.
+        now += 1000;
+        const releasedNotPrevented = fireEvent.wheel(sticky, { deltaY: -120 });
+        expect(releasedNotPrevented).toBe(true);
+      } finally {
+        nowSpy.mockRestore();
+      }
+    });
   });
 
   describe("snap-stepper: touch gestures", () => {
