@@ -18,7 +18,6 @@ import { ContactForm } from "../components/ContactForm/ContactForm";
 import { ErrorScreen } from "../components/ErrorScreen/ErrorScreen";
 import { HomeAnalytics } from "../components/HomeAnalytics/HomeAnalytics";
 import type { HomeSection } from "../components/HomeAnalytics/HomeAnalytics.types";
-import { ResumeLink } from "../components/ResumeLink/ResumeLink";
 import { SiteFooter } from "../components/SiteFooter/SiteFooter";
 import { SiteNav } from "../components/SiteNav/SiteNav";
 import { getTranslations } from "./dictionaries";
@@ -130,9 +129,7 @@ export default async function HomePage({
           )}
           intro={hero.description}
           tabs={heroTabs}
-        >
-          <ResumeLink href={hero.resumeUrl} label={dict.hero.resumeLabel} />
-        </Hero>
+        ></Hero>
 
         {/* #work */}
         <WorkGrid
